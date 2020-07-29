@@ -9,12 +9,12 @@
     </el-row>
     <p>個人資訊</p>
     <el-row>
-      <el-col :span="3">
+      <el-col>
         <span>姓名</span>
         <span class="required-mark">*</span>
         <span>:</span>
       </el-col>
-      <el-col :span="21">
+      <el-col>
         <el-input type="text" placeholder="請輸入姓名(僅限填寫一位)"></el-input>
       </el-col>
     </el-row>
@@ -23,6 +23,8 @@
         <span>性別</span>
         <span class="required-mark">*</span>
         <span>:&nbsp;</span>
+      </el-col>
+      <el-col>
         <el-radio v-model="gender" label="1">男</el-radio>
         <el-radio v-model="gender" label="2">女</el-radio>
       </el-col>
@@ -32,6 +34,8 @@
         <span>是否為廣論學員</span>
         <span class="required-mark">*</span>
         <span>:&nbsp;</span>
+      </el-col>
+      <el-col>
         <el-radio v-model="lr" label="1">是</el-radio>
         <el-radio v-model="lr" label="2">否</el-radio>
         <el-radio v-model="lr" label="3">曾經</el-radio>
@@ -42,49 +46,41 @@
         <span>身分證字號</span>
         <span class="required-mark">*</span>
         <span>:&nbsp;</span>
-        <el-radio v-model="gender" label="1">全碼</el-radio>
-        <el-radio v-model="gender" label="2">後四碼</el-radio>
+      </el-col>
+      <el-col>
+        <el-radio v-model="useridType" label="1">全碼</el-radio>
+        <el-radio v-model="useridType" label="2">後四碼</el-radio>
       </el-col>
       <el-col>
         <el-input type="text" placeholder="請輸入身分證字號"></el-input>
       </el-col>
     </el-row>
     <el-row>
-      <el-col :span="4">
+      <el-col>
         <span>手機號碼</span>
         <span class="required-mark">*</span>
         <span>:</span>
       </el-col>
-      <el-col :span="20">
+      <el-col>
         <el-input type="text" placeholder="範例：0987654321( 不需 - )"></el-input>
       </el-col>
     </el-row>
     <el-row>
-      <el-col :span="4">
+      <el-col>
         <span>住家電話</span>
         <span>:</span>
       </el-col>
-      <el-col :span="20">
+      <el-col>
         <el-input type="text" placeholder="範例：0212345678( 不需 - )"></el-input>
       </el-col>
     </el-row>
     <el-row>
-      <el-col :span="7">
-        <span>聯絡地址</span>
-        <span class="required-mark">*</span>
-        <span>(收據寄送地址):</span>
-      </el-col>
-      <el-col :span="17">
-        <el-input type="text" placeholder="請輸入地址"></el-input>
-      </el-col>
-    </el-row>
-    <el-row>
-      <el-col :span="4">
+      <el-col>
         <span>電子信箱</span>
         <span class="required-mark">*</span>
         <span>:</span>
       </el-col>
-      <el-col :span="20">
+      <el-col>
         <el-input type="text" placeholder="請輸入電子信箱"></el-input>
       </el-col>
     </el-row>
@@ -102,15 +98,17 @@
       </el-col>
     </el-row>
     <el-row>
-        <el-col>
-            <span><a>&lt;&lt;個資聲明&gt;&gt;</a></span>
-        </el-col>
+      <el-col>
+        <span>
+          &lt;&lt;<a>個資聲明</a>&gt;&gt;
+        </span>
+      </el-col>
     </el-row>
     <el-row>
-        <el-col>
-            <el-button type="warning" plain>下一步</el-button>
-            <el-button type="warning" plain>上一步</el-button>
-        </el-col>
+      <el-col style="text-align:center; margin:16px 0;">
+        <el-button type="warning" plain>下一步</el-button>
+        <el-button type="warning" plain>上一步</el-button>
+      </el-col>
     </el-row>
   </div>
 </template>
@@ -121,8 +119,9 @@ export default {
     return {
       gender: "1",
       lr: "1",
+      useridType:'1',
       value: "",
-      region: '',
+      region: "",
       regions: [
         {
           value: "01",
@@ -225,12 +224,17 @@ export default {
 }
 span {
   font-size: 16px;
+  font-weight: bold;
 }
 .required-mark {
   color: red;
 }
 .el-row {
-  margin: 8px 0;
+  margin: 16px 0;
+}
+.el-input__inner {
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
 }
 .step {
   line-height: 0%;

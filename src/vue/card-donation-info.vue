@@ -10,7 +10,7 @@
     <p>捐款資訊</p>
     <el-row>
       <el-col>
-        <span>捐款項目：福智佛教學院</span>
+        <span class="title">捐款項目：福智佛教學院</span>
       </el-col>
     </el-row>
     <el-row>
@@ -18,6 +18,8 @@
         <span>捐款方式</span>
         <span class="required-mark">*</span>
         <span>:&nbsp;</span>
+      </el-col>
+      <el-col>
         <el-radio v-model="donaMode" label="1">單次捐款</el-radio>
         <el-radio v-model="donaMode" label="2">定期定額捐款</el-radio>
       </el-col>
@@ -35,10 +37,10 @@
         <el-button type="warning" plain @click="amounts = 799" size="mini">799</el-button>
         <el-button type="warning" plain @click="amounts = 999" size="mini">999</el-button>
       </el-col>
-      <el-col :span="21">
+      <el-col :span="18">
         <el-input type="number" placeholder="請輸入金額" v-model="amounts"></el-input>
       </el-col>
-      <el-col :span="3">
+      <el-col :span="6">
         <span>&nbsp;元</span>
         <span v-show="donaMode == '2'">/&nbsp;每月</span>
       </el-col>
@@ -48,23 +50,35 @@
         <span>收據開立方式</span>
         <span class="required-mark">*</span>
         <span>(收據寄送資訊):&nbsp;</span>
+      </el-col>
+      <el-col>
         <el-radio v-model="receipt" label="1">單筆</el-radio>
         <el-radio v-model="receipt" label="2">年開</el-radio>
         <el-radio v-model="receipt" label="3">不需寄發</el-radio>
       </el-col>
     </el-row>
     <el-row>
-      <el-col :span="4">
+      <el-col>
         <span>收據抬頭</span>
         <span class="required-mark">*</span>
         <span>:</span>
       </el-col>
-      <el-col :span="20">
+      <el-col>
         <el-input type="text" placeholder="請輸入姓名(僅限填寫一位)"></el-input>
       </el-col>
     </el-row>
     <el-row>
       <el-col>
+        <span>聯絡地址</span>
+        <span class="required-mark">*</span>
+        <span>(收據寄送地址):</span>
+      </el-col>
+      <el-col>
+        <el-input type="text" placeholder="請輸入地址"></el-input>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col style="text-align:center; margin:16px 0;">
         <el-button type="warning" plain>下一步</el-button>
       </el-col>
     </el-row>
@@ -90,14 +104,22 @@ export default {
 }
 span {
   font-size: 16px;
+  font-weight: bold;
 }
 .required-mark {
   color: red;
 }
 .el-row {
-  margin: 8px 0;
+  margin: 16px 0;
+}
+.el-input__inner {
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
 }
 .step {
   line-height: 0%;
+}
+.el-button + .el-button {
+  margin: 0%;
 }
 </style>
