@@ -87,7 +87,7 @@
 </template>
 
 <script>
-import AddressEdit from "/components/AddressEdit";
+import AddressEdit from "./components/AddressEdit";
 export default {
   components: { AddressEdit },
   data() {

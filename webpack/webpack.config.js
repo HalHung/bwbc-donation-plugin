@@ -12,7 +12,7 @@ module.exports = {
   devtool: isDev ? 'inline-source-map' : false,
   mode: process.env.NODE_ENV,
   module: {
-    rules: loaders,
+    rules: loaders
   },
   plugins,
   output: {
@@ -21,5 +21,11 @@ module.exports = {
   },
   optimization: {
     minimize: true,
+  },
+  resolve: {
+    alias: {
+      'vue$': 'vue/dist/vue.esm.js'
+    },
+    extensions: ['*', '.js', '.vue', '.json']
   },
 };
