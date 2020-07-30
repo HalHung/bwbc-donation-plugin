@@ -15,7 +15,7 @@
         <span>:</span>
       </el-col>
       <el-col>
-        <el-input type="text" placeholder="請輸入姓名(僅限填寫一位)"></el-input>
+        <el-input type="text" placeholder="請輸入姓名(僅限填寫一位)" v-model="name"></el-input>
       </el-col>
     </el-row>
     <el-row>
@@ -25,8 +25,8 @@
         <span>:&nbsp;</span>
       </el-col>
       <el-col>
-        <el-radio v-model="gender" label="1">男</el-radio>
-        <el-radio v-model="gender" label="2">女</el-radio>
+        <el-radio v-model="genderTypeCode" label="1">男</el-radio>
+        <el-radio v-model="genderTypeCode" label="2">女</el-radio>
       </el-col>
     </el-row>
     <el-row>
@@ -36,9 +36,9 @@
         <span>:&nbsp;</span>
       </el-col>
       <el-col>
-        <el-radio v-model="lr" label="1">是</el-radio>
-        <el-radio v-model="lr" label="2">否</el-radio>
-        <el-radio v-model="lr" label="3">曾經</el-radio>
+        <el-radio v-model="payerTypeCode" label="1">是</el-radio>
+        <el-radio v-model="payerTypeCode" label="2">否</el-radio>
+        <el-radio v-model="payerTypeCode" label="3">曾經</el-radio>
       </el-col>
     </el-row>
     <el-row>
@@ -52,7 +52,7 @@
         <el-radio v-model="useridType" label="2">後四碼</el-radio>
       </el-col>
       <el-col>
-        <el-input type="text" placeholder="請輸入身分證字號"></el-input>
+        <el-input type="text" placeholder="請輸入身分證字號" v-model="sin"></el-input>
       </el-col>
     </el-row>
     <el-row>
@@ -62,7 +62,7 @@
         <span>:</span>
       </el-col>
       <el-col>
-        <el-input type="text" placeholder="範例：0987654321( 不需 - )"></el-input>
+        <el-input type="text" placeholder="範例：0987654321( 不需 - )" v-model="cellPhone"></el-input>
       </el-col>
     </el-row>
     <el-row>
@@ -71,7 +71,7 @@
         <span>:</span>
       </el-col>
       <el-col>
-        <el-input type="text" placeholder="範例：0212345678( 不需 - )"></el-input>
+        <el-input type="text" placeholder="範例：0212345678( 不需 - )" v-model="homePhone"></el-input>
       </el-col>
     </el-row>
     <el-row>
@@ -81,7 +81,7 @@
         <span>:</span>
       </el-col>
       <el-col>
-        <el-input type="text" placeholder="請輸入電子信箱"></el-input>
+        <el-input type="text" placeholder="請輸入電子信箱" v-model="email"></el-input>
       </el-col>
     </el-row>
     <el-row>
@@ -100,7 +100,7 @@
     <el-row>
       <el-col>
         <span>
-          &lt;&lt;<a>個資聲明</a>&gt;&gt;
+          <a>個資聲明</a>
         </span>
       </el-col>
     </el-row>
@@ -117,10 +117,15 @@
 export default {
   data() {
     return {
-      gender: "1",
-      lr: "1",
-      useridType:'1',
-      value: "",
+      name: null, // 姓名
+      genderTypeCode: "1", // 性別
+      payerTypeCode: "1", // 是否為廣論學員
+      useridType: "1", // 身分證選填全碼或末四碼
+      sin: null, // 身分證字號
+      sinLast4: null, // 身分證字號末四碼
+      cellPhone: null, // 手機號碼
+      homePhone: null, // 住家電話
+      email: null, // 電子信箱
       region: "",
       regions: [
         {

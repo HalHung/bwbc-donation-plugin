@@ -7,20 +7,24 @@
 
 export default {
     token: '',
-    user: null,
     /**
-     * 播放主題
+     * 捐款者資訊
      * 
-     * dataCover: 圖片
-     * dataDescription: 說明
-     * dataId: 
-     * dataInfoUrl: 音檔詳情
-     * dataNumChapter: 章節數
-     * dataNumRead: 閱讀數
-     * dataTitle: 標題
-     * dataType: 分類
-     * teacherInfo: 老師介紹
-     * teacherName: 老師
+     * name: 姓名
+     * genderTypeCode: 性別
+     * payerTypeCode: 是否為廣論學員
+     * useridType: 身分證選填全碼或末四碼
+     * sin: 身分證字號
+     * sinLast4: 身分證字號末四碼
+     * cellPhone: 手機號碼
+     * homePhone: 住家電話
+     * email: 電子信箱
+     */
+    member: null,
+    /**
+     * 信用卡捐款
+     * 
+     * 
      *  */
-    playData:null,
-  };  
+    cardDonation: null,
+};  

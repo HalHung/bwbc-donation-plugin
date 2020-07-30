@@ -38,7 +38,7 @@
         <el-button type="warning" plain @click="amounts = 999" size="mini">999</el-button>
       </el-col>
       <el-col :span="18">
-        <el-input type="number" placeholder="請輸入金額" v-model="amounts"></el-input>
+        <el-input type="number" placeholder="請輸入金額" v-model="amount"></el-input>
       </el-col>
       <el-col :span="6">
         <span>&nbsp;元</span>
@@ -52,7 +52,7 @@
         <span>(收據寄送資訊):&nbsp;</span>
       </el-col>
       <el-col>
-        <el-radio v-model="receipt" label="1">單筆</el-radio>
+        <el-radio v-model="receipt" label="1" v-show="donaMode == '1'">單筆</el-radio>
         <el-radio v-model="receipt" label="2">年開</el-radio>
         <el-radio v-model="receipt" label="3">不需寄發</el-radio>
       </el-col>
@@ -64,17 +64,18 @@
         <span>:</span>
       </el-col>
       <el-col>
-        <el-input type="text" placeholder="請輸入姓名(僅限填寫一位)"></el-input>
+        <el-input type="text" placeholder="請輸入姓名(僅限填寫一位)" v-model="donatorName"></el-input>
       </el-col>
     </el-row>
-    <el-row>
+    <el-row v-show="receipt != '3'">
       <el-col>
         <span>聯絡地址</span>
         <span class="required-mark">*</span>
         <span>(收據寄送地址):</span>
       </el-col>
       <el-col>
-        <el-input type="text" placeholder="請輸入地址"></el-input>
+        <!-- <el-input type="text" placeholder="請輸入地址"></el-input> -->
+        <AddressEdit ref="addressEdit"></AddressEdit>
       </el-col>
     </el-row>
     <el-row>
@@ -86,12 +87,15 @@
 </template>
 
 <script>
+import AddressEdit from "/components/AddressEdit";
 export default {
+  components: { AddressEdit },
   data() {
     return {
-      donaMode: "1",
-      amounts: "",
-      receipt: "1",
+      donaMode: "1", // 捐款模式: 1單次捐款 2定期定額
+      amount: null, // 捐款金額
+      receipt: "1", // 收據開立方式: 1單筆 2年開 3不需寄發
+      donatorName: null, // 收據抬頭
     };
   },
 };
