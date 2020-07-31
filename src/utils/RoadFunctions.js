@@ -8,7 +8,7 @@ export const RoadFunctions = {
         // }
       ];
       let temp = [];
-      const roads = require("@/assets/roads.json");
+      const roads = require("../assets/roads");
       for (let i = 0; i < roads.length; i++) {
         if (temp.length < 1) {
           temp.push(roads[i].city);
@@ -37,7 +37,7 @@ export const RoadFunctions = {
         //   text: "請選擇"
         // }
       ];
-      const roads = require("@/assets/roads.json");
+      const roads = require("../assets/roads");
       for (let i = 0; i < roads.length; i++) {
         if (roads[i].city == city) {
           if (temp.length < 1) {
@@ -73,7 +73,7 @@ export const RoadFunctions = {
         // }
       ];
       let cityAnddistrict = city + ":" + district;
-      const roads = require("@/assets/roads.json");
+      const roads = require("../assets/roads");
       for (let i = 0; i < roads.length; i++) {
         if (
           String(roads[i].city + ":" + roads[i].district) ===
@@ -130,7 +130,7 @@ export const RoadFunctions = {
     getRoadZipCode: function(city, district, road) {
       let cityAnddistrictAndRoad = city + ":" + district + ":" + road;
       let zipCode = undefined;
-      const roads = require("@/assets/roads.json");
+      const roads = require("../assets/roads");
       for (let i = 0; i < roads.length; i++) {
         if (
           String(

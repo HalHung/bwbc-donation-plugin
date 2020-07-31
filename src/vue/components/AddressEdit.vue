@@ -9,59 +9,42 @@
       </el-form-item>
       <div v-if="address.addressType == 'TAIWAN'">
         <el-form-item label="縣市" prop="city" class="star" ref="city">
-          <b-form-select
-            v-model="address.city"
-            :options="cityOptions"
-            v-on:change="getDistrict"
-          >
+          <b-form-select v-model="address.city" :options="cityOptions" v-on:change="getDistrict">
             <template v-slot:first>
-              <b-form-select-option :value="undefined" disabled
-                >-- 請選擇 --</b-form-select-option
-              >
+              <b-form-select-option :value="undefined" disabled>-- 請選擇 --</b-form-select-option>
             </template>
           </b-form-select>
         </el-form-item>
-        <el-form-item
-          label="鄉鎮市區"
-          prop="district"
-          class="star"
-          ref="district"
-        >
+        <el-form-item label="鄉鎮市區" prop="district" class="star" ref="district">
           <b-form-select
             v-model="address.district"
             :options="districtOptions"
             v-on:change="getRoadList"
           >
             <template v-slot:first>
-              <b-form-select-option :value="undefined" disabled
-                >-- 請選擇 --</b-form-select-option
-              >
+              <b-form-select-option :value="undefined" disabled>-- 請選擇 --</b-form-select-option>
             </template>
           </b-form-select>
         </el-form-item>
         <el-form-item label="路街村里" prop="road" class="star" ref="road">
-          <b-form-select
-            v-model="address.road"
-            :options="roadOptions"
-            v-on:change="getRoadZipCode"
-          >
+          <b-form-select v-model="address.road" :options="roadOptions" v-on:change="getRoadZipCode">
             <template v-slot:first>
-              <b-form-select-option :value="undefined" disabled
-                >-- 請選擇 --</b-form-select-option
-              >
+              <b-form-select-option :value="undefined" disabled>-- 請選擇 --</b-form-select-option>
             </template>
           </b-form-select>
         </el-form-item>
-        <el-row class="mb-3" type="flex" align="middle">
-          <el-col :span="6" class="font-size-title">郵遞區號</el-col>
-          <el-col :offset="1" :span="17">
+        <el-row type="flex" align="middle" style="margin-bottom:0px;">
+          <el-col class="font-size-title">郵遞區號</el-col>
+        </el-row>
+        <el-row style="margin-top:0px;">
+          <el-col>
             <el-tag
+              type="warning"
               size="medium"
               effect="plain"
               :hit="false"
               v-if="address.zipCode"
-              >{{ address.zipCode }}
-            </el-tag>
+            >{{ address.zipCode }}</el-tag>
           </el-col>
         </el-row>
         <!-- <el-form-item label="郵遞區號" class="mb-0">{{ address.zipCode }}</el-form-item> -->
@@ -69,11 +52,7 @@
           <el-col :xs="12" :sm="4">
             <el-form-item>
               <el-col class="ad-small-input">
-                <el-input
-                  v-model="address.lane"
-                  class="small-input"
-                  maxlength="20"
-                ></el-input>
+                <el-input v-model="address.lane" class="small-input" maxlength="20"></el-input>
               </el-col>
               <el-col class="ad-small-label">巷</el-col>
             </el-form-item>
@@ -119,13 +98,12 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <br />
-        <label>備註：請含有○○之○的巷、弄、號地址，以○○-○方式輸入</label>
-        <label>如：88之10號→88-10號</label>
+        <label style="font-size:16px; font-weight:500;">備註：請含有○○之○的巷、弄、號地址，以○○-○方式輸入</label>
+        <label style="font-size:16px; font-weight:500;">如：88之10號→88-10號</label>
       </div>
       <div v-else>
         <el-form-item prop="other">
-          <el-input v-model="address.other" maxlength="100"></el-input>
+          <el-input v-model="address.other" maxlength="100" placeholder="請輸入地址"></el-input>
         </el-form-item>
       </div>
     </el-form>
@@ -133,13 +111,13 @@
 </template>
 
 <script>
-import { RoadFunctions } from "../assets/roads.json";
+import { RoadFunctions } from "../../utils/RoadFunctions";
 import { isNullOrUndefined } from "util";
 
 export default {
   name: "AddressEdit",
   props: {
-    oAddress: Object
+    oAddress: Object,
   },
   data() {
     var checkSelectValidator = (rule, value, callback) => {
@@ -175,20 +153,20 @@ export default {
         floor: undefined, //樓
         room: undefined, //室
         zipCode: "", //郵遞區號
-        other: undefined
+        other: undefined,
       },
       cityOptions: [],
       districtOptions: [],
       roadOptions: [],
       rules: {
         addressType: [
-          { required: true, message: "請選擇地區", trigger: "blur" }
+          { required: true, message: "請選擇地區", trigger: "blur" },
         ],
         city: [{ validator: checkSelectValidator, trigger: "blur" }],
         district: [{ validator: checkSelectValidator, trigger: "blur" }],
         road: [{ validator: checkSelectValidator, trigger: "blur" }],
-        other: [{ validator: checkOtherValidator, trigger: "blur" }]
-      }
+        other: [{ validator: checkOtherValidator, trigger: "blur" }],
+      },
     };
   },
   watch: {
@@ -204,7 +182,7 @@ export default {
           this.address.district
         );
       }
-    }
+    },
   },
   created() {
     if (this.oAddress != undefined && this.oAddress.addressType != undefined) {
@@ -302,8 +280,8 @@ export default {
     },
     ok() {
       this.$emit("finishAddress", this.address);
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -318,8 +296,6 @@ export default {
 }
 .ad-small-label {
   width: 20px !important;
-  font-size: 1.2rem;
-  font-weight: bold;
 }
 
 .ad-small-input {
@@ -330,8 +306,17 @@ export default {
 }
 
 .font-size-title {
-  font-size: 1.2rem;
-  font-weight: bold;
+  font-size: 16px;
   color: #606266;
+}
+
+.custom-select {
+  font-size: 16px;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  border-radius: 0%;
+}
+.el-form-item__label {
+  margin: 0%;
 }
 </style>

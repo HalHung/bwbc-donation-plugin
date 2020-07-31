@@ -88,8 +88,8 @@
     </el-row>
     <el-row>
       <el-col style="text-align:center; margin:16px 0;">
-        <el-button type="warning" plain>送出</el-button>
         <el-button type="warning" plain>上一步</el-button>
+        <el-button type="warning" plain>送出</el-button>
       </el-col>
     </el-row>
   </div>
