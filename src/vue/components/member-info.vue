@@ -1,4 +1,5 @@
 <template>
+<!-- 捐款人資訊(共用畫面) -->
   <div id="component-body">
     <el-form :model="memberInfo" :rules="rules" ref="memberInfo">
       <el-row class="step">
@@ -345,7 +346,10 @@ span {
   line-height: 0%;
 }
 .el-select-dropdown__item {
-  /* font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
-    "Lucida Sans Unicode", Geneva, Verdana, sans-serif; */
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+}
+.el-form-item {
+  margin: 0%;
 }
 </style>

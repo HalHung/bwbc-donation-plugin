@@ -1,4 +1,5 @@
 <template>
+<!-- 地址選填 -->
   <div>
     <el-form ref="address" :model="address" :rules="rules">
       <el-form-item label="地區" prop="addressType">

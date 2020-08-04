@@ -1,6 +1,6 @@
 <template>
 <!-- 信用卡捐款 -->
-  <div id="credit-card">
+  <div id="body">
     <CardDonationInfo></CardDonationInfo>
     <MemberInfo></MemberInfo>
     <CreditCardInfo></CreditCardInfo>
@@ -18,15 +18,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#credit-card {
+#body {
   font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
     "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
 }
-input {
-  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
-    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
-}
-.el-select-dropdown__item {
+/deep/ .el-input__inner {
   font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
     "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
 }

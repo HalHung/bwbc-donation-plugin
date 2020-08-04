@@ -1,4 +1,5 @@
 <template>
+<!-- 信用卡資訊(信用卡捐款流程3) -->
   <div id="component-body">
     <el-form :model="card" :rules="rules" ref="creditCardInfo">
       <el-row class="step">
@@ -65,7 +66,7 @@
         <el-col>
           <el-card class="box-card" shadow="never">
             <div slot="header" class="clearfix">
-              <span>捐款注意事項</span>
+              <span style="color:white;">捐款注意事項</span>
             </div>
             <el-row>
               <el-col :span="2">
@@ -183,7 +184,7 @@ export default {
 };
 </script>
 
-<style lang="css" scoped>
+<style lang="scss" scoped>
 #component-body {
   /* font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
     "Lucida Sans Unicode", Geneva, Verdana, sans-serif; */
@@ -219,7 +220,13 @@ span {
   font-size: 20px;
 }
 .el-select-dropdown__item {
-  /* font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
-    "Lucida Sans Unicode", Geneva, Verdana, sans-serif; */
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+}
+/deep/ .el-card__header {
+  background-color: #BDA268;
+}
+.el-form-item {
+  margin: 0%;
 }
 </style>

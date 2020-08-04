@@ -12,6 +12,7 @@ import App from './App.vue';
 // import MemberInfo from './components/member-info.vue';
 // import CreditCardInfo from './components/credit-card-info.vue';
 import CreditCard from './Credit-card';
+import Cheque from './Cheque';
 import Test from './test.vue';
 Vue.use(ElementUI);
 Vue.use(BootstrapVue);
@@ -44,4 +45,8 @@ new Vue ({
 new Vue({
   el: '#vwp-plugin-Credit-card',
   render: h => h(CreditCard),
+})
+new Vue({
+  el: '#vwp-plugin-Cheque',
+  render: h => h(Cheque),
 })
