@@ -13,6 +13,7 @@ import App from './App.vue';
 // import CreditCardInfo from './components/credit-card-info.vue';
 import CreditCard from './Credit-card';
 import Cheque from './Cheque';
+import BankTransfer from './Bank-transfer';
 import Test from './test.vue';
 Vue.use(ElementUI);
 Vue.use(BootstrapVue);
@@ -49,4 +50,8 @@ new Vue({
 new Vue({
   el: '#vwp-plugin-Cheque',
   render: h => h(Cheque),
+})
+new Vue({
+  el: '#vwp-plugin-Bank-transfer',
+  render: h => h(BankTransfer),
 })
