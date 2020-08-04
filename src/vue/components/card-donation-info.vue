@@ -137,7 +137,6 @@ export default {
         donatorName: [
           { required: true, message: "請輸入收據抬頭", trigger: "blur" },
         ],
-        city: [{ required: true, message: "請輸入姓名", trigger: "blur" }],
       },
     };
   },
