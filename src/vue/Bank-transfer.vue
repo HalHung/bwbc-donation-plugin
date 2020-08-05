@@ -1,17 +1,20 @@
 <template>
   <!-- 固定帳號匯款 -->
   <div id="body">
-    <TransferInfo></TransferInfo>
+    <TransferDonation></TransferDonation>
     <MemberInfo></MemberInfo>
+    <TransferInfo></TransferInfo>
   </div>
 </template>
 
 <script>
 import MemberInfo from "./components/member-info";
+import TransferDonation from "./components/transfer-donation";
 import TransferInfo from "./components/transfer-info";
 export default {
   components: {
     MemberInfo,
+    TransferDonation,
     TransferInfo,
   },
 };
