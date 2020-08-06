@@ -1,5 +1,5 @@
 <template>
-<!-- 信用卡捐款資訊(信用卡捐款流程1) -->
+  <!-- 信用卡捐款資訊(信用卡捐款流程1) -->
   <div id="component-body">
     <el-form :model="cardDonation" :rules="rules" ref="cardDonation">
       <el-row class="step">
@@ -37,11 +37,11 @@
           <span>:</span>
         </el-col>
         <el-col v-show="cardDonation.donaMode == '2'">
-          <el-button type="warning" plain @click="amount = 199" size="mini">199</el-button>
-          <el-button type="warning" plain @click="amount = 299" size="mini">299</el-button>
-          <el-button type="warning" plain @click="amount = 599" size="mini">599</el-button>
-          <el-button type="warning" plain @click="amount = 799" size="mini">799</el-button>
-          <el-button type="warning" plain @click="amount = 999" size="mini">999</el-button>
+          <el-button type="warning" plain @click="cardDonation.amount = 199" size="mini">199</el-button>
+          <el-button type="warning" plain @click="cardDonation.amount = 299" size="mini">299</el-button>
+          <el-button type="warning" plain @click="cardDonation.amount = 599" size="mini">599</el-button>
+          <el-button type="warning" plain @click="cardDonation.amount = 799" size="mini">799</el-button>
+          <el-button type="warning" plain @click="cardDonation.amount = 999" size="mini">999</el-button>
         </el-col>
         <el-col style="width:fit-content; margin-top:8px;">
           <el-form-item prop="amount">
@@ -101,7 +101,7 @@
         </el-col>
         <el-col>
           <!-- <el-input type="text" placeholder="請輸入地址"></el-input> -->
-          <AddressEdit ref="addressEdit"></AddressEdit>
+          <AddressEdit ref="addressEdit" :oAddress="cardDonation.address"></AddressEdit>
         </el-col>
       </el-row>
       <el-row>
@@ -110,6 +110,21 @@
         </el-col>
       </el-row>
     </el-form>
+    <el-dialog
+      custom-class="dialog-message-box"
+      :title="dialog.title"
+      :visible.sync="dialog.isShow"
+      :show-close="false"
+    >
+      <span v-html="dialog.content"></span>
+      <span slot="footer" class="dialog-footer">
+        <el-row class="top-line">
+          <el-col>
+            <el-button @click="dialog.isShow = false" class="primary-color">好喔</el-button>
+          </el-col>
+        </el-row>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -125,6 +140,12 @@ export default {
         amount: null, // 捐款金額
         receipt: "3", // 收據開立方式: 1單筆 2年開 3不需寄發
         donatorName: null, // 收據抬頭
+        address: null, // 地址
+      },
+      dialog: {
+        title: "",
+        content: "",
+        isShow: false,
       },
       rules: {
         donaMode: [
@@ -144,13 +165,34 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert("submit!");
+          this.adderssValidate();
+          console.log("驗證已執行");
         } else {
           console.log("error submit!!");
-          alert("請填寫必要資訊!");
+          this.showMessageBox("提示", "無輸入必填欄位或格式不符！");
           return false;
         }
       });
+    },
+    adderssValidate() {
+      if (this.cardDonation.receipt != "3") {
+        console.log("地址驗證");
+        this.$refs["addressEdit"].$refs["address"].validate((valid) => {
+          console.log(`address v:${valid}`);
+          if (valid) {
+            this.cardDonation.address = this.$refs["addressEdit"].address;
+            // this.toEndSave();
+          }
+        });
+      } else {
+        this.cardDonation.address = undefined;
+        // this.toEndSave();
+      }
+    },
+    showMessageBox(title, content) {
+      this.dialog.title = title;
+      this.dialog.content = content;
+      this.dialog.isShow = true;
     },
   },
 };

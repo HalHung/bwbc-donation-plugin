@@ -287,7 +287,7 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="scss">
+<style lang="scss" scoped>
 .star {
   .el-form-item__label:before {
     content: "*";
@@ -316,6 +316,9 @@ export default {
   font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
     "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
   border-radius: 0%;
+}
+.el-form-item {
+  margin-bottom: 8px;
 }
 .el-form-item__label {
   margin: 0%;
