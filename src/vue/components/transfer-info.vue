@@ -55,10 +55,10 @@
             <div slot="header" class="clearfix">
               <span style="color:white;">捐款注意事項</span>
             </div>
-            <el-row>
+            <el-row @click="print()">
               <el-col :span="2">
                 <el-form-item prop="isAcceptPdpa">
-                  <input type="checkbox" v-model="isAcceptPdpa" required />
+                  <el-checkbox v-model="isAcceptPdpa"></el-checkbox>
                 </el-form-item>
               </el-col>
               <el-col :span="22">
@@ -89,11 +89,26 @@
       </el-row>
       <el-row>
         <el-col style="text-align:center; margin:16px 0;">
-          <el-button type="warning" plain>上一步</el-button>
-          <el-button type="warning" plain @click="submitForm('chequeInfo')">送出</el-button>
+          <el-button type="warning" plain @click="previous()">上一步</el-button>
+          <el-button type="warning" plain @click="submitForm('transferInfo')">送出</el-button>
         </el-col>
       </el-row>
     </el-form>
+    <el-dialog
+      custom-class="dialog-message-box"
+      :title="dialog.title"
+      :visible.sync="dialog.isShow"
+      :show-close="false"
+    >
+      <span v-html="dialog.content"></span>
+      <span slot="footer" class="dialog-footer">
+        <el-row class="top-line">
+          <el-col>
+            <el-button @click="dialog.isShow = false" class="primary-color">好喔</el-button>
+          </el-col>
+        </el-row>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -101,19 +116,62 @@
 export default {
   name: "TransferInfo",
   data() {
+    var checkIsAcceptPdpaValidator = (rule, value, callback) => {
+      if (!this.isAcceptPdpa) {
+        console.log(this.isAcceptPdpa);
+        return callback(new Error("請勾選"));
+      }
+    };
     return {
       transferInfo: {
         accountLast5: null, // 匯款帳號末五碼
         name: null, // 匯款人
         donaDate: null, // 匯款日期
+        step: "4", // 回傳通知父組件切換到第4步
       },
-      isAcceptPdpa: false,
+      dialog: {
+        title: "",
+        content: "",
+        isShow: false,
+      },
+      isAcceptPdpa: false, // 同意遵守捐款注意事項
       rules: {
         accountLast5: [
           { required: true, message: "請輸入匯款帳號末五碼", trigger: "blur" },
+          { min: 5, max: 5, message: "請輸入五碼", trigger: "blur" },
+        ],
+        isAcceptPdpa: [
+          { validator: checkIsAcceptPdpaValidator, trigger: "change" },
         ],
       },
     };
+  },
+  methods: {
+    submitForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          console.log('送出')
+          this.$emit("nextStep", this.transferInfo);
+        } else {
+          console.log("error submit!!");
+          this.showMessageBox("提示", "無輸入必填欄位或格式不符！");
+          return false;
+        }
+      });
+    },
+    showMessageBox(title, content) {
+      this.dialog.title = title;
+      this.dialog.content = content;
+      this.dialog.isShow = true;
+    },
+    previous() {
+      this.transferInfo.step = "1";
+      this.$emit("nextStep", this.transferInfo);
+      console.log("上一步");
+    },
+    print() {
+      console.log(this.isAcceptPdpa);
+    }
   },
 };
 </script>

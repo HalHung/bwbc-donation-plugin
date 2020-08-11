@@ -107,6 +107,21 @@
         </el-col>
       </el-row>
     </el-form>
+    <el-dialog
+      custom-class="dialog-message-box"
+      :title="dialog.title"
+      :visible.sync="dialog.isShow"
+      :show-close="false"
+    >
+      <span v-html="dialog.content"></span>
+      <span slot="footer" class="dialog-footer">
+        <el-row class="top-line">
+          <el-col>
+            <el-button @click="dialog.isShow = false" class="primary-color">好喔</el-button>
+          </el-col>
+        </el-row>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -121,7 +136,11 @@ export default {
         cardYear: null, // 有效年
         cvc: null, // 安全碼
       },
-      //   year: null,
+      dialog: {
+        title: "",
+        content: "",
+        isShow: false,
+      },
       monthList: null,
       yearList: null,
       isAcceptPdpa: false, // 同意遵守捐款注意事項
@@ -151,9 +170,7 @@ export default {
     //年份清單
     var moment = require("moment");
     let y = moment().format("YY") - 1;
-    console.log(typeof y + y);
     this.yearList = [];
-    console.log("y:" + y);
     for (let i = 0; i < 10; i++) {
       this.yearList.push({ value: `${y++}`, label: `${y}` });
     }
@@ -175,10 +192,19 @@ export default {
           alert("submit!");
         } else {
           console.log("error submit!!");
-          alert("請填寫必要資訊!");
+          this.showMessageBox("提示", "無輸入必填欄位或格式不符！");
           return false;
         }
       });
+    },
+    previous() {
+      this.$emit("nextStep", "2");
+      console.log('上一步');
+    },
+    showMessageBox(title, content) {
+      this.dialog.title = title;
+      this.dialog.content = content;
+      this.dialog.isShow = true;
     },
   },
 };

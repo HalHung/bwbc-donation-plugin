@@ -22,10 +22,10 @@
           <span>:&nbsp;</span>
         </el-col>
         <el-col>
-          <el-form-item prop="donaMode">
-            <el-radio-group v-model="cardDonation.donaMode">
-              <el-radio label="1">單次捐款</el-radio>
-              <el-radio label="2">定期定額捐款</el-radio>
+          <el-form-item prop="paymentToolCode">
+            <el-radio-group v-model="cardDonation.paymentToolCode">
+              <el-radio label="E">單次捐款</el-radio>
+              <el-radio label="R">定期定額捐款</el-radio>
             </el-radio-group>
           </el-form-item>
         </el-col>
@@ -36,7 +36,7 @@
           <span class="required-mark">*</span>
           <span>:</span>
         </el-col>
-        <el-col v-show="cardDonation.donaMode == '2'">
+        <el-col v-show="cardDonation.paymentToolCode == 'R'">
           <el-button type="warning" plain @click="cardDonation.amount = 199" size="mini">199</el-button>
           <el-button type="warning" plain @click="cardDonation.amount = 299" size="mini">299</el-button>
           <el-button type="warning" plain @click="cardDonation.amount = 599" size="mini">599</el-button>
@@ -57,7 +57,7 @@
         </el-col>
         <el-col style="width:fit-content;">
           <span>&nbsp;元</span>
-          <span v-show="cardDonation.donaMode == '2'">/&nbsp;每月</span>
+          <span v-show="cardDonation.paymentToolCode == 'R'">/&nbsp;每月</span>
         </el-col>
       </el-row>
       <el-row>
@@ -69,14 +69,14 @@
         <el-col>
           <el-form-item prop="receipt">
             <el-radio-group v-model="cardDonation.receipt">
-              <el-radio label="1" v-show="cardDonation.donaMode == '1'">單筆</el-radio>
-              <el-radio label="2">年開</el-radio>
-              <el-radio label="3">不需寄發</el-radio>
+              <el-radio label="BY_TIME" v-show="cardDonation.paymentToolCode == 'E'">單筆</el-radio>
+              <el-radio label="ANNUAL">年開</el-radio>
+              <el-radio label="UNWANTTED">不需寄發</el-radio>
             </el-radio-group>
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row v-if="cardDonation.receipt != '3'">
+      <el-row v-if="cardDonation.receipt != 'UNWANTTED'">
         <el-col>
           <span>收據抬頭</span>
           <span class="required-mark">*</span>
@@ -93,7 +93,7 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row v-if="cardDonation.receipt != '3'">
+      <el-row v-if="cardDonation.receipt != 'UNWANTTED'">
         <el-col>
           <span>聯絡地址</span>
           <span class="required-mark">*</span>
@@ -136,11 +136,12 @@ export default {
   data() {
     return {
       cardDonation: {
-        donaMode: "1", // 捐款模式: 1單次捐款 2定期定額
+        paymentToolCode: "E", // 捐款模式: E單次捐款 R定期定額
         amount: null, // 捐款金額
-        receipt: "3", // 收據開立方式: 1單筆 2年開 3不需寄發
+        receipt: "UNWANTTED", // 收據開立方式: 1.BY_TIME單筆 2.ANNUAL年開 3.UNWANTTED不需寄發
         donatorName: null, // 收據抬頭
         address: null, // 地址
+        step: "2", // 步驟切換
       },
       dialog: {
         title: "",
@@ -148,8 +149,8 @@ export default {
         isShow: false,
       },
       rules: {
-        donaMode: [
-          { required: true, message: "請選擇捐款方式", trigger: "blur" },
+        paymentToolCode: [
+          { required: true, message: "請選擇捐款方式", trigger: "change" },
         ],
         amount: [{ required: true, message: "請輸入金額", trigger: "blur" }],
         receipt: [
@@ -163,11 +164,17 @@ export default {
   },
   methods: {
     submitForm(formName) {
+      console.log("formName:" + formName);
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.adderssValidate();
-          console.log("驗證已執行");
+          if (this.cardDonation.receipt != "UNWANTTED") {
+            this.adderssValidate();
+            console.log("驗證完成");
+          } else {
+            this.nextStep();
+          }
         } else {
+          console.log(valid);
           console.log("error submit!!");
           this.showMessageBox("提示", "無輸入必填欄位或格式不符！");
           return false;
@@ -175,13 +182,14 @@ export default {
       });
     },
     adderssValidate() {
-      if (this.cardDonation.receipt != "3") {
+      if (this.cardDonation.receipt != "UNWANTTED") {
         console.log("地址驗證");
         this.$refs["addressEdit"].$refs["address"].validate((valid) => {
           console.log(`address v:${valid}`);
           if (valid) {
             this.cardDonation.address = this.$refs["addressEdit"].address;
             // this.toEndSave();
+            this.nextStep();
           }
         });
       } else {
@@ -194,11 +202,14 @@ export default {
       this.dialog.content = content;
       this.dialog.isShow = true;
     },
+    nextStep() {
+      this.$emit("nextStep", this.cardDonation);
+    },
   },
 };
 </script>
 
-<style lang="css" scoped>
+<style lang="scss" scoped>
 #component-body {
   /* font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
     "Lucida Sans Unicode", Geneva, Verdana, sans-serif; */
@@ -229,5 +240,8 @@ span {
 .el-select-dropdown__item {
   /* font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
     "Lucida Sans Unicode", Geneva, Verdana, sans-serif; */
+}
+/deep/ .dialog-message-box {
+  min-width: 300px;
 }
 </style>

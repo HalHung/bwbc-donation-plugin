@@ -45,10 +45,10 @@
         </el-col>
         <el-col>
           <el-form-item prop="receipt">
-            <el-radio-group v-model="chequeDonation.receipt">
-              <el-radio label="1">單筆</el-radio>
-              <el-radio label="2">年開</el-radio>
-              <el-radio label="3">不需寄發</el-radio>
+            <el-radio-group v-model="cardDonation.receipt">
+              <el-radio label="BY_TIME">單筆</el-radio>
+              <el-radio label="ANNUAL">年開</el-radio>
+              <el-radio label="UNWANTTED">不需寄發</el-radio>
             </el-radio-group>
           </el-form-item>
         </el-col>
@@ -113,7 +113,7 @@ export default {
     return {
       chequeDonation: {
         amount: null, // 捐款金額
-        receipt: "3", // 收據開立方式
+        receipt: "UNWANTTED", // 收據開立方式
         donatorName: null, // 收據抬頭
         address: null, // 地址
       },
@@ -189,5 +189,8 @@ span {
 }
 .el-form-item {
   margin: 0%;
+}
+/deep/ .dialog-message-box {
+  min-width: 300px;
 }
 </style>

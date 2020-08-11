@@ -1,5 +1,5 @@
 <template>
-<!-- 捐款人資訊(共用畫面) -->
+  <!-- 捐款人資訊(共用畫面) -->
   <div id="component-body">
     <el-form :model="memberInfo" :rules="rules" ref="memberInfo">
       <el-row class="step">
@@ -31,8 +31,8 @@
         <el-col>
           <el-form-item prop="genderTypeCode">
             <el-radio-group v-model="memberInfo.genderTypeCode">
-              <el-radio label="1">男</el-radio>
-              <el-radio label="2">女</el-radio>
+              <el-radio label="MALE">男</el-radio>
+              <el-radio label="FEMALE">女</el-radio>
             </el-radio-group>
           </el-form-item>
         </el-col>
@@ -46,9 +46,10 @@
         <el-col>
           <el-form-item prop="payerTypeCode">
             <el-radio-group v-model="memberInfo.payerTypeCode">
-              <el-radio label="1">是</el-radio>
-              <el-radio label="2">否</el-radio>
-              <el-radio label="3">曾經</el-radio>
+              <el-radio label="YES">正在參加</el-radio>
+              <el-radio label="EVER">曾經參加過</el-radio>
+              <el-radio label="NO">沒有</el-radio>
+              <el-radio label="NOT_HEARD">沒聽過</el-radio>
             </el-radio-group>
           </el-form-item>
         </el-col>
@@ -62,12 +63,12 @@
         <el-col>
           <el-form-item prop="useridType">
             <el-radio-group v-model="memberInfo.useridType">
-              <el-radio label="1">全碼</el-radio>
-              <el-radio label="2">後四碼</el-radio>
+              <el-radio label="全碼">全碼</el-radio>
+              <el-radio label="末四碼">末四碼</el-radio>
             </el-radio-group>
           </el-form-item>
         </el-col>
-        <el-col v-if="memberInfo.useridType == '1'">
+        <el-col v-if="memberInfo.useridType == '全碼'">
           <el-form-item prop="sin">
             <el-input
               type="text"
@@ -102,6 +103,7 @@
               type="text"
               placeholder="範例：0987654321( 不需 - )"
               v-model="memberInfo.cellPhone"
+              maxlength="10"
             ></el-input>
           </el-form-item>
         </el-col>
@@ -129,7 +131,7 @@
         </el-col>
         <el-col>
           <el-form-item prop="email">
-            <el-input type="text" placeholder="請輸入電子信箱" v-model="memberInfo.email"></el-input>
+            <el-input type="email" placeholder="請輸入電子信箱" v-model="memberInfo.email"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -155,119 +157,140 @@
       </el-row>
       <el-row>
         <el-col style="text-align:center; margin:16px 0;">
-          <el-button type="warning" plain>上一步</el-button>
+          <el-button type="warning" plain @click="previous()">上一步</el-button>
           <el-button type="warning" plain @click="submitForm('memberInfo')">下一步</el-button>
         </el-col>
       </el-row>
     </el-form>
+    <el-dialog
+      custom-class="dialog-message-box"
+      :title="dialog.title"
+      :visible.sync="dialog.isShow"
+      :show-close="false"
+    >
+      <span v-html="dialog.content"></span>
+      <span slot="footer" class="dialog-footer">
+        <el-row class="top-line">
+          <el-col>
+            <el-button @click="dialog.isShow = false" class="primary-color">好喔</el-button>
+          </el-col>
+        </el-row>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 export default {
-    name: "MemberInfo",
+  name: "MemberInfo",
   data() {
     return {
       memberInfo: {
         name: null, // 姓名
-        genderTypeCode: "1", // 性別
-        payerTypeCode: "1", // 是否參加福智廣論研討班
-        useridType: "1", // 身分證選填全碼或末四碼
+        genderTypeCode: "MALE", // 性別
+        payerTypeCode: "YES", // 是否參加福智廣論研討班
+        useridType: "全碼", // 身分證選填全碼或末四碼
         sin: null, // 身分證字號
         sinLast4: null, // 身分證字號末四碼
         cellPhone: null, // 手機號碼
         homePhone: null, // 住家電話
         email: null, // 電子信箱
-        region: "",
+        region: null, // 居住地
+        step: "3", // 回傳通知父組件切換到第三步
+      },
+      dialog: {
+        title: "",
+        content: "",
+        isShow: false,
       },
       region: "",
       regions: [
         {
-          value: "01",
+          value: "基隆市",
           label: "基隆市",
         },
         {
-          value: "02",
+          value: "台北市",
           label: "台北市",
         },
         {
-          value: "03",
+          value: "新北市",
           label: "新北市",
         },
         {
-          value: "04",
+          value: "桃園縣",
           label: "桃園縣",
         },
         {
-          value: "05",
+          value: "新竹市",
           label: "新竹市",
         },
         {
-          value: "06",
+          value: "新竹縣",
           label: "新竹縣",
         },
         {
-          value: "07",
+          value: "苗栗縣",
           label: "苗栗縣",
         },
         {
-          value: "08",
+          value: "台中市",
           label: "台中市",
         },
         {
-          value: "09",
+          value: "彰化縣",
           label: "彰化縣",
         },
         {
-          value: "10",
+          value: "南投縣",
           label: "南投縣",
         },
         {
-          value: "11",
+          value: "雲林縣",
           label: "雲林縣",
         },
         {
-          value: "12",
+          value: "嘉義市",
           label: "嘉義市",
         },
         {
-          value: "13",
+          value: "嘉義縣",
           label: "嘉義縣",
         },
         {
-          value: "14",
+          value: "台南市",
           label: "台南市",
         },
         {
-          value: "15",
+          value: "高雄市",
           label: "高雄市",
         },
         {
-          value: "16",
+          value: "屏東縣",
           label: "屏東縣",
         },
         {
-          value: "17",
+          value: "台東縣",
           label: "台東縣",
         },
         {
-          value: "18",
+          value: "花蓮縣",
           label: "花蓮縣",
         },
         {
-          value: "19",
+          value: "宜蘭縣",
           label: "宜蘭縣",
         },
         {
-          value: "20",
+          value: "澎湖縣",
           label: "澎湖縣",
         },
         {
-          value: "21",
+          value: "金門縣",
           label: "金門縣",
         },
         {
-          value: "22",
+          value: "連江縣",
           label: "連江縣",
         },
       ],
@@ -292,6 +315,7 @@ export default {
         ],
         sin: [
           { required: true, message: "請確認身份證輸入無誤", trigger: "blur" },
+          { min: 10, max: 10, message: "身分證全碼有10碼", trigger: "blur" },
         ],
         sinLast4: [
           {
@@ -299,9 +323,11 @@ export default {
             message: "請確認身份證末4碼輸入無誤",
             trigger: "blur",
           },
+          { min: 4, max: 4, message: "請輸入4碼", trigger: "blur" },
         ],
         cellPhone: [
           { required: true, message: "請輸入行動電話", trigger: "blur" },
+          { min: 10, max: 10, message: "請確認號碼", trigger: "blur" },
         ],
         email: [{ required: true, message: "請輸入電子信箱", trigger: "blur" }],
       },
@@ -311,19 +337,39 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert("submit!");
+          this.$emit("nextStep", this.memberInfo);
         } else {
           console.log("error submit!!");
-          alert("請填寫必要資訊!");
+          this.showMessageBox("提示", "無輸入必填欄位或格式不符！");
           return false;
         }
       });
+    },
+    showMessageBox(title, content) {
+      this.dialog.title = title;
+      this.dialog.content = content;
+      this.dialog.isShow = true;
+    },
+    previous() {
+      // this.memberInfo.name = null;
+      // this.memberInfo.genderTypeCode = null;
+      // this.memberInfo.payerTypeCode = null;
+      // this.memberInfo.useridType = null;
+      // this.memberInfo.sin = null;
+      // this.memberInfo.sinLast4 = null;
+      // this.memberInfo.cellPhone = null;
+      // this.memberInfo.homePhone = null;
+      // this.memberInfo.email = null;
+      // this.memberInfo.region = null;
+      this.memberInfo.step = "1";
+      this.$emit("nextStep", this.memberInfo);
+      console.log("上一步");
     },
   },
 };
 </script>
 
-<style lang="css" scoped>
+<style lang="scss" scoped>
 #component-body {
   /* font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
     "Lucida Sans Unicode", Geneva, Verdana, sans-serif; */
@@ -351,5 +397,8 @@ span {
 }
 .el-form-item {
   margin: 0%;
+}
+/deep/ .dialog-message-box {
+  min-width: 300px;
 }
 </style>
