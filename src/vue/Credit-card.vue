@@ -8,9 +8,36 @@
       <MemberInfo @nextStep="setMemberInfo($event)"></MemberInfo>
     </div>
     <div v-if="step == '3'">
-      <CreditCardInfo @nextStep="setCreditCardInfo($event)"></CreditCardInfo>
+      <CreditCardInfo :donationInfo="bwbcCardDonate" @nextStep="setCreditCardInfo($event)"></CreditCardInfo>
     </div>
-    <div v-if="step == '4'"></div>
+    <div v-if="step == '4'">
+      <span style="font-weight:500; font-size:20px;">感謝您進行了線上捐款</span>
+      <p style="font-size:16px;">
+        謝謝您認同我們的教育理念，更為了教育環境盡一份力！
+        <br />若捐款有問題我們將主動跟您聯繫。
+      </p>
+      <div>
+        <span style="font-size:18px;">以下是您的捐款資訊：</span>
+        <p style="font-size:16px; margin:0;">捐款人：{{bwbcCardDonate.name}}</p>
+        <p style="font-size:16px; margin:0;">手機號碼：{{bwbcCardDonate.cellPhone}}</p>
+        <p style="font-size:16px; margin:0;">捐款項目：福智佛教學院</p>
+        <p style="font-size:16px; margin:0;">捐款日期：{{donaDate}}</p>
+        <p style="font-size:16px; margin:0;" v-if="bwbcCardDonate.paymentToolCode == 'R'">捐款方式：定期定額</p>
+        <p style="font-size:16px; margin:0;" v-else>捐款方式：單筆捐款</p>
+        <p style="font-size:16px; margin:0;">捐款金額：{{bwbcCardDonate.amount}}</p>
+        <p style="font-size:16px; margin:0;" v-show="bwbcCardDonate.receiptTypeCode == 'BY_TIME'">收據開立方式：單筆開立</p>
+        <p style="font-size:16px; margin:0;" v-show="bwbcCardDonate.receiptTypeCode == 'ANNUAL'">收據開立方式：年開</p>
+        <p style="font-size:16px; margin:0;" v-show="bwbcCardDonate.receiptTypeCode == 'UNWANTTED'">收據開立方式：不需寄發</p>
+        <p style="font-size:16px; margin:0;" v-if="bwbcCardDonate.receiptTypeCode != 'UNWANTTED'">收據抬頭：{{bwbcCardDonate.donatorName}}</p>
+      </div>
+      <p style="font-size:16px;">再次誠摯感謝您！</p>
+      <p style="font-size:16px;">
+        若您有疑惑，歡迎您透過以下方式聯繫我們：
+        <br />捐款專線：05-582-8222 分機6085
+        <br />福智佛教學院籌備處信箱：bwbc.po@blisswisdom.org
+        <br />
+      </p>
+    </div>
   </div>
 </template>
 
@@ -38,72 +65,86 @@ export default {
         cellPhone: null, // 手機號碼
         homePhone: null, // 住家電話
         email: null, // 電子信箱
-        card:{
-          number: null, // 信用卡號碼
+        card: {
+          cardNumber: null, // 信用卡號碼
           expMonth: null, // 有效月
           expYear: null, // 有效年
           cvc: null, // 安全碼
         },
-        donaUseCode:"Z",
-        donaItemCode:"W11"
+        donaUseCode: "Z",
+        donaItemCode: "W11",
       },
       region: null, // 居住地
       useridType: null, // 身分證選填全碼或末四碼
+      donaDate: null,
     };
   },
+  mounted() {
+    var today = new Date();
+    this.donaDate =
+      today.getFullYear() +
+      " 年 " +
+      (today.getMonth() + 1) +
+      " 月 " +
+      today.getDate() +
+      " 日";
+  },
   methods: {
-    donate(){
-      if(this.useridType == "全碼"){
+    donate() {
+      if (this.useridType == "全碼") {
         this.bwbcCardDonate.sinLast4 = this.bwbcCardDonate.sin.substr(6, 4);
-      }else {
+      } else {
         this.bwbcCardDonate.sin = null;
       }
-      if(this.bwbcCardDonate.receiptTypeCode == "UNWANTTED"){
+      if (this.bwbcCardDonate.receiptTypeCode == "UNWANTTED") {
         this.bwbcCardDonate.donatorName = this.bwbcCardDonate.name;
-        this.bwbcCardDonate.address = {addressType:"TAIWAN",city:this.region}
+        this.bwbcCardDonate.address = {
+          addressType: "TAIWAN",
+          city: this.region,
+        };
       }
-      API.donate.wpDonateCard(this.bwbcCardDonate).then(res=>{
-          let data = res.data;
-          if (data.status == 200 && data.message == "成功取得3D HTML") {
-            var body2 = data.data.Result;
-            document.body.innerHTML = body2;
-            document.forms[0].submit();
-          } else if (data.status == 200) {
-            this.step=4;
-          } else {
-            console.log(`data.pageChange:${data.pageChange}`);
-            switch (data.pageChange) {
-              case "NEXT":
-                this.step=4;
-                var t = "提示";
-                var c = data.message;
-                if (data.message.includes(":")) {
-                  t = data.message.split(":")[0];
-                  c = data.message.split(":")[1];
-                }
-                this.showMessageBox(t, c);
-                break;
-              case "NONE":
-                var t = "提示";
-                var c = data.message;
-                if (data.message.includes(":")) {
-                  t = data.message.split(":")[0];
-                  c = data.message.split(":")[1];
-                }
-                this.showMessageBox(t, c);
-                break;
-              default:
-                var t = "提示";
-                var c = data.message;
-                if (data.message.includes(":")) {
-                  t = data.message.split(":")[0];
-                  c = data.message.split(":")[1];
-                }
-                this.showMessageBox(t, c);
-                break;
-            }
+      API.donate.wpDonateCard(this.bwbcCardDonate).then((res) => {
+        let data = res.data;
+        if (data.status == 200 && data.message == "成功取得3D HTML") {
+          var body2 = data.data.Result;
+          document.body.innerHTML = body2;
+          document.forms[0].submit();
+        } else if (data.status == 200) {
+          this.step = "4";
+        } else {
+          console.log(`data.pageChange:${data.pageChange}`);
+          switch (data.pageChange) {
+            case "NEXT":
+              this.step = "4";
+              var t = "提示";
+              var c = data.message;
+              if (data.message.includes(":")) {
+                t = data.message.split(":")[0];
+                c = data.message.split(":")[1];
+              }
+              this.showMessageBox(t, c);
+              break;
+            case "NONE":
+              var t = "提示";
+              var c = data.message;
+              if (data.message.includes(":")) {
+                t = data.message.split(":")[0];
+                c = data.message.split(":")[1];
+              }
+              this.showMessageBox(t, c);
+              break;
+            default:
+              var t = "提示";
+              var c = data.message;
+              if (data.message.includes(":")) {
+                t = data.message.split(":")[0];
+                c = data.message.split(":")[1];
+              }
+              this.showMessageBox(t, c);
+              break;
           }
-      })
+        }
+      });
     },
     setCardDonationInfo(cardDonationInfo) {
       this.bwbcCardDonate.paymentToolCode = cardDonationInfo.paymentToolCode;
@@ -127,18 +168,18 @@ export default {
       this.step = memberInfo.step;
     },
     setCreditCardInfo(creditCardInfo) {
-      this.bwbcCardDonate.card.number = creditCardInfo.number;
+      this.bwbcCardDonate.card.cardNumber = creditCardInfo.cardNumber;
       this.bwbcCardDonate.card.expMonth = creditCardInfo.cardMonth;
       this.bwbcCardDonate.card.expYear = creditCardInfo.cardYear;
       this.bwbcCardDonate.card.cvc = creditCardInfo.cvc;
-      // this.step = cardDonationInfo.step;
-      this.donate()
+      // this.step = creditCardInfo.step;
+      this.donate();
     },
     showMessageBox(title, content) {
       this.dialog.title = title;
       this.dialog.content = content;
       this.dialog.isShow = true;
-    }
+    },
   },
 };
 </script>

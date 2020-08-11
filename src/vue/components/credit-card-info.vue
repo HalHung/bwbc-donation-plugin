@@ -1,5 +1,5 @@
 <template>
-<!-- 信用卡資訊(信用卡捐款流程3) -->
+  <!-- 信用卡資訊(信用卡捐款流程3) -->
   <div id="component-body">
     <el-form :model="card" :rules="rules" ref="creditCardInfo">
       <el-row class="step">
@@ -18,7 +18,7 @@
         </el-col>
         <el-col>
           <el-form-item prop="cardNumber">
-            <el-input type="text" placeholder="請輸入信用卡卡號" v-model="card.number"></el-input>
+            <el-input type="text" placeholder="請輸入信用卡卡號" v-model="card.cardNumber"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -28,14 +28,14 @@
           <span class="required-mark">*</span>
           <span>:</span>
         </el-col>
-        <el-col  style="width:fit-content;">
+        <el-col style="width:fit-content;">
           <el-form-item prop="cardMonth">
             <el-select v-model="card.cardMonth" placeholder="月">
               <el-option v-for="m in monthList" :key="m.value" :label="m.label" :value="m.value"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col  style="width:fit-content;">
+        <el-col style="width:fit-content;">
           <el-form-item prop="cardYear">
             <el-select v-model="card.cardYear" placeholder="年">
               <el-option v-for="y in yearList" :key="y.value" :label="y.label" :value="y.value"></el-option>
@@ -50,7 +50,7 @@
           <span>(CVC):</span>
         </el-col>
         <el-col>
-          <el-form-item prop="cardCvc">
+          <el-form-item prop="cvc">
             <el-input type="text" v-model="card.cvc" placeholder="卡背三碼" maxlength="3" minlength="3"></el-input>
           </el-form-item>
         </el-col>
@@ -58,8 +58,9 @@
       <el-row>
         <el-col>
           <span class="reminder">捐款金額：</span>
-          <span class="reminder">xxx</span>
-          <span class="reminder">(定期定額)</span>
+          <span class="reminder">{{donationInfo.amount}}</span>
+          <span class="reminder" v-if="donationInfo.paymentToolCode == 'R'">(定期定額)</span>
+          <span class="reminder" v-else>(單筆捐款)</span>
         </el-col>
       </el-row>
       <el-row>
@@ -71,7 +72,7 @@
             <el-row>
               <el-col :span="2">
                 <el-form-item prop="isAcceptPdpa">
-                  <input type="checkbox" v-model="isAcceptPdpa" required />
+                  <el-checkbox v-model="isAcceptPdpa"></el-checkbox>
                 </el-form-item>
               </el-col>
               <el-col :span="22">
@@ -102,7 +103,7 @@
       </el-row>
       <el-row>
         <el-col style="text-align:center; margin:16px 0;">
-          <el-button type="warning" plain>上一步</el-button>
+          <el-button type="warning" plain @click="previous()">上一步</el-button>
           <el-button type="warning" plain @click="submitForm('creditCardInfo')">送出</el-button>
         </el-col>
       </el-row>
@@ -128,13 +129,24 @@
 <script>
 export default {
   name: "CreditCardInfo",
+  props: {
+    donationInfo: Object,
+  },
   data() {
+    var checkIsAcceptPdpaValidator = (rule, value, callback) => {
+      if (!this.isAcceptPdpa) {
+        return callback(new Error("請勾選"));
+      } else {
+        return callback();
+      }
+    };
     return {
       card: {
-        number: null, // 信用卡號碼
+        cardNumber: null, // 信用卡號碼
         cardMonth: null, // 有效月
         cardYear: null, // 有效年
         cvc: null, // 安全碼
+        step: "4",
       },
       dialog: {
         title: "",
@@ -154,14 +166,9 @@ export default {
         cardYear: [
           { required: true, message: "請選擇有效年", trigger: "change" },
         ],
-        cardCvc: [{ required: true, message: "請輸入安全碼", trigger: "blur" }],
+        cvc: [{ required: true, message: "請輸入安全碼", trigger: "blur" }],
         isAcceptPdpa: [
-          {
-            type: "array",
-            required: true,
-            message: "請勾選",
-            trigger: "change",
-          },
+          { validator: checkIsAcceptPdpaValidator, trigger: "change" },
         ],
       },
     };
@@ -189,7 +196,8 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert("submit!");
+          console.log("送出");
+          this.$emit("nextStep", this.card);
         } else {
           console.log("error submit!!");
           this.showMessageBox("提示", "無輸入必填欄位或格式不符！");
@@ -198,8 +206,9 @@ export default {
       });
     },
     previous() {
-      this.$emit("nextStep", "2");
-      console.log('上一步');
+      this.card.step = "2";
+      this.$emit("nextStep", this.card);
+      console.log("上一步");
     },
     showMessageBox(title, content) {
       this.dialog.title = title;
@@ -250,7 +259,7 @@ span {
     "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
 }
 /deep/ .el-card__header {
-  background-color: #BDA268;
+  background-color: #bda268;
 }
 .el-form-item {
   margin: 0%;

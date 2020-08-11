@@ -25,7 +25,7 @@
           <el-form-item prop="paymentToolCode">
             <el-radio-group v-model="cardDonation.paymentToolCode">
               <el-radio label="E">單次捐款</el-radio>
-              <el-radio label="R">定期定額捐款</el-radio>
+              <el-radio label="R" @click="changeReceipt()">定期定額捐款</el-radio>
             </el-radio-group>
           </el-form-item>
         </el-col>
@@ -69,7 +69,7 @@
         <el-col>
           <el-form-item prop="receipt">
             <el-radio-group v-model="cardDonation.receipt">
-              <el-radio label="BY_TIME" v-show="cardDonation.paymentToolCode == 'E'">單筆</el-radio>
+              <el-radio label="BY_TIME" v-if="cardDonation.paymentToolCode == 'E'">單筆</el-radio>
               <el-radio label="ANNUAL">年開</el-radio>
               <el-radio label="UNWANTTED">不需寄發</el-radio>
             </el-radio-group>
@@ -162,9 +162,15 @@ export default {
       },
     };
   },
+  watch: {
+    "cardDonation.paymentToolCode"() {
+      if (this.cardDonation.paymentToolCode == "R") {
+        this.cardDonation.receipt = "UNWANTTED";
+      }
+    },
+  },
   methods: {
     submitForm(formName) {
-      console.log("formName:" + formName);
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (this.cardDonation.receipt != "UNWANTTED") {
