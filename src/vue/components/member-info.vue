@@ -4,12 +4,12 @@
     <el-form :model="memberInfo" :rules="rules" ref="memberInfo">
       <el-row class="step">
         <el-steps :active="2" finish-status="success">
-          <el-step title="步驟１"></el-step>
-          <el-step title="步驟２"></el-step>
-          <el-step title="步驟３"></el-step>
+          <el-step title="步驟１" icon="el-icon-s-order"></el-step>
+          <el-step title="步驟２" icon="el-icon-s-custom"></el-step>
+          <el-step title="步驟３" icon="el-icon-bank-card"></el-step>
         </el-steps>
       </el-row>
-      <p>個人資訊</p>
+      <p style="color:#9c8044; font-weight:500; font-size:24px;">個人資訊</p>
       <el-row>
         <el-col>
           <span>姓名</span>
@@ -63,8 +63,8 @@
         <el-col>
           <el-form-item prop="useridType">
             <el-radio-group v-model="memberInfo.useridType">
-              <el-radio label="全碼">全碼</el-radio>
-              <el-radio label="末四碼">末四碼</el-radio>
+              <el-radio label="全碼" style="margin-bottom:0;">全碼</el-radio>
+              <el-radio label="末四碼" style="margin-bottom:0;">末四碼</el-radio>
             </el-radio-group>
           </el-form-item>
         </el-col>
@@ -135,7 +135,7 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row>
+      <el-row v-if="donationInfo.receiptTypeCode == 'UNWANTTED'">
         <el-col>
           <span>居住地(區域性活動通知用)：</span>
           <el-select v-model="memberInfo.region" placeholder="請選擇">
@@ -148,7 +148,9 @@
           </el-select>
         </el-col>
       </el-row>
-      <el-row>
+      <el-row
+        style="background-color: #d8ba5f33; padding: 8px 16px 0; border-radius: 4px; border: solid 1px #decb93;"
+      >
         <el-col :span="2">
           <el-form-item prop="acceptDeclaration">
             <el-checkbox v-model="acceptDeclaration"></el-checkbox>
@@ -157,15 +159,15 @@
         <el-col :span="22">
           <span>
             請詳閱
-            <a @click="declaration = true" style="color:blue;">個資聲明</a>
+            <a @click="declaration = true" style="color:blue; text-decoration:none;">《個資聲明》</a>
             ，進行下一步即表示同意個資聲明。
           </span>
         </el-col>
       </el-row>
       <el-row>
         <el-col style="text-align:center; margin:16px 0;">
-          <el-button type="warning" plain @click="previous()">上一步</el-button>
-          <el-button type="warning" plain @click="submitForm('memberInfo')">下一步</el-button>
+          <el-button @click="previous()">上一步</el-button>
+          <el-button @click="submitForm('memberInfo')">下一步</el-button>
         </el-col>
       </el-row>
     </el-form>
@@ -249,7 +251,7 @@
             </el-col>
           </el-row>
           <el-button @click="declaration = false">取消</el-button>
-          <el-button type="primary" @click="next()" :disabled="!acceptDeclaration">下一步</el-button>
+          <el-button @click="next()" :disabled="!acceptDeclaration">下一步</el-button>
         </el-footer>
       </el-container>
     </el-dialog>
@@ -260,6 +262,9 @@
 import { CheckFunctions } from "../../utils/CheckFunctions.js";
 export default {
   name: "MemberInfo",
+  props: {
+    donationInfo: Object,
+  },
   data() {
     // 身分證全碼驗證
     var checkSinValidator = (rule, value, callback) => {
@@ -490,10 +495,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#component-body {
-  /* font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
-    "Lucida Sans Unicode", Geneva, Verdana, sans-serif; */
-}
 span {
   font-size: 16px;
   font-weight: bold;
@@ -503,10 +504,6 @@ span {
 }
 .el-row {
   margin: 16px 0;
-}
-.el-input__inner {
-  /* font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
-    "Lucida Sans Unicode", Geneva, Verdana, sans-serif; */
 }
 .step {
   line-height: 0%;
@@ -523,5 +520,18 @@ span {
 }
 /deep/ .el-dialog__body {
   padding: 0 20px 30px;
+}
+/deep/ .el-button {
+  color: #9c8044;
+  border-color: #9c8044;
+  background-color: #fff9ee;
+  &:hover {
+    color: white;
+    background-color: #9c8044;
+    border-color: #9c8044;
+  }
+}
+.el-radio /deep/ .el-radio__label {
+  font-size: 16px;
 }
 </style>

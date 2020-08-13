@@ -1,23 +1,23 @@
 <template>
   <!-- 信用卡捐款 -->
-  <div id="body" v-loading="loading">
+  <div id="body" v-loading="loading" element-loading-text="努力傳送資料中...">
     <div v-if="step == '1'">
       <CardDonationInfo @nextStep="setCardDonationInfo($event)"></CardDonationInfo>
     </div>
     <div v-if="step == '2'">
-      <MemberInfo @nextStep="setMemberInfo($event)"></MemberInfo>
+      <MemberInfo :donationInfo="bwbcCardDonate" @nextStep="setMemberInfo($event)"></MemberInfo>
     </div>
     <div v-if="step == '3'">
       <CreditCardInfo :donationInfo="bwbcCardDonate" @nextStep="setCreditCardInfo($event)"></CreditCardInfo>
     </div>
     <div v-if="step == '4'">
-      <span style="font-weight:500; font-size:20px;">感謝您進行了線上捐款</span>
+      <span style="font-weight:500; font-size:20px; color:#9c8044;">感謝您進行了線上捐款</span>
       <p style="font-size:16px;">
         謝謝您認同我們的教育理念，更為了教育環境盡一份力！
         <br />若捐款有問題我們將主動跟您聯繫。
       </p>
       <div>
-        <span style="font-size:18px;">以下是您的捐款資訊：</span>
+        <span style="font-size:18px; color:#9c8044;">以下是您的捐款資訊：</span>
         <p style="font-size:16px; margin:0;">捐款人：{{bwbcCardDonate.name}}</p>
         <p style="font-size:16px; margin:0;">手機號碼：{{bwbcCardDonate.cellPhone}}</p>
         <p style="font-size:16px; margin:0;">捐款項目：福智佛教學院</p>

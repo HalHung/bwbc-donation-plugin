@@ -4,12 +4,12 @@
     <el-form :model="card" :rules="rules" ref="creditCardInfo">
       <el-row class="step">
         <el-steps :active="3" finish-status="success">
-          <el-step title="步驟１"></el-step>
-          <el-step title="步驟２"></el-step>
-          <el-step title="步驟３"></el-step>
+          <el-step title="步驟１" icon="el-icon-s-order"></el-step>
+          <el-step title="步驟２" icon="el-icon-s-custom"></el-step>
+          <el-step title="步驟３" icon="el-icon-bank-card"></el-step>
         </el-steps>
       </el-row>
-      <p>信用卡資訊</p>
+      <p style="color:#9c8044; font-weight:500; font-size:24px;">信用卡資訊</p>
       <el-row>
         <el-col>
           <span>信用卡卡號</span>
@@ -34,14 +34,14 @@
           <span class="required-mark">*</span>
           <span>:</span>
         </el-col>
-        <el-col style="width:fit-content;">
+        <el-col :span="12">
           <el-form-item prop="cardMonth">
             <el-select v-model="card.cardMonth" placeholder="月">
               <el-option v-for="m in monthList" :key="m.value" :label="m.label" :value="m.value"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col style="width:fit-content;">
+        <el-col :span="12">
           <el-form-item prop="cardYear">
             <el-select v-model="card.cardYear" placeholder="年">
               <el-option v-for="y in yearList" :key="y.value" :label="y.label" :value="y.value"></el-option>
@@ -87,8 +87,8 @@
                   <a
                     href="https://bwbc.blisswisdom.org/%e3%80%90%e6%8d%90%e6%ac%be%e6%b3%a8%e6%84%8f%e4%ba%8b%e9%a0%85%e3%80%91/"
                     target="_blank"
-                    style="color:#2B63E0;"
-                  >捐款注意事項</a>及其他有關著作權、版權、商標專用權、網路智慧財產權等之法律規定。
+                    style="color:#2B63E0; text-decoration:none;"
+                  >《捐款注意事項》</a>及其他有關著作權、版權、商標專用權、網路智慧財產權等之法律規定。
                 </label>
               </el-col>
             </el-row>
@@ -99,8 +99,8 @@
                   <a
                     href="https://www.blisswisdom.org/donate/qanda#q2"
                     target="_blank"
-                    style="color:#2B63E0;"
-                  >捐款徵信說明</a>
+                    style="color:#2B63E0; text-decoration:none;"
+                  >《捐款徵信說明》</a>
                 </label>
               </el-col>
             </el-row>
@@ -109,8 +109,8 @@
       </el-row>
       <el-row>
         <el-col style="text-align:center; margin:16px 0;">
-          <el-button type="warning" plain @click="previous()">上一步</el-button>
-          <el-button type="warning" plain @click="submitForm('creditCardInfo')">送出</el-button>
+          <el-button @click="previous()">上一步</el-button>
+          <el-button @click="submitForm('creditCardInfo')">送出</el-button>
         </el-col>
       </el-row>
     </el-form>
@@ -186,7 +186,8 @@ export default {
     let y = moment().format("YY") - 1;
     this.yearList = [];
     for (let i = 0; i < 10; i++) {
-      this.yearList.push({ value: `${y++}`, label: `${y}` });
+      this.yearList.push({ value: `${y}`, label: `${y}` });
+      y++;
     }
 
     //月份清單
@@ -227,10 +228,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#component-body {
-  /* font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
-    "Lucida Sans Unicode", Geneva, Verdana, sans-serif; */
-}
 span {
   font-size: 16px;
   font-weight: bold;
@@ -240,10 +237,6 @@ span {
 }
 .el-row {
   margin: 16px 0;
-}
-.el-input__inner {
-  /* font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
-    "Lucida Sans Unicode", Geneva, Verdana, sans-serif; */
 }
 .step {
   line-height: 0%;
@@ -270,5 +263,15 @@ span {
 }
 .el-form-item {
   margin: 0%;
+}
+/deep/ .el-button {
+  color: #9c8044;
+  border-color: #9c8044;
+  background-color: #fff9ee;
+  &:hover {
+    color: white;
+    background-color: #9c8044;
+    border-color: #9c8044;
+  }
 }
 </style>

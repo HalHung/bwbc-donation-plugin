@@ -4,12 +4,12 @@
     <el-form :model="cardDonation" :rules="rules" ref="cardDonation">
       <el-row class="step">
         <el-steps :active="1" finish-status="success">
-          <el-step title="步驟１"></el-step>
-          <el-step title="步驟２"></el-step>
-          <el-step title="步驟３"></el-step>
+          <el-step title="步驟１" icon="el-icon-s-order"></el-step>
+          <el-step title="步驟２" icon="el-icon-s-custom"></el-step>
+          <el-step title="步驟３" icon="el-icon-bank-card"></el-step>
         </el-steps>
       </el-row>
-      <p>捐款資訊</p>
+      <p style="color:#9c8044; font-weight:500; font-size:24px;">捐款資訊</p>
       <el-row>
         <el-col>
           <span class="title">捐款項目：福智佛教學院</span>
@@ -37,18 +37,18 @@
           <span>:</span>
         </el-col>
         <el-col v-show="cardDonation.paymentToolCode == 'R'">
-          <el-button type="warning" plain @click="cardDonation.amount = 199" size="mini">199</el-button>
-          <el-button type="warning" plain @click="cardDonation.amount = 299" size="mini">299</el-button>
-          <el-button type="warning" plain @click="cardDonation.amount = 599" size="mini">599</el-button>
-          <el-button type="warning" plain @click="cardDonation.amount = 799" size="mini">799</el-button>
-          <el-button type="warning" plain @click="cardDonation.amount = 999" size="mini">999</el-button>
+          <el-button @click="cardDonation.amount = 199" size="mini">199</el-button>
+          <el-button @click="cardDonation.amount = 299" size="mini">299</el-button>
+          <el-button @click="cardDonation.amount = 599" size="mini">599</el-button>
+          <el-button @click="cardDonation.amount = 799" size="mini">799</el-button>
+          <el-button @click="cardDonation.amount = 999" size="mini">999</el-button>
         </el-col>
         <el-col style="width:fit-content; margin-top:8px;">
           <el-form-item prop="amount">
             <el-input-number
               v-model="cardDonation.amount"
               controls-position="right"
-              :min="1"
+              :min="100"
               :max="100000"
               placeholder="請輸入金額"
               :step="100"
@@ -106,7 +106,7 @@
       </el-row>
       <el-row>
         <el-col style="text-align:center; margin:16px 0;">
-          <el-button type="warning" plain @click="submitForm('cardDonation')">下一步</el-button>
+          <el-button @click="submitForm('cardDonation')">下一步</el-button>
         </el-col>
       </el-row>
     </el-form>
@@ -216,10 +216,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#component-body {
-  /* font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
-    "Lucida Sans Unicode", Geneva, Verdana, sans-serif; */
-}
 span {
   font-size: 16px;
   font-weight: bold;
@@ -230,24 +226,30 @@ span {
 .el-row {
   margin: 16px 0;
 }
-.el-input__inner {
-  /* font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
-    "Lucida Sans Unicode", Geneva, Verdana, sans-serif; */
-}
 .step {
   line-height: 0%;
 }
-.el-button + .el-button {
-  margin: 0%;
+/deep/ .el-button {
+  color: #9c8044;
+  border-color: #9c8044;
+  background-color: #fff9ee;
+  &:hover {
+    color: white;
+    background-color: #9c8044;
+    border-color: #9c8044;
+  }
 }
 .el-form-item {
   margin: 0%;
 }
-.el-select-dropdown__item {
-  /* font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
-    "Lucida Sans Unicode", Geneva, Verdana, sans-serif; */
-}
 /deep/ .dialog-message-box {
   min-width: 300px;
+}
+.el-radio /deep/ .el-radio__label {
+  font-size: 16px;
+}
+// build 後被押上的樣式把它改掉
+.el-button + .el-button {
+  margin: 0;
 }
 </style>
