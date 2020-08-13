@@ -50,7 +50,7 @@
         </el-row>
         <!-- <el-form-item label="郵遞區號" class="mb-0">{{ address.zipCode }}</el-form-item> -->
         <el-row>
-          <el-col :xs="12" :sm="4">
+          <el-col :xs="12" :sm="8">
             <el-form-item>
               <el-col class="ad-small-input">
                 <el-input v-model="address.lane" class="small-input" maxlength="20"></el-input>
@@ -58,7 +58,7 @@
               <el-col class="ad-small-label">巷</el-col>
             </el-form-item>
           </el-col>
-          <el-col :xs="12" :sm="4">
+          <el-col :xs="12" :sm="8">
             <el-form-item>
               <el-col class="ad-small-input">
                 <el-input v-model="address.alley" maxlength="20"></el-input>
@@ -66,7 +66,7 @@
               <el-col class="ad-small-label">弄</el-col>
             </el-form-item>
           </el-col>
-          <el-col :xs="12" :sm="4">
+          <el-col :xs="12" :sm="8">
             <el-form-item>
               <el-col class="ad-small-input">
                 <el-input v-model="address.subAlley" maxlength="20"></el-input>
@@ -74,7 +74,7 @@
               <el-col class="ad-small-label">衖</el-col>
             </el-form-item>
           </el-col>
-          <el-col :xs="12" :sm="4">
+          <el-col :xs="12" :sm="8">
             <el-form-item>
               <el-col class="ad-small-input">
                 <el-input v-model="address.number" maxlength="20"></el-input>
@@ -82,7 +82,7 @@
               <el-col class="ad-small-label">號</el-col>
             </el-form-item>
           </el-col>
-          <el-col :xs="12" :sm="4">
+          <el-col :xs="12" :sm="8">
             <el-form-item class="mb-0">
               <el-col class="ad-small-input">
                 <el-input v-model="address.floor" maxlength="20"></el-input>
@@ -90,7 +90,7 @@
               <el-col class="ad-small-label">樓</el-col>
             </el-form-item>
           </el-col>
-          <el-col :xs="12" :sm="4">
+          <el-col :xs="12" :sm="8">
             <el-form-item class="mb-0">
               <el-col class="ad-small-input">
                 <el-input v-model="address.room" maxlength="20"></el-input>
@@ -296,14 +296,12 @@ export default {
   }
 }
 .ad-small-label {
+  padding-left: 4px;
   width: 20px !important;
 }
 
 .ad-small-input {
-  width: 100px !important;
-  input {
-    width: 90px !important;
-  }
+  width: 85% !important;
 }
 
 .font-size-title {
