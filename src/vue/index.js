@@ -15,6 +15,7 @@ import CreditCard from './Credit-card';
 import Cheque from './Cheque';
 import BankTransfer from './Bank-transfer';
 import Test from './test.vue';
+import CardSuccess from './Card-success';
 Vue.use(ElementUI);
 Vue.use(BootstrapVue);
 Vue.use(IconsPlugin);
@@ -54,4 +55,8 @@ new Vue({
 new Vue({
   el: '#vwp-plugin-Bank-transfer',
   render: h => h(BankTransfer),
+})
+new Vue({
+  el: '#vwp-plugin-Card-success',
+  render: h => h(CardSuccess),
 })

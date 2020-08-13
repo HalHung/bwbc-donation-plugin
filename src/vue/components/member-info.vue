@@ -257,10 +257,51 @@
 </template>
 
 <script>
-import { CheckFunctions } from "../../utils/CheckFunctions";
+import { CheckFunctions } from "../../utils/CheckFunctions.js";
 export default {
   name: "MemberInfo",
   data() {
+    // 身分證全碼驗證
+    var checkSinValidator = (rule, value, callback) => {
+      if (!value && this.memberInfo.useridType == "全碼") {
+        return callback(new Error("身分證全碼不能為空"));
+      } else if (!value) {
+        return callback();
+      }
+      if (!CheckFunctions.checkSin(value)) {
+        return callback(new Error("請輸入正確身分證"));
+      } else {
+        return callback();
+      }
+    };
+    // 身分證末四碼驗證
+    var checkSinLast4Validator = (rule, value, callback) => {
+      let reg = new RegExp(/^\d{4}$/);
+      if (!value) {
+        return callback(new Error("身分證後四碼不能為空"));
+      } else if (!reg.test(value)) {
+        return callback(new Error("請輸入正確身分證後四碼"));
+      } else {
+        return callback();
+      }
+    };
+    // 手機號碼驗證
+    var checkCellPhoneValidator = (rule, value, callback) => {
+      if (!CheckFunctions.checkCellPhone(value)) {
+        return callback(new Error("手機格式錯誤"));
+      } else {
+        return callback();
+      }
+    };
+    // 電子信箱驗證
+    var checkEmailValidator = (rule, value, callback) => {
+      if (!CheckFunctions.checkEmail(value)) {
+        return callback(new Error("信箱格式錯誤"));
+      } else {
+        return callback();
+      }
+    };
+    // 個資聲明勾選驗證
     var checkAcceptDeclarationValidator = (rule, value, callback) => {
       if (!this.acceptDeclaration) {
         return callback(new Error("請勾選"));
@@ -399,23 +440,20 @@ export default {
             trigger: "change",
           },
         ],
-        sin: [
-          { required: true, message: "請確認身份證輸入無誤", trigger: "blur" },
-          { min: 10, max: 10, message: "身分證全碼有10碼", trigger: "blur" },
-        ],
+        sin: [{ validator: checkSinValidator, trigger: "blur" }],
         sinLast4: [
-          {
-            required: true,
-            message: "請確認身份證末4碼輸入無誤",
-            trigger: "blur",
-          },
-          { min: 4, max: 4, message: "請輸入4碼", trigger: "blur" },
+          { required: true, message: "請輸入身分證末四碼", trigger: "blur" },
+          { min: 4, max: 4, message: "長度為4", trigger: "blur" },
+          { validator: checkSinLast4Validator, trigger: "blur" },
         ],
         cellPhone: [
           { required: true, message: "請輸入行動電話", trigger: "blur" },
-          { min: 10, max: 10, message: "請確認號碼", trigger: "blur" },
+          { validator: checkCellPhoneValidator, trigger: "blur" },
         ],
-        email: [{ required: true, message: "請輸入電子信箱", trigger: "blur" }],
+        email: [
+          { required: true, message: "請輸入電子信箱", trigger: "blur" },
+          { validator: checkEmailValidator, trigger: "blur" },
+        ],
         acceptDeclaration: [
           { validator: checkAcceptDeclarationValidator, trigger: "change" },
         ],
@@ -440,16 +478,6 @@ export default {
       this.dialog.isShow = true;
     },
     previous() {
-      // this.memberInfo.name = null;
-      // this.memberInfo.genderTypeCode = null;
-      // this.memberInfo.payerTypeCode = null;
-      // this.memberInfo.useridType = null;
-      // this.memberInfo.sin = null;
-      // this.memberInfo.sinLast4 = null;
-      // this.memberInfo.cellPhone = null;
-      // this.memberInfo.homePhone = null;
-      // this.memberInfo.email = null;
-      // this.memberInfo.region = null;
       this.memberInfo.step = "1";
       this.$emit("nextStep", this.memberInfo);
       console.log("上一步");

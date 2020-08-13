@@ -18,7 +18,13 @@
         </el-col>
         <el-col>
           <el-form-item prop="cardNumber">
-            <el-input type="text" placeholder="請輸入信用卡卡號" v-model="card.cardNumber"></el-input>
+            <el-input
+              type="text"
+              placeholder="請輸入信用卡卡號"
+              v-model="card.cardNumber"
+              maxlength="16"
+              minlength="16"
+            ></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -159,6 +165,7 @@ export default {
       rules: {
         cardNumber: [
           { required: true, message: "請輸入卡號", trigger: "blur" },
+          { min: 16, max: 16, message: "卡號有16碼", trigger: "blur" },
         ],
         cardMonth: [
           { required: true, message: "請選擇有效月", trigger: "change" },

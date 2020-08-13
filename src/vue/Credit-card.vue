@@ -1,6 +1,6 @@
 <template>
   <!-- 信用卡捐款 -->
-  <div id="body">
+  <div id="body" v-loading="loading">
     <div v-if="step == '1'">
       <CardDonationInfo @nextStep="setCardDonationInfo($event)"></CardDonationInfo>
     </div>
@@ -25,10 +25,22 @@
         <p style="font-size:16px; margin:0;" v-if="bwbcCardDonate.paymentToolCode == 'R'">捐款方式：定期定額</p>
         <p style="font-size:16px; margin:0;" v-else>捐款方式：單筆捐款</p>
         <p style="font-size:16px; margin:0;">捐款金額：{{bwbcCardDonate.amount}}</p>
-        <p style="font-size:16px; margin:0;" v-show="bwbcCardDonate.receiptTypeCode == 'BY_TIME'">收據開立方式：單筆開立</p>
-        <p style="font-size:16px; margin:0;" v-show="bwbcCardDonate.receiptTypeCode == 'ANNUAL'">收據開立方式：年開</p>
-        <p style="font-size:16px; margin:0;" v-show="bwbcCardDonate.receiptTypeCode == 'UNWANTTED'">收據開立方式：不需寄發</p>
-        <p style="font-size:16px; margin:0;" v-if="bwbcCardDonate.receiptTypeCode != 'UNWANTTED'">收據抬頭：{{bwbcCardDonate.donatorName}}</p>
+        <p
+          style="font-size:16px; margin:0;"
+          v-show="bwbcCardDonate.receiptTypeCode == 'BY_TIME'"
+        >收據開立方式：單筆開立</p>
+        <p
+          style="font-size:16px; margin:0;"
+          v-show="bwbcCardDonate.receiptTypeCode == 'ANNUAL'"
+        >收據開立方式：年開</p>
+        <p
+          style="font-size:16px; margin:0;"
+          v-show="bwbcCardDonate.receiptTypeCode == 'UNWANTTED'"
+        >收據開立方式：不需寄發</p>
+        <p
+          style="font-size:16px; margin:0;"
+          v-if="bwbcCardDonate.receiptTypeCode != 'UNWANTTED'"
+        >收據抬頭：{{bwbcCardDonate.donatorName}}</p>
       </div>
       <p style="font-size:16px;">再次誠摯感謝您！</p>
       <p style="font-size:16px;">
@@ -38,6 +50,21 @@
         <br />
       </p>
     </div>
+    <el-dialog
+      custom-class="dialog-message-box"
+      :title="dialog.title"
+      :visible.sync="dialog.isShow"
+      :show-close="false"
+    >
+      <span v-html="dialog.content"></span>
+      <span slot="footer" class="dialog-footer">
+        <el-row class="top-line">
+          <el-col>
+            <el-button @click="dialog.isShow = false" class="primary-color">好喔</el-button>
+          </el-col>
+        </el-row>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -66,7 +93,7 @@ export default {
         homePhone: null, // 住家電話
         email: null, // 電子信箱
         card: {
-          cardNumber: null, // 信用卡號碼
+          number: null, // 信用卡號碼
           expMonth: null, // 有效月
           expYear: null, // 有效年
           cvc: null, // 安全碼
@@ -77,6 +104,12 @@ export default {
       region: null, // 居住地
       useridType: null, // 身分證選填全碼或末四碼
       donaDate: null,
+      dialog: {
+        title: "",
+        content: "",
+        isShow: false,
+      },
+      loading: false,
     };
   },
   mounted() {
@@ -91,6 +124,8 @@ export default {
   },
   methods: {
     donate() {
+      this.loading = !this.loading;
+      console.log("loading");
       if (this.useridType == "全碼") {
         this.bwbcCardDonate.sinLast4 = this.bwbcCardDonate.sin.substr(6, 4);
       } else {
@@ -98,10 +133,12 @@ export default {
       }
       if (this.bwbcCardDonate.receiptTypeCode == "UNWANTTED") {
         this.bwbcCardDonate.donatorName = this.bwbcCardDonate.name;
-        this.bwbcCardDonate.address = {
-          addressType: "TAIWAN",
-          city: this.region,
-        };
+        if (this.region !== null) {
+          this.bwbcCardDonate.address = {
+            addressType: "TAIWAN",
+            city: this.region,
+          };
+        }
       }
       API.donate.wpDonateCard(this.bwbcCardDonate).then((res) => {
         let data = res.data;
@@ -144,6 +181,8 @@ export default {
               break;
           }
         }
+        this.loading = !this.loading;
+        console.log("done");
       });
     },
     setCardDonationInfo(cardDonationInfo) {
@@ -168,12 +207,18 @@ export default {
       this.step = memberInfo.step;
     },
     setCreditCardInfo(creditCardInfo) {
-      this.bwbcCardDonate.card.cardNumber = creditCardInfo.cardNumber;
+      this.bwbcCardDonate.card.number = creditCardInfo.cardNumber;
       this.bwbcCardDonate.card.expMonth = creditCardInfo.cardMonth;
       this.bwbcCardDonate.card.expYear = creditCardInfo.cardYear;
       this.bwbcCardDonate.card.cvc = creditCardInfo.cvc;
       // this.step = creditCardInfo.step;
-      this.donate();
+      if (creditCardInfo.step == "4") {
+        this.donate();
+      } else {
+        this.step = creditCardInfo.step;
+      }
+      // this.$store.commit("global/SET_BWBC_CARD_DONATION", this.bwbcCardDonate);
+      // console.log("vuex store");
     },
     showMessageBox(title, content) {
       this.dialog.title = title;
