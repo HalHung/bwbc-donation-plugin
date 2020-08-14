@@ -106,7 +106,7 @@
       </el-row>
       <el-row>
         <el-col style="text-align:center; margin:16px 0;">
-          <el-button @click="submitForm('cardDonation')">下一步</el-button>
+          <el-button @click="submitForm('cardDonation')" v-scroll-to="'#member'">下一步</el-button>
         </el-col>
       </el-row>
     </el-form>
@@ -141,7 +141,7 @@ export default {
         receipt: "UNWANTTED", // 收據開立方式: 1.BY_TIME單筆 2.ANNUAL年開 3.UNWANTTED不需寄發
         donatorName: null, // 收據抬頭
         address: null, // 地址
-        step: "2", // 步驟切換
+        step: null,
       },
       dialog: {
         title: "",
@@ -175,7 +175,6 @@ export default {
         if (valid) {
           if (this.cardDonation.receipt != "UNWANTTED") {
             this.adderssValidate();
-            console.log("驗證完成");
           } else {
             this.nextStep();
           }
@@ -189,12 +188,10 @@ export default {
     },
     adderssValidate() {
       if (this.cardDonation.receipt != "UNWANTTED") {
-        console.log("地址驗證");
         this.$refs["addressEdit"].$refs["address"].validate((valid) => {
           console.log(`address v:${valid}`);
           if (valid) {
             this.cardDonation.address = this.$refs["addressEdit"].address;
-            // this.toEndSave();
             this.nextStep();
           }
         });
@@ -209,6 +206,8 @@ export default {
       this.dialog.isShow = true;
     },
     nextStep() {
+      this.cardDonation.step = "2";
+      console.log("step:" + this.cardDonation.step);
       this.$emit("nextStep", this.cardDonation);
     },
   },

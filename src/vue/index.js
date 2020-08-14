@@ -16,6 +16,9 @@ import Cheque from './Cheque';
 import BankTransfer from './Bank-transfer';
 import Test from './test.vue';
 import CardSuccess from './Card-success';
+
+var VueScrollTo = require('vue-scrollto');
+Vue.use(VueScrollTo);
 Vue.use(ElementUI);
 Vue.use(BootstrapVue);
 Vue.use(IconsPlugin);

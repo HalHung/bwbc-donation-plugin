@@ -166,8 +166,8 @@
       </el-row>
       <el-row>
         <el-col style="text-align:center; margin:16px 0;">
-          <el-button @click="previous()">上一步</el-button>
-          <el-button @click="submitForm('memberInfo')">下一步</el-button>
+          <el-button @click="previous()" v-scroll-to="'#donation'">上一步</el-button>
+          <el-button @click="submitForm('memberInfo')" v-scroll-to="'#card'">下一步</el-button>
         </el-col>
       </el-row>
     </el-form>
@@ -251,7 +251,7 @@
             </el-col>
           </el-row>
           <el-button @click="declaration = false">取消</el-button>
-          <el-button @click="next()" :disabled="!acceptDeclaration">下一步</el-button>
+          <el-button @click="next()" :disabled="!acceptDeclaration" v-scroll-to="'#card'">下一步</el-button>
         </el-footer>
       </el-container>
     </el-dialog>
@@ -326,7 +326,7 @@ export default {
         homePhone: null, // 住家電話
         email: null, // 電子信箱
         region: null, // 居住地
-        step: "3", // 回傳通知父組件切換到第三步
+        step: null, // 回傳通知父組件切換
       },
       dialog: {
         title: "",
@@ -484,10 +484,12 @@ export default {
     },
     previous() {
       this.memberInfo.step = "1";
+      console.log("step:" + this.memberInfo.step);
       this.$emit("nextStep", this.memberInfo);
-      console.log("上一步");
     },
     next() {
+      this.memberInfo.step = "3";
+      console.log("step:" + this.memberInfo.step);
       this.$emit("nextStep", this.memberInfo);
     },
   },

@@ -1,16 +1,16 @@
 <template>
   <!-- 信用卡捐款 -->
   <div id="body" v-loading="loading" element-loading-text="努力傳送資料中...">
-    <div v-if="step == '1'">
+    <div v-show="step == '1'" id="donation">
       <CardDonationInfo @nextStep="setCardDonationInfo($event)"></CardDonationInfo>
     </div>
-    <div v-if="step == '2'">
+    <div v-show="step == '2'" id="member">
       <MemberInfo :donationInfo="bwbcCardDonate" @nextStep="setMemberInfo($event)"></MemberInfo>
     </div>
-    <div v-if="step == '3'">
+    <div v-show="step == '3'" id="card">
       <CreditCardInfo :donationInfo="bwbcCardDonate" @nextStep="setCreditCardInfo($event)"></CreditCardInfo>
     </div>
-    <div v-if="step == '4'">
+    <div v-show="step == '4'">
       <span style="font-weight:500; font-size:20px; color:#9c8044;">感謝您進行了線上捐款</span>
       <p style="font-size:16px;">
         謝謝您認同我們的教育理念，更為了教育環境盡一份力！

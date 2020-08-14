@@ -109,7 +109,7 @@
       </el-row>
       <el-row>
         <el-col style="text-align:center; margin:16px 0;">
-          <el-button @click="previous()">上一步</el-button>
+          <el-button @click="previous()" v-scroll-to="'#member'">上一步</el-button>
           <el-button @click="submitForm('creditCardInfo')">送出</el-button>
         </el-col>
       </el-row>
@@ -152,7 +152,7 @@ export default {
         cardMonth: null, // 有效月
         cardYear: null, // 有效年
         cvc: null, // 安全碼
-        step: "4",
+        step: null,
       },
       dialog: {
         title: "",
@@ -183,7 +183,7 @@ export default {
   created() {
     //年份清單
     var moment = require("moment");
-    let y = moment().format("YY") - 1;
+    let y = moment().format("YY");
     this.yearList = [];
     for (let i = 0; i < 10; i++) {
       this.yearList.push({ value: `${y}`, label: `${y}` });
@@ -204,7 +204,8 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          console.log("送出");
+          this.card.step = "4"
+          console.log("step:" + this.card.step);
           this.$emit("nextStep", this.card);
         } else {
           console.log("error submit!!");
@@ -215,8 +216,8 @@ export default {
     },
     previous() {
       this.card.step = "2";
+      console.log("step:" + this.card.step);
       this.$emit("nextStep", this.card);
-      console.log("上一步");
     },
     showMessageBox(title, content) {
       this.dialog.title = title;
