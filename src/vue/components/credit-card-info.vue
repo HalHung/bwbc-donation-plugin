@@ -20,6 +20,8 @@
           <el-form-item prop="cardNumber">
             <el-input
               type="text"
+              name="cardnumber"
+              autocompletetype="cc-number"
               placeholder="請輸入信用卡卡號"
               v-model="card.cardNumber"
               maxlength="16"
@@ -204,7 +206,7 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.card.step = "4"
+          this.card.step = "4";
           console.log("step:" + this.card.step);
           this.$emit("nextStep", this.card);
         } else {

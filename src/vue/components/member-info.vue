@@ -251,7 +251,11 @@
             </el-col>
           </el-row>
           <el-button @click="declaration = false">取消</el-button>
-          <el-button @click="next()" :disabled="!acceptDeclaration" v-scroll-to="'#card'">下一步</el-button>
+          <el-button
+            @click="submitForm('memberInfo')"
+            :disabled="!acceptDeclaration"
+            v-scroll-to="'#card'"
+          >下一步</el-button>
         </el-footer>
       </el-container>
     </el-dialog>
@@ -467,6 +471,8 @@ export default {
   },
   methods: {
     submitForm(formName) {
+      this.declaration = false;
+      console.log("hide:" + this.declaration);
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.next();
