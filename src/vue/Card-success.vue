@@ -26,21 +26,61 @@
       <br />福智佛教學院籌備處信箱：bwbc.po@blisswisdom.org
       <br />
     </p>
+    <el-dialog
+      custom-class="dialog-message-box"
+      :title="dialog.title"
+      :visible.sync="dialog.isShow"
+      :show-close="false"
+    >
+      <span v-html="dialog.content"></span>
+      <span slot="footer" class="dialog-footer">
+        <el-row class="top-line">
+          <el-col>
+            <el-button @click="dialog.isShow = false" class="primary-color">好喔</el-button>
+          </el-col>
+        </el-row>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import API from "../api";
+
 export default {
   data() {
     return {
       bwbcCardDonate: null,
+      dialog: {
+        title: "",
+        content: "",
+        isShow: false,
+      },
     };
   },
-  computed: {
-    // bwbcCardDonate() {
-    //   return this.$store.state.global.bwbcCardDonate;
-    // },
+  created(){
+    let urlParams = new URLSearchParams(window.location.search);
+    console.log(urlParams.get('no'));
+    this.getDonationTxn(urlParams.get('no'));
   },
+  methods:{
+    getDonationTxn(donatxnNo){
+      API.donate.wpDonationData(donatxnNo).then(res=>{
+        if (res.data.status == 200) {
+          this.bwbcCardDonate = res.data.data;
+        } else {
+          this.showMessageBox('提示',res.data.message);
+        }
+      }).catch(e=>{
+        console.log("getDonationTxn:"+e)
+      })
+    },
+    showMessageBox(title, content) {
+      this.dialog.title = title;
+      this.dialog.content = content;
+      this.dialog.isShow = true;
+    }
+  }
 };
 </script>
 

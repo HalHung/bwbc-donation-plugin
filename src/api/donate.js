@@ -3,6 +3,7 @@
  */
 import request from "./request";
 function wpDonateCard(data) {
+  data.is3D = true
   var params = {
     data: data,
   };
@@ -13,6 +14,14 @@ function wpDonateCard(data) {
   });
 }
 
+function wpDonationData(donatxnNo) {
+  return request({
+    url: `wpDonationData?no=${donatxnNo}`,
+    method: "get"
+  });
+}
+
 export default {
-  wpDonateCard
+  wpDonateCard,
+  wpDonationData
 };
