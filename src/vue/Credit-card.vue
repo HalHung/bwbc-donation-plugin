@@ -116,11 +116,10 @@ export default {
     var today = new Date();
     this.donaDate =
       today.getFullYear() +
-      " 年 " +
+      "/" +
       (today.getMonth() + 1) +
-      " 月 " +
-      today.getDate() +
-      " 日";
+      "/" +
+      today.getDate()
   },
   methods: {
     donate() {
