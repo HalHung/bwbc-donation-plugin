@@ -1,32 +1,290 @@
 <template>
-  <!-- 支票捐款 -->
   <div id="body">
-    <ChequeDonationInfo></ChequeDonationInfo>
-    <MemberInfo></MemberInfo>
-    <ChequeInfo></ChequeInfo>
+    <div v-show="step == '1'" id="step-one">
+      <ChequeDonationInfo @nextStep="setChequeDonationInfo($event)"></ChequeDonationInfo>
+    </div>
+    <div v-show="step == '2'" id="step-two">
+      <ChequeInfo @nextStep="setChequeInfo($event)"></ChequeInfo>
+    </div>
+    <div v-show="step == '3'" id="step-three">
+      <MemberInfo
+        v-if="bwbcChequeDonate.donatorTypeCode == 'PERSON'"
+        :donationInfo="bwbcChequeDonate"
+        @nextStep="setMemberInfo($event)"
+      ></MemberInfo>
+      <CompanyInfo
+        v-if="bwbcChequeDonate.donatorTypeCode == 'CORPORATION'"
+        :donationInfo="bwbcChequeDonate"
+        @nextStep="setCorporationInfo($event)"
+      ></CompanyInfo>
+    </div>
+    <div v-if="step == '4'">
+      <span style="font-weight:500; font-size:20px; color:#9c8044;">感謝您進行了線上捐款</span>
+      <p style="font-size:16px;">
+        謝謝您認同我們的教育理念，更為了教育環境盡一份力！
+        <br />若捐款有問題我們將主動跟您聯繫。
+      </p>
+      <div>
+        <span style="font-size:18px; color:#9c8044;">以下是您回報的資訊：</span>
+        <p style="font-size:16px; margin:0;">捐款方式：支票捐款</p>
+        <p
+          style="font-size:16px; margin:0;"
+          v-if="bwbcChequeDonate.donatorTypeCode == 'PERSON'"
+        >捐款人：{{bwbcChequeDonate.name}}</p>
+        <p style="font-size:16px; margin:0;" v-else>捐款公司：{{bwbcChequeDonate.companyInfo.name}}</p>
+        <p
+          style="font-size:16px; margin:0;"
+          v-if="bwbcChequeDonate.donatorTypeCode == 'PERSON'"
+        >手機號碼：{{bwbcChequeDonate.cellPhone}}</p>
+        <p style="font-size:16px; margin:0;" v-else>聯絡電話：{{bwbcChequeDonate.cellPhone}}</p>
+        <p style="font-size:16px; margin:0;">捐款項目：福智佛教學院</p>
+        <p style="font-size:16px; margin:0;">回報日期：{{donaDate}}</p>
+        <p style="font-size:16px; margin:0;">捐款金額：{{bwbcChequeDonate.amount}}</p>
+        <p
+          style="font-size:16px; margin:0;"
+          v-show="bwbcChequeDonate.receiptTypeCode == 'BY_TIME'"
+        >收據開立方式：單筆開立</p>
+        <p
+          style="font-size:16px; margin:0;"
+          v-show="bwbcChequeDonate.receiptTypeCode == 'UNWANTTED'"
+        >收據開立方式：不需寄發</p>
+      </div>
+      <p style="font-size:16px;">再次誠摯感謝您！</p>
+      <p style="font-size:16px;">
+        若您有疑惑，歡迎您透過以下方式聯繫我們：
+        <br />捐款專線：05-582-8222 分機6085
+        <br />福智佛教學院籌備處信箱：bwbc.po@blisswisdom.org
+        <br />
+      </p>
+    </div>
+    <el-dialog
+      custom-class="dialog-message-box"
+      :title="dialog.title"
+      :visible.sync="dialog.isShow"
+      :show-close="false"
+    >
+      <span v-html="dialog.content"></span>
+      <span slot="footer" class="dialog-footer">
+        <el-row class="top-line">
+          <el-col>
+            <el-button @click="dialog.isShow = false" class="primary-color">好喔</el-button>
+          </el-col>
+        </el-row>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import MemberInfo from "./components/member-info";
 import ChequeDonationInfo from "./components/cheque-donation-info";
 import ChequeInfo from "./components/cheque-info";
+import MemberInfo from "./components/member-info";
+import CompanyInfo from "./components/company-info";
 export default {
-  components: {
-    MemberInfo,
-    ChequeDonationInfo,
-    ChequeInfo,
+  components: { ChequeDonationInfo, ChequeInfo, MemberInfo, CompanyInfo },
+  data() {
+    return {
+      step: "1",
+      bwbcChequeDonate: {
+        donatorTypeCode: null, // PERSON自然人捐款 CORPORATION法人捐款
+        isForeign: null, // 國籍
+        amount: null, // 捐款金額
+        receiptTypeCode: null, // 收據開立方式: 1.BY_TIME單筆 2.UNWANTTED不需寄發
+        donatorName: null, // 收據抬頭
+        address: null, // 地址
+        step: null,
+        cheque: {
+          memo1: null, // 支票末五碼
+          memo2: null, // 開票人
+        },
+        name: null, // 會員姓名
+        genderTypeCode: null, // 性別
+        payerTypeCode: null, // 是否參加福智廣論研討班
+        sin: null, // 身分證字號
+        sinLast4: null, // 身分證字號末四碼
+        cellPhone: null, // 手機號碼
+        phone_country_code: null,
+        homePhone: null, // 住家電話
+        email: null, // 電子信箱
+        region: null, // 居住地
+        useridType: null, // 身分證選填全碼或末四碼
+        notifyTypeCode: null, // 通知方式 1.SMS簡訊 2.EMAIL電子信件 3.NONE不通知
+        companyInfo: {
+          name: null, // 公司名稱
+          sinCompany: null, // 公司統編
+          companyAddress: null, // 聯絡地址
+        },
+        donaUseCode: "Z",
+        donaItemCode: "W11",
+        fromCard: false,
+      },
+      donaDate: null,
+      dialog: {
+        title: "",
+        content: "",
+        isShow: false,
+      },
+    };
+  },
+  mounted() {
+    var today = new Date();
+    this.donaDate =
+      today.getFullYear() +
+      "/" +
+      (today.getMonth() + 1) +
+      "/" +
+      today.getDate();
+  },
+  methods: {
+    setChequeDonationInfo(chequeDonationInfo) {
+      this.bwbcChequeDonate.isForeign = chequeDonationInfo.isForeign;
+      this.bwbcChequeDonate.donatorTypeCode =
+        chequeDonationInfo.donatorTypeCode;
+      this.bwbcChequeDonate.amount = chequeDonationInfo.amount;
+      this.bwbcChequeDonate.receiptTypeCode = chequeDonationInfo.receipt;
+      this.bwbcChequeDonate.donatorName = chequeDonationInfo.donatorName;
+      this.bwbcChequeDonate.address = chequeDonationInfo.address;
+      this.step = chequeDonationInfo.step;
+      console.log(
+        this.bwbcChequeDonate.isForeign +
+          " / " +
+          this.bwbcChequeDonate.donatorTypeCode +
+          " / " +
+          this.bwbcChequeDonate.amount +
+          " / " +
+          this.bwbcChequeDonate.receiptTypeCode +
+          " / " +
+          this.bwbcChequeDonate.donatorName +
+          " / " +
+          this.bwbcChequeDonate.address +
+          " / " +
+          this.step
+      );
+    },
+    setChequeInfo(chequeInfo) {
+      this.bwbcChequeDonate.cheque.chequeNoLast5 = chequeInfo.chequeNoLast5;
+      this.bwbcChequeDonate.cheque.drawer = chequeInfo.drawer;
+      this.step = chequeInfo.step;
+      console.log(
+        this.bwbcChequeDonate.cheque.chequeNoLast5 +
+          " / " +
+          this.bwbcChequeDonate.cheque.drawer +
+          " / " +
+          this.step
+      );
+    },
+    setMemberInfo(memberInfo) {
+      this.bwbcChequeDonate.name = memberInfo.name;
+      this.bwbcChequeDonate.genderTypeCode = memberInfo.genderTypeCode;
+      this.bwbcChequeDonate.payerTypeCode = memberInfo.payerTypeCode;
+      this.useridType = memberInfo.useridType;
+      this.bwbcChequeDonate.sin = memberInfo.sin;
+      this.bwbcChequeDonate.sinLast4 = memberInfo.sinLast4;
+      this.bwbcChequeDonate.cellPhone = memberInfo.cellPhone;
+      this.bwbcChequeDonate.phone_country_code = memberInfo.phone_country_code;
+      this.bwbcChequeDonate.homePhone = memberInfo.homePhone;
+      this.bwbcChequeDonate.email = memberInfo.email;
+      this.region = memberInfo.region;
+      this.step = memberInfo.step;
+      console.log(
+        this.bwbcChequeDonate.name +
+          " / " +
+          this.bwbcChequeDonate.genderTypeCode +
+          " / " +
+          this.bwbcChequeDonate.payerTypeCode +
+          " / " +
+          this.bwbcChequeDonate.sin +
+          " / " +
+          this.bwbcChequeDonate.sinLast4 +
+          " / " +
+          this.bwbcChequeDonate.cellPhone +
+          " / " +
+          this.bwbcChequeDonate.phone_country_code +
+          " / " +
+          this.bwbcChequeDonate.homePhone +
+          " / " +
+          this.bwbcChequeDonate.email +
+          " / " +
+          this.step
+      );
+    },
+    setCorporationInfo(companyInfo) {
+      this.bwbcChequeDonate.companyInfo.name = companyInfo.name;
+      this.bwbcChequeDonate.companyInfo.sinCompany = companyInfo.sinCompany;
+      this.bwbcChequeDonate.companyInfo.companyAddress =
+        companyInfo.companyAddress;
+      this.bwbcChequeDonate.name = companyInfo.contactName;
+      this.bwbcChequeDonate.genderTypeCode = "MALE";
+      this.bwbcChequeDonate.payerTypeCode = "NOT_HEARD";
+      this.bwbcChequeDonate.sin = null;
+      this.bwbcChequeDonate.sinLast4 = "0000";
+      this.bwbcChequeDonate.cellPhone = companyInfo.contactPhone;
+      this.bwbcChequeDonate.phone_country_code = null;
+      this.bwbcChequeDonate.homePhone = null;
+      this.bwbcChequeDonate.email = companyInfo.contactEmail;
+      this.bwbcChequeDonate.region = null;
+      this.bwbcChequeDonate.useridType = "末四碼";
+      this.bwbcChequeDonate.notifyTypeCode = "NONE";
+      this.step = companyInfo.step;
+      console.log(
+        this.bwbcChequeDonate.companyInfo.name +
+          " / " +
+          this.bwbcChequeDonate.companyInfo.sinCompany +
+          " / " +
+          this.bwbcChequeDonate.companyInfo.companyAddress +
+          " / " +
+          this.bwbcChequeDonate.name +
+          " / " +
+          this.bwbcChequeDonate.genderTypeCode +
+          " / " +
+          this.bwbcChequeDonate.sin +
+          " / " +
+          this.bwbcChequeDonate.sinLast4 +
+          " / " +
+          this.bwbcChequeDonate.cellPhone +
+          " / " +
+          this.bwbcChequeDonate.phone_country_code +
+          " / " +
+          this.bwbcChequeDonate.homePhone +
+          " / " +
+          this.bwbcChequeDonate.email +
+          " / " +
+          this.bwbcChequeDonate.region +
+          " / " +
+          this.bwbcChequeDonate.useridType +
+          " / " +
+          this.bwbcChequeDonate.notifyTypeCode +
+          " / " +
+          this.step
+      );
+    },
   },
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 #body {
   font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
     "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
-}
-/deep/ .el-input__inner {
-  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
-    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+
+  /deep/ .el-input__inner {
+    font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+      "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  }
+
+  .el-row {
+    margin: 8px 0px 10px;
+  }
+
+  /deep/ .el-button {
+    color: #9c8044;
+    border-color: #9c8044;
+    background-color: #fff9ee;
+    &:hover {
+      color: white;
+      background-color: #9c8044;
+      border-color: #9c8044;
+    }
+  }
 }
 </style>

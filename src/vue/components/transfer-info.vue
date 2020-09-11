@@ -4,9 +4,9 @@
     <el-form :model="transferInfo" :rules="rules" ref="transferInfo">
       <el-row class="step">
         <el-steps :active="3" finish-status="success">
-          <el-step title="步驟１"></el-step>
-          <el-step title="步驟２"></el-step>
-          <el-step title="步驟３"></el-step>
+          <el-step title="步驟１" icon="el-icon-tickets"></el-step>
+          <el-step title="步驟２" icon="el-icon-s-order"></el-step>
+          <el-step title="步驟３" icon="el-icon-s-custom"></el-step>
         </el-steps>
       </el-row>
       <p>匯款資訊</p>
@@ -17,11 +17,11 @@
           <span>:</span>
         </el-col>
         <el-col>
-          <el-form-item prop="accountLast5">
+          <el-form-item prop="memo1">
             <el-input
               type="text"
               placeholder="請輸入匯款帳號末五碼"
-              v-model="transferInfo.accountLast5"
+              v-model="transferInfo.memo1"
               maxlength="5"
             ></el-input>
           </el-form-item>
@@ -34,7 +34,7 @@
         </el-col>
         <el-col>
           <el-form-item>
-            <el-input type="text" placeholder="請輸入匯款人姓名" v-model="transferInfo.name"></el-input>
+            <el-input type="text" placeholder="請輸入匯款人姓名" v-model="transferInfo.memo2"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -43,9 +43,10 @@
           <span>匯款日期</span>
           <span>:</span>
         </el-col>
-        <el-col>
+        <el-col :span="8">
           <el-form-item>
-            <el-input type="date" placeholder="請選擇匯款日期" v-model="transferInfo.donaDate"></el-input>
+            <!-- <el-input type="date" placeholder="yyyy-mm-dd" v-model="transferInfo.date1"></el-input> -->
+            <el-date-picker v-model="transferInfo.date1" type="date" placeholder="請選擇匯款日期"></el-date-picker>
           </el-form-item>
         </el-col>
       </el-row>
@@ -55,7 +56,7 @@
             <div slot="header" class="clearfix">
               <span style="color:white;">捐款注意事項</span>
             </div>
-            <el-row @click="print()">
+            <el-row>
               <el-col :span="2">
                 <el-form-item prop="isAcceptPdpa">
                   <el-checkbox v-model="isAcceptPdpa"></el-checkbox>
@@ -89,8 +90,8 @@
       </el-row>
       <el-row>
         <el-col style="text-align:center; margin:16px 0;">
-          <el-button type="warning" plain @click="previous()">上一步</el-button>
-          <el-button type="warning" plain @click="submitForm('transferInfo')">送出</el-button>
+          <el-button type="warning" plain @click="previous()" v-scroll-to="'#step-one'">上一步</el-button>
+          <el-button type="warning" plain @click="submitForm('transferInfo')" v-scroll-to="'#step-three'">下一步</el-button>
         </el-col>
       </el-row>
     </el-form>
@@ -121,13 +122,15 @@ export default {
         console.log(this.isAcceptPdpa);
         return callback(new Error("請勾選"));
       }
+      else
+        return callback()
     };
     return {
       transferInfo: {
-        accountLast5: null, // 匯款帳號末五碼
-        name: null, // 匯款人
-        donaDate: null, // 匯款日期
-        step: "4", // 回傳通知父組件切換到第4步
+        memo1: null, // 匯款帳號末五碼
+        memo2: null, // 匯款人
+        date1: null, // 匯款日期
+        step: "3",
       },
       dialog: {
         title: "",
@@ -136,7 +139,7 @@ export default {
       },
       isAcceptPdpa: false, // 同意遵守捐款注意事項
       rules: {
-        accountLast5: [
+        memo1: [
           { required: true, message: "請輸入匯款帳號末五碼", trigger: "blur" },
           { min: 5, max: 5, message: "請輸入五碼", trigger: "blur" },
         ],
@@ -150,10 +153,10 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          console.log('送出')
-          this.$emit("nextStep", this.transferInfo);
+          console.log("下一步");
+          this.nextStep();
         } else {
-          console.log("error submit!!");
+          console.log("error submit transferInfo!!");
           this.showMessageBox("提示", "無輸入必填欄位或格式不符！");
           return false;
         }
@@ -169,9 +172,11 @@ export default {
       this.$emit("nextStep", this.transferInfo);
       console.log("上一步");
     },
-    print() {
-      console.log(this.isAcceptPdpa);
-    }
+    nextStep() {
+      this.transferInfo.step = "3";
+      this.$emit("nextStep", this.transferInfo);
+      console.log("下一步");
+    },
   },
 };
 </script>
@@ -212,5 +217,20 @@ span {
 }
 .el-form-item {
   margin: 0%;
+}
+.el-picker-panel__body {
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+}
+.el-picker-panel__icon-btn {
+  padding: 4px;
+
+  &:hover {
+    color: #409eff;
+    background-color: #fff;
+  }
+}
+th {
+  text-align: center;
 }
 </style>

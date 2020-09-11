@@ -1,14 +1,14 @@
 <template>
   <!-- 信用卡捐款 -->
   <div id="body" v-loading="loading" element-loading-text="努力傳送資料中...">
-    <div v-show="step == '1'" id="donation">
+    <div v-show="step == '1'" id="step-one">
       <CardDonationInfo @nextStep="setCardDonationInfo($event)"></CardDonationInfo>
     </div>
-    <div v-show="step == '2'" id="member">
-      <MemberInfo :donationInfo="bwbcCardDonate" @nextStep="setMemberInfo($event)"></MemberInfo>
-    </div>
-    <div v-show="step == '3'" id="card">
+    <div v-show="step == '2'" id="step-two">
       <CreditCardInfo :donationInfo="bwbcCardDonate" @nextStep="setCreditCardInfo($event)"></CreditCardInfo>
+    </div>
+    <div v-show="step == '3'" id="step-three">
+      <MemberInfo :donationInfo="bwbcCardDonate" @nextStep="setMemberInfo($event)"></MemberInfo>
     </div>
     <div v-show="step == '4'">
       <span style="font-weight:500; font-size:20px; color:#9c8044;">感謝您進行了線上捐款</span>
@@ -79,6 +79,7 @@ export default {
     return {
       step: "1", // 依步驟要顯示的component
       bwbcCardDonate: {
+        isForeign: null, // 國籍
         paymentToolCode: null, // 捐款模式: E單次捐款 R定期定額
         amount: null, // 捐款金額
         receiptTypeCode: null, // 收據開立方式: 1.BY_TIME單筆 2.ANNUAL年開 3.UNWANTTED不需寄發
@@ -90,6 +91,7 @@ export default {
         sin: null, // 身分證字號
         sinLast4: null, // 身分證字號末四碼
         cellPhone: null, // 手機號碼
+        phone_country_code: null,
         homePhone: null, // 住家電話
         email: null, // 電子信箱
         card: {
@@ -98,8 +100,10 @@ export default {
           expYear: null, // 有效年
           cvc: null, // 安全碼
         },
+        notifyTypeCode: null, // 通知方式 1.SMS簡訊 2.EMAIL電子信件 3.NONE不通知
         donaUseCode: "Z",
         donaItemCode: "W11",
+        fromCard: true,
       },
       region: null, // 居住地
       useridType: null, // 身分證選填全碼或末四碼
@@ -119,7 +123,7 @@ export default {
       "/" +
       (today.getMonth() + 1) +
       "/" +
-      today.getDate()
+      today.getDate();
   },
   methods: {
     donate() {
@@ -190,7 +194,13 @@ export default {
       this.bwbcCardDonate.receiptTypeCode = cardDonationInfo.receipt;
       this.bwbcCardDonate.donatorName = cardDonationInfo.donatorName;
       this.bwbcCardDonate.address = cardDonationInfo.address;
+      this.bwbcCardDonate.isForeign = cardDonationInfo.isForeign;
       this.step = cardDonationInfo.step;
+      console.log(
+        typeof this.bwbcCardDonate.isForeign +
+          ", " +
+          this.bwbcCardDonate.isForeign
+      );
     },
     setMemberInfo(memberInfo) {
       this.bwbcCardDonate.name = memberInfo.name;
@@ -200,24 +210,29 @@ export default {
       this.bwbcCardDonate.sin = memberInfo.sin;
       this.bwbcCardDonate.sinLast4 = memberInfo.sinLast4;
       this.bwbcCardDonate.cellPhone = memberInfo.cellPhone;
+      this.bwbcCardDonate.phone_country_code = memberInfo.phone_country_code;
       this.bwbcCardDonate.homePhone = memberInfo.homePhone;
       this.bwbcCardDonate.email = memberInfo.email;
       this.region = memberInfo.region;
-      this.step = memberInfo.step;
+      this.bwbcCardDonate.notifyTypeCode = memberInfo.notifyTypeCode;
+      console.log(
+        "phone_country_code:" +
+          this.bwbcCardDonate.phone_country_code +
+          " / " +
+          this.bwbcChequeDonate.notifyTypeCode
+      );
+      if (memberInfo.step == "4") {
+        this.donate();
+      } else {
+        this.step = memberInfo.step;
+      }
     },
     setCreditCardInfo(creditCardInfo) {
       this.bwbcCardDonate.card.number = creditCardInfo.cardNumber;
       this.bwbcCardDonate.card.expMonth = creditCardInfo.cardMonth;
       this.bwbcCardDonate.card.expYear = creditCardInfo.cardYear;
       this.bwbcCardDonate.card.cvc = creditCardInfo.cvc;
-      // this.step = creditCardInfo.step;
-      if (creditCardInfo.step == "4") {
-        this.donate();
-      } else {
-        this.step = creditCardInfo.step;
-      }
-      // this.$store.commit("global/SET_BWBC_CARD_DONATION", this.bwbcCardDonate);
-      // console.log("vuex store");
+      this.step = creditCardInfo.step;
     },
     showMessageBox(title, content) {
       this.dialog.title = title;
@@ -232,9 +247,10 @@ export default {
 #body {
   font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
     "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
-}
-/deep/ .el-input__inner {
-  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
-    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+
+  /deep/ .el-input__inner {
+    font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+      "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  }
 }
 </style>

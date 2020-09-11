@@ -61,7 +61,7 @@ export default {
   created(){
     let urlParams = new URLSearchParams(window.location.search);
     console.log(urlParams.get('no'));
-    this.getDonationTxn(urlParams.get('no'));
+    // this.getDonationTxn(urlParams.get('no'));
   },
   methods:{
     getDonationTxn(donatxnNo){
@@ -84,7 +84,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 #body {
   font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
     "Lucida Sans Unicode", Geneva, Verdana, sans-serif;

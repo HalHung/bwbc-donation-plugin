@@ -318,7 +318,7 @@ export default {
 .el-form-item {
   margin-bottom: 8px;
 }
-.el-form-item__label {
+/deep/ .el-form-item__label {
   margin: 0%;
 }
 </style>

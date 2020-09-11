@@ -3,10 +3,10 @@
   <div id="component-body">
     <el-form :model="chequeInfo" :rules="rules" ref="chequeInfo">
       <el-row class="step">
-        <el-steps :active="3" finish-status="success">
-          <el-step title="步驟１"></el-step>
-          <el-step title="步驟２"></el-step>
-          <el-step title="步驟３"></el-step>
+        <el-steps :active="2" finish-status="success">
+          <el-step title="步驟１" icon="el-icon-s-order"></el-step>
+          <el-step title="步驟２" icon="el-icon-tickets"></el-step>
+          <el-step title="步驟３" icon="el-icon-s-custom"></el-step>
         </el-steps>
       </el-row>
       <p>支票資訊</p>
@@ -17,11 +17,11 @@
           <span>:</span>
         </el-col>
         <el-col>
-          <el-form-item prop="chequeNoLast5">
+          <el-form-item prop="memo1">
             <el-input
               type="text"
               placeholder="請輸入支票號碼末五碼"
-              v-model="chequeInfo.chequeNoLast5"
+              v-model="chequeInfo.memo1"
               maxlength="5"
             ></el-input>
           </el-form-item>
@@ -34,7 +34,7 @@
         </el-col>
         <el-col>
           <el-form-item>
-            <el-input type="text" placeholder="請輸入開票人姓名" v-model="chequeInfo.drawer"></el-input>
+            <el-input type="text" placeholder="請輸入開票人姓名" v-model="chequeInfo.memo2"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -78,36 +78,63 @@
       </el-row>
       <el-row>
         <el-col style="text-align:center; margin:16px 0;">
-          <el-button type="warning" plain>上一步</el-button>
-          <el-button type="warning" plain @click="submitForm('chequeInfo')">送出</el-button>
+          <el-button type="warning" plain @click="previous()" v-scroll-to="'#step-one'">上一步</el-button>
+          <el-button type="warning" plain @click="submitForm('chequeInfo')" v-scroll-to="'#step-three'">下一步</el-button>
         </el-col>
       </el-row>
     </el-form>
+    <el-dialog
+      custom-class="dialog-message-box"
+      :title="dialog.title"
+      :visible.sync="dialog.isShow"
+      :show-close="false"
+    >
+      <span v-html="dialog.content"></span>
+      <span slot="footer" class="dialog-footer">
+        <el-row class="top-line">
+          <el-col>
+            <el-button @click="dialog.isShow = false" class="primary-color">好喔</el-button>
+          </el-col>
+        </el-row>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 export default {
   name: "ChequeInfo",
+  props: {
+    donationInfo: Object,
+  },
   data() {
+    var checkIsAcceptPdpaValidator = (rule, value, callback) => {
+      if (!this.isAcceptPdpa) {
+        return callback(new Error("請勾選"));
+      } else {
+        return callback();
+      }
+    };
     return {
       chequeInfo: {
-        chequeNoLast5: null, // 支票末五碼
-        drawer: null, // 開票人
+        memo1: null, // 支票末五碼
+        memo2: null, // 開票人
+        step: null,
       },
       isAcceptPdpa: false, // 同意遵守捐款注意事項
       rules: {
-        chequeNoLast5: [
+        memo1: [
           { required: true, message: "請確認支票號碼末五碼", trigger: "blur" },
+          { min: 5, max: 5, message: "長度為5", trigger: "blur" },
         ],
         isAcceptPdpa: [
-          {
-            type: "array",
-            required: true,
-            message: "請勾選",
-            trigger: "change",
-          },
+          { validator: checkIsAcceptPdpaValidator, trigger: "change" },
         ],
+      },
+      dialog: {
+        title: "",
+        content: "",
+        isShow: false,
       },
     };
   },
@@ -116,23 +143,31 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert("submit!");
+          this.chequeInfo.step = "3";
+          console.log("step:" + this.chequeInfo.step);
+          this.$emit("nextStep", this.chequeInfo);
         } else {
           console.log("error submit!!");
-          alert("請填寫必要資訊!");
+          this.showMessageBox("提示", "無輸入必填欄位或格式不符！");
           return false;
         }
       });
+    },
+    previous() {
+      this.chequeInfo.step = "1";
+      console.log("step:" + this.chequeInfo.step);
+      this.$emit("nextStep", this.chequeInfo);
+    },
+    showMessageBox(title, content) {
+      this.dialog.title = title;
+      this.dialog.content = content;
+      this.dialog.isShow = true;
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-#component-body {
-  /* font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
-    "Lucida Sans Unicode", Geneva, Verdana, sans-serif; */
-}
 span {
   font-size: 16px;
   font-weight: bold;
@@ -142,10 +177,6 @@ span {
 }
 .el-row {
   margin: 16px 0;
-}
-.el-input__inner {
-  /* font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
-    "Lucida Sans Unicode", Geneva, Verdana, sans-serif; */
 }
 .step {
   line-height: 0%;

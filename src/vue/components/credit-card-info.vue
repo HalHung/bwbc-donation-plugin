@@ -3,10 +3,10 @@
   <div id="component-body">
     <el-form :model="card" :rules="rules" ref="creditCardInfo">
       <el-row class="step">
-        <el-steps :active="3" finish-status="success">
+        <el-steps :active="2" finish-status="success">
           <el-step title="步驟１" icon="el-icon-s-order"></el-step>
-          <el-step title="步驟２" icon="el-icon-s-custom"></el-step>
-          <el-step title="步驟３" icon="el-icon-bank-card"></el-step>
+          <el-step title="步驟２" icon="el-icon-bank-card"></el-step>
+          <el-step title="步驟３" icon="el-icon-s-custom"></el-step>
         </el-steps>
       </el-row>
       <p style="color:#9c8044; font-weight:500; font-size:24px;">信用卡資訊</p>
@@ -111,8 +111,8 @@
       </el-row>
       <el-row>
         <el-col style="text-align:center; margin:16px 0;">
-          <el-button @click="previous()" v-scroll-to="'#member'">上一步</el-button>
-          <el-button @click="submitForm('creditCardInfo')">送出</el-button>
+          <el-button @click="previous()" v-scroll-to="'#step-one'">上一步</el-button>
+          <el-button @click="submitForm('creditCardInfo')" v-scroll-to="'#step-three'">下一步</el-button>
         </el-col>
       </el-row>
     </el-form>
@@ -206,7 +206,7 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.card.step = "4";
+          this.card.step = "3";
           console.log("step:" + this.card.step);
           this.$emit("nextStep", this.card);
         } else {
@@ -217,7 +217,7 @@ export default {
       });
     },
     previous() {
-      this.card.step = "2";
+      this.card.step = "1";
       console.log("step:" + this.card.step);
       this.$emit("nextStep", this.card);
     },

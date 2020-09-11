@@ -3,13 +3,13 @@
   <div id="component-body">
     <el-form :model="memberInfo" :rules="rules" ref="memberInfo">
       <el-row class="step">
-        <el-steps :active="2" finish-status="success">
+        <el-steps :active="3" finish-status="success">
           <el-step title="步驟１" icon="el-icon-s-order"></el-step>
-          <el-step title="步驟２" icon="el-icon-s-custom"></el-step>
-          <el-step title="步驟３" icon="el-icon-bank-card"></el-step>
+          <el-step title="步驟２" icon="el-icon-bank-card"></el-step>
+          <el-step title="步驟３" icon="el-icon-s-custom"></el-step>
         </el-steps>
       </el-row>
-      <p style="color:#9c8044; font-weight:500; font-size:24px;">個人資訊</p>
+      <p style="color:#9c8044; font-weight:500; font-size:24px;">捐款人資訊</p>
       <el-row>
         <el-col>
           <span>姓名</span>
@@ -18,7 +18,11 @@
         </el-col>
         <el-col>
           <el-form-item prop="name">
-            <el-input type="text" placeholder="請輸入姓名(僅限填寫一位)" v-model="memberInfo.name"></el-input>
+            <el-input
+              type="text"
+              placeholder="請輸入姓名(僅限填寫一位)"
+              v-model="memberInfo.name"
+            ></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -54,7 +58,7 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row>
+      <el-row v-if="donationInfo.isForeign == false">
         <el-col>
           <span>身分證字號</span>
           <span class="required-mark">*</span>
@@ -99,12 +103,19 @@
         </el-col>
         <el-col>
           <el-form-item prop="cellPhone">
-            <el-input
+            <!-- <el-input
               type="text"
               placeholder="範例：0987654321( 不需 - )"
               v-model="memberInfo.cellPhone"
               maxlength="10"
-            ></el-input>
+            ></el-input>-->
+            <vue-tel-input
+              placeholder="請輸入手機號碼"
+              name="phoneNumber"
+              v-bind="bindProps"
+              @input="onPhoneInput"
+              v-model="memberInfo.cellPhone"
+            ></vue-tel-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -135,21 +146,39 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row v-if="donationInfo.receiptTypeCode == 'UNWANTTED'">
+      <div v-if="donationInfo.isForeign == false">
+        <el-row v-if="donationInfo.receiptTypeCode == 'UNWANTTED'" style="margin:16px 0px;">
+          <el-col>
+            <span>居住地(區域性活動通知用)：</span>
+            <el-select v-model="memberInfo.region" placeholder="請選擇">
+              <el-option
+                v-for="item in regions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
+          </el-col>
+        </el-row>
+      </div>
+      <el-row v-if="donationInfo.fromCard">
         <el-col>
-          <span>居住地(區域性活動通知用)：</span>
-          <el-select v-model="memberInfo.region" placeholder="請選擇">
-            <el-option
-              v-for="item in regions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
-          </el-select>
+          <span>捐款成功通知方式</span>
+          <span class="required-mark">*</span>
+          <span>:&nbsp;</span>
+        </el-col>
+        <el-col>
+          <el-form-item prop="notifyTypeCode">
+            <el-radio-group v-model="memberInfo.notifyTypeCode">
+              <el-radio label="SMS" v-if="donationInfo.isForeign == false">簡訊</el-radio>
+              <el-radio label="EMAIL">Email</el-radio>
+              <el-radio label="NONE">不通知</el-radio>
+            </el-radio-group>
+          </el-form-item>
         </el-col>
       </el-row>
       <el-row
-        style="background-color: #d8ba5f33; padding: 8px 16px 0; border-radius: 4px; border: solid 1px #decb93;"
+        style="background-color: #d8ba5f33; padding: 8px 16px 0; border-radius: 4px; border: solid 1px #decb93; margin-top:24px;"
       >
         <el-col :span="2">
           <el-form-item prop="acceptDeclaration">
@@ -166,8 +195,8 @@
       </el-row>
       <el-row>
         <el-col style="text-align:center; margin:16px 0;">
-          <el-button @click="previous()" v-scroll-to="'#donation'">上一步</el-button>
-          <el-button @click="submitForm('memberInfo')" v-scroll-to="'#card'">下一步</el-button>
+          <el-button @click="previous()" v-scroll-to="'#step-two'">上一步</el-button>
+          <el-button @click="submitForm('memberInfo')">送出</el-button>
         </el-col>
       </el-row>
     </el-form>
@@ -255,7 +284,7 @@
             @click="submitForm('memberInfo')"
             :disabled="!acceptDeclaration"
             v-scroll-to="'#card'"
-          >下一步</el-button>
+          >送出</el-button>
         </el-footer>
       </el-container>
     </el-dialog>
@@ -294,14 +323,14 @@ export default {
         return callback();
       }
     };
-    // 手機號碼驗證
-    var checkCellPhoneValidator = (rule, value, callback) => {
-      if (!CheckFunctions.checkCellPhone(value)) {
-        return callback(new Error("手機格式錯誤"));
-      } else {
-        return callback();
-      }
-    };
+    // 國內手機號碼驗證
+    // var checkCellPhoneValidator = (rule, value, callback) => {
+    //   if (!CheckFunctions.checkCellPhone(value)) {
+    //     return callback(new Error("手機格式錯誤"));
+    //   } else {
+    //     return callback();
+    //   }
+    // };
     // 電子信箱驗證
     var checkEmailValidator = (rule, value, callback) => {
       if (!CheckFunctions.checkEmail(value)) {
@@ -319,6 +348,21 @@ export default {
       }
     };
     return {
+      bindProps: {
+        preferredCountries: [
+          "TW",
+          "CA",
+          "CN",
+          "US",
+          "JP",
+          "KR",
+          "HK",
+          "SG",
+          "MY",
+          "IN",
+          "VN",
+        ],
+      },
       memberInfo: {
         name: null, // 姓名
         genderTypeCode: "MALE", // 性別
@@ -327,10 +371,12 @@ export default {
         sin: null, // 身分證字號
         sinLast4: null, // 身分證字號末四碼
         cellPhone: null, // 手機號碼
+        phone_country_code: null,
         homePhone: null, // 住家電話
         email: null, // 電子信箱
         region: null, // 居住地
         step: null, // 回傳通知父組件切換
+        notifyTypeCode: null, // 通知方式 1.SMS簡訊 2.EMAIL電子信件 3.NONE不通知
       },
       dialog: {
         title: "",
@@ -435,6 +481,9 @@ export default {
         genderTypeCode: [
           { required: true, message: "請選擇性別", trigger: "change" },
         ],
+        notifyTypeCode: [
+          { required: true, message: "請選擇通知方式", trigger: "change" },
+        ],
         payerTypeCode: [
           {
             required: true,
@@ -457,7 +506,7 @@ export default {
         ],
         cellPhone: [
           { required: true, message: "請輸入行動電話", trigger: "blur" },
-          { validator: checkCellPhoneValidator, trigger: "blur" },
+          // { validator: checkCellPhoneValidator, trigger: "blur" },
         ],
         email: [
           { required: true, message: "請輸入電子信箱", trigger: "blur" },
@@ -470,14 +519,26 @@ export default {
     };
   },
   methods: {
+    onPhoneInput(phone, value) {
+      // console.log(`onPhoneInput:${phone},${JSON.stringify(value)}`);
+      this.memberInfo.cellPhone = value.number.e164;
+      this.memberInfo.phone_country_code = value.country.iso2.toLowerCase();
+    },
     submitForm(formName) {
       this.declaration = false;
-      console.log("hide:" + this.declaration);
+      if (this.donationInfo.isForeign) {
+        this.memberInfo.useridType = "末四碼";
+        this.memberInfo.sinLast4 = "9999";
+        this.region = null;
+        console.log(
+          this.memberInfo.useridType + ", " + this.memberInfo.sinLast4
+        );
+      }
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.next();
         } else {
-          console.log("error submit!!");
+          console.log("error submit member info!!");
           this.showMessageBox("提示", "無輸入必填欄位或格式不符！");
           return false;
         }
@@ -489,12 +550,12 @@ export default {
       this.dialog.isShow = true;
     },
     previous() {
-      this.memberInfo.step = "1";
+      this.memberInfo.step = "2";
       console.log("step:" + this.memberInfo.step);
       this.$emit("nextStep", this.memberInfo);
     },
     next() {
-      this.memberInfo.step = "3";
+      this.memberInfo.step = "4";
       console.log("step:" + this.memberInfo.step);
       this.$emit("nextStep", this.memberInfo);
     },
@@ -511,7 +572,7 @@ span {
   color: red;
 }
 .el-row {
-  margin: 16px 0;
+  margin: 8px 0;
 }
 .step {
   line-height: 0%;
@@ -541,5 +602,28 @@ span {
 }
 .el-radio /deep/ .el-radio__label {
   font-size: 16px;
+}
+/deep/ .vue-tel-input {
+  border-radius: 0%;
+  border-color: #cccccc;
+
+  .vti__input {
+    border: none;
+    border-left: solid 1px #cccccc;
+    font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+      "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  }
+  ::placeholder {
+    /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: #cccccc;
+  }
+  :-ms-input-placeholder {
+    /* Internet Explorer 10-11 */
+    color: #cccccc;
+  }
+  ::-ms-input-placeholder {
+    /* Microsoft Edge */
+    color: #cccccc;
+  }
 }
 </style>
