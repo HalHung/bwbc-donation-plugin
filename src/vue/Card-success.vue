@@ -5,12 +5,12 @@
       謝謝您認同我們的教育理念，更為了教育環境盡一份力！
       <br />若捐款有問題我們將主動跟您聯繫。
     </p>
-    <!-- <div>
+    <div>
         <span style="font-size:18px;">以下是您的捐款資訊：</span>
         <p style="font-size:16px; margin:0;">捐款人：{{bwbcCardDonate.name}}</p>
         <p style="font-size:16px; margin:0;">手機號碼：{{bwbcCardDonate.cellPhone}}</p>
         <p style="font-size:16px; margin:0;">捐款項目：福智佛教學院</p>
-        <p style="font-size:16px; margin:0;">捐款日期：{{donaDate}}</p>
+        <p style="font-size:16px; margin:0;">捐款日期：{{bwbcCardDonate.donaDateStr}}</p>
         <p style="font-size:16px; margin:0;" v-if="bwbcCardDonate.paymentToolCode == 'R'">捐款方式：定期定額</p>
         <p style="font-size:16px; margin:0;" v-else>捐款方式：單筆捐款</p>
         <p style="font-size:16px; margin:0;">捐款金額：{{bwbcCardDonate.amount}}</p>
@@ -18,7 +18,7 @@
         <p style="font-size:16px; margin:0;" v-show="bwbcCardDonate.receiptTypeCode == 'ANNUAL'">收據開立方式：年開</p>
         <p style="font-size:16px; margin:0;" v-show="bwbcCardDonate.receiptTypeCode == 'UNWANTTED'">收據開立方式：不需寄發</p>
         <p style="font-size:16px; margin:0;" v-if="bwbcCardDonate.receiptTypeCode != 'UNWANTTED'">收據抬頭：{{bwbcCardDonate.donatorName}}</p>
-    </div> -->
+    </div>
     <p style="font-size:16px;">再次誠摯感謝您！</p>
     <p style="font-size:16px;">
       若您有疑惑，歡迎您透過以下方式聯繫我們：
@@ -60,8 +60,8 @@ export default {
   },
   created(){
     let urlParams = new URLSearchParams(window.location.search);
-    console.log(urlParams.get('no'));
-    // this.getDonationTxn(urlParams.get('no'));
+    console.log(urlParams.get('id'));
+    this.getDonationTxn(urlParams.get('id'));
   },
   methods:{
     getDonationTxn(donatxnNo){

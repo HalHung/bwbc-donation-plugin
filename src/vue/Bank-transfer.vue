@@ -165,6 +165,7 @@ export default {
         memberInfo.phone_country_code;
       this.bwbcTransferDonate.homePhone = memberInfo.homePhone;
       this.bwbcTransferDonate.email = memberInfo.email;
+      this.bwbcChequeDonate.notifyTypeCode = "NONE";
       this.region = memberInfo.region;
       this.step = memberInfo.step;
       console.log(

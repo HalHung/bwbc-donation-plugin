@@ -18,11 +18,7 @@
         </el-col>
         <el-col>
           <el-form-item prop="name">
-            <el-input
-              type="text"
-              placeholder="請輸入姓名(僅限填寫一位)"
-              v-model="memberInfo.name"
-            ></el-input>
+            <el-input type="text" placeholder="請輸入姓名(僅限填寫一位)" v-model="memberInfo.name"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -95,7 +91,7 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row>
+      <el-row v-if="donationInfo.isForeign == false">
         <el-col>
           <span>手機號碼</span>
           <span class="required-mark">*</span>
@@ -103,12 +99,23 @@
         </el-col>
         <el-col>
           <el-form-item prop="cellPhone">
-            <!-- <el-input
+            <el-input
               type="text"
               placeholder="範例：0987654321( 不需 - )"
               v-model="memberInfo.cellPhone"
               maxlength="10"
-            ></el-input>-->
+            ></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row v-if="donationInfo.isForeign == true">
+        <el-col>
+          <span>手機號碼</span>
+          <span class="required-mark">*</span>
+          <span>:</span>
+        </el-col>
+        <el-col>
+          <el-form-item prop="cellPhone">
             <vue-tel-input
               placeholder="請輸入手機號碼"
               name="phoneNumber"
@@ -324,13 +331,18 @@ export default {
       }
     };
     // 國內手機號碼驗證
-    // var checkCellPhoneValidator = (rule, value, callback) => {
-    //   if (!CheckFunctions.checkCellPhone(value)) {
-    //     return callback(new Error("手機格式錯誤"));
-    //   } else {
-    //     return callback();
-    //   }
-    // };
+    var checkDomesticPhoneValidator = (rule, value, callback) => {
+      console.log(typeof(this.donationInfo.isForeign)+', '+this.donationInfo.isForeign);
+      if (this.donationInfo.isForeign) {
+        console.log("foreigner");
+      } else {
+        if (!CheckFunctions.checkCellPhone(value)) {
+          return callback(new Error("手機格式錯誤"));
+        } else {
+          return callback();
+        }
+      }
+    };
     // 電子信箱驗證
     var checkEmailValidator = (rule, value, callback) => {
       if (!CheckFunctions.checkEmail(value)) {
@@ -376,7 +388,7 @@ export default {
         email: null, // 電子信箱
         region: null, // 居住地
         step: null, // 回傳通知父組件切換
-        notifyTypeCode: null, // 通知方式 1.SMS簡訊 2.EMAIL電子信件 3.NONE不通知
+        notifyTypeCode: "NONE", // 通知方式 1.SMS簡訊 2.EMAIL電子信件 3.NONE不通知
       },
       dialog: {
         title: "",
@@ -506,7 +518,7 @@ export default {
         ],
         cellPhone: [
           { required: true, message: "請輸入行動電話", trigger: "blur" },
-          // { validator: checkCellPhoneValidator, trigger: "blur" },
+          { validator: checkDomesticPhoneValidator, trigger: "blur" },
         ],
         email: [
           { required: true, message: "請輸入電子信箱", trigger: "blur" },

@@ -100,7 +100,7 @@ export default {
           expYear: null, // 有效年
           cvc: null, // 安全碼
         },
-        notifyTypeCode: null, // 通知方式 1.SMS簡訊 2.EMAIL電子信件 3.NONE不通知
+        notifyTypeCode: "NONE", // 通知方式 1.SMS簡訊 2.EMAIL電子信件 3.NONE不通知
         donaUseCode: "Z",
         donaItemCode: "W11",
         fromCard: true,
@@ -219,7 +219,7 @@ export default {
         "phone_country_code:" +
           this.bwbcCardDonate.phone_country_code +
           " / " +
-          this.bwbcChequeDonate.notifyTypeCode
+          this.bwbcCardDonate.notifyTypeCode
       );
       if (memberInfo.step == "4") {
         this.donate();

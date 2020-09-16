@@ -3,7 +3,7 @@
   <div id="component-body">
     <el-form :model="transferInfo" :rules="rules" ref="transferInfo">
       <el-row class="step">
-        <el-steps :active="3" finish-status="success">
+        <el-steps :active="2" finish-status="success">
           <el-step title="步驟１" icon="el-icon-tickets"></el-step>
           <el-step title="步驟２" icon="el-icon-s-order"></el-step>
           <el-step title="步驟３" icon="el-icon-s-custom"></el-step>

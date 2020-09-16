@@ -161,7 +161,7 @@ export default {
       roadOptions: [],
       rules: {
         addressType: [
-          { required: true, message: "請選擇地區", trigger: "blur" },
+          // { required: true, message: "請選擇地區", trigger: "blur" },
         ],
         city: [{ validator: checkSelectValidator, trigger: "blur" }],
         district: [{ validator: checkSelectValidator, trigger: "blur" }],
@@ -290,7 +290,7 @@ export default {
 <style lang="scss" scoped>
 .star {
   .el-form-item__label:before {
-    content: "*";
+    content: "";
     color: red;
     margin-right: 4px;
   }
