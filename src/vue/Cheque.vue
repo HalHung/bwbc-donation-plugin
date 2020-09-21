@@ -1,5 +1,5 @@
 <template>
-  <div id="body">
+  <div id="body" v-loading="loading" element-loading-text="努力傳送資料中...">
     <div v-show="step == '1'" id="step-one">
       <ChequeDonationInfo @nextStep="setChequeDonationInfo($event)"></ChequeDonationInfo>
     </div>
@@ -31,7 +31,7 @@
           style="font-size:16px; margin:0;"
           v-if="bwbcChequeDonate.donatorTypeCode == 'PERSON'"
         >捐款人：{{bwbcChequeDonate.name}}</p>
-        <p style="font-size:16px; margin:0;" v-else>捐款公司：{{bwbcChequeDonate.companyInfo.name}}</p>
+        <p style="font-size:16px; margin:0;" v-else>捐款公司：{{bwbcChequeDonate.companyName}}</p>
         <p
           style="font-size:16px; margin:0;"
           v-if="bwbcChequeDonate.donatorTypeCode == 'PERSON'"
@@ -80,6 +80,8 @@ import ChequeDonationInfo from "./components/cheque-donation-info";
 import ChequeInfo from "./components/cheque-info";
 import MemberInfo from "./components/member-info";
 import CompanyInfo from "./components/company-info";
+import API from "../api";
+
 export default {
   components: { ChequeDonationInfo, ChequeInfo, MemberInfo, CompanyInfo },
   data() {
@@ -92,32 +94,27 @@ export default {
         receiptTypeCode: null, // 收據開立方式: 1.BY_TIME單筆 2.UNWANTTED不需寄發
         donatorName: null, // 收據抬頭
         address: null, // 地址
-        step: null,
-        cheque: {
-          memo1: null, // 支票末五碼
-          memo2: null, // 開票人
-        },
+        memo1: null, // 支票末五碼
+        memo2: null, // 開票人
         name: null, // 會員姓名
         genderTypeCode: null, // 性別
         payerTypeCode: null, // 是否參加福智廣論研討班
         sin: null, // 身分證字號
         sinLast4: null, // 身分證字號末四碼
         cellPhone: null, // 手機號碼
-        phone_country_code: null,
         homePhone: null, // 住家電話
         email: null, // 電子信箱
-        region: null, // 居住地
-        useridType: null, // 身分證選填全碼或末四碼
         notifyTypeCode: null, // 通知方式 1.SMS簡訊 2.EMAIL電子信件 3.NONE不通知
-        companyInfo: {
-          name: null, // 公司名稱
-          sinCompany: null, // 公司統編
-          companyAddress: null, // 聯絡地址
-        },
+        companyName: null, // 公司名稱
+        sinCompany: null, // 公司統編
+        companyAddress: null, // 聯絡地址
         donaUseCode: "Z",
         donaItemCode: "W11",
-        fromCard: false,
       },
+      phone_country_code: null,
+      fromCard: false,
+      region: null, // 居住地
+      useridType: null, // 身分證選填全碼或末四碼
       donaDate: null,
       dialog: {
         title: "",
@@ -136,6 +133,64 @@ export default {
       today.getDate();
   },
   methods: {
+    donate() {
+      this.loading = !this.loading;
+      console.log("loading");
+      if (this.useridType == "全碼") {
+        this.bwbcChequeDonate.sinLast4 = this.bwbcChequeDonate.sin.substr(6, 4);
+      } else {
+        this.bwbcChequeDonate.sin = null;
+      }
+      if (this.bwbcChequeDonate.receiptTypeCode == "UNWANTTED") {
+        this.bwbcChequeDonate.donatorName = this.bwbcChequeDonate.name;
+        if (this.region !== null) {
+          this.bwbcChequeDonate.address = {
+            addressType: "TAIWAN",
+            city: this.region,
+          };
+        }
+      }
+      API.donate.wpDonateCheck(this.bwbcChequeDonate).then((res) => {
+        let data = res.data;
+        if (data.status == 200) {
+          this.step = "4";
+        } else {
+          console.log(`data.pageChange:${data.pageChange}`);
+          switch (data.pageChange) {
+            case "NEXT":
+              this.step = "4";
+              var t = "提示";
+              var c = data.message;
+              if (data.message.includes(":")) {
+                t = data.message.split(":")[0];
+                c = data.message.split(":")[1];
+              }
+              this.showMessageBox(t, c);
+              break;
+            case "NONE":
+              var t = "提示";
+              var c = data.message;
+              if (data.message.includes(":")) {
+                t = data.message.split(":")[0];
+                c = data.message.split(":")[1];
+              }
+              this.showMessageBox(t, c);
+              break;
+            default:
+              var t = "提示";
+              var c = data.message;
+              if (data.message.includes(":")) {
+                t = data.message.split(":")[0];
+                c = data.message.split(":")[1];
+              }
+              this.showMessageBox(t, c);
+              break;
+          }
+        }
+        this.loading = !this.loading;
+        console.log("done");
+      });
+    },
     setChequeDonationInfo(chequeDonationInfo) {
       this.bwbcChequeDonate.isForeign = chequeDonationInfo.isForeign;
       this.bwbcChequeDonate.donatorTypeCode =
@@ -162,16 +217,9 @@ export default {
       );
     },
     setChequeInfo(chequeInfo) {
-      this.bwbcChequeDonate.cheque.chequeNoLast5 = chequeInfo.chequeNoLast5;
-      this.bwbcChequeDonate.cheque.drawer = chequeInfo.drawer;
+      this.bwbcChequeDonate.memo1 = chequeInfo.memo1;
+      this.bwbcChequeDonate.memo2 = chequeInfo.memo2;
       this.step = chequeInfo.step;
-      console.log(
-        this.bwbcChequeDonate.cheque.chequeNoLast5 +
-          " / " +
-          this.bwbcChequeDonate.cheque.drawer +
-          " / " +
-          this.step
-      );
     },
     setMemberInfo(memberInfo) {
       this.bwbcChequeDonate.name = memberInfo.name;
@@ -181,38 +229,17 @@ export default {
       this.bwbcChequeDonate.sin = memberInfo.sin;
       this.bwbcChequeDonate.sinLast4 = memberInfo.sinLast4;
       this.bwbcChequeDonate.cellPhone = memberInfo.cellPhone;
-      this.bwbcChequeDonate.phone_country_code = memberInfo.phone_country_code;
+      this.phone_country_code = memberInfo.phone_country_code;
       this.bwbcChequeDonate.homePhone = memberInfo.homePhone;
       this.bwbcChequeDonate.email = memberInfo.email;
       this.bwbcChequeDonate.notifyTypeCode = "NONE";
       this.region = memberInfo.region;
-      this.step = memberInfo.step;
-      console.log(
-        this.bwbcChequeDonate.name +
-          " / " +
-          this.bwbcChequeDonate.genderTypeCode +
-          " / " +
-          this.bwbcChequeDonate.payerTypeCode +
-          " / " +
-          this.bwbcChequeDonate.sin +
-          " / " +
-          this.bwbcChequeDonate.sinLast4 +
-          " / " +
-          this.bwbcChequeDonate.cellPhone +
-          " / " +
-          this.bwbcChequeDonate.phone_country_code +
-          " / " +
-          this.bwbcChequeDonate.homePhone +
-          " / " +
-          this.bwbcChequeDonate.email +
-          " / " +
-          this.step
-      );
+      this.donate();
     },
     setCorporationInfo(companyInfo) {
-      this.bwbcChequeDonate.companyInfo.name = companyInfo.name;
-      this.bwbcChequeDonate.companyInfo.sinCompany = companyInfo.sinCompany;
-      this.bwbcChequeDonate.companyInfo.companyAddress =
+      this.bwbcChequeDonate.companyName = companyInfo.name;
+      this.bwbcChequeDonate.sinCompany = companyInfo.sinCompany;
+      this.bwbcChequeDonate.companyAddress =
         companyInfo.companyAddress;
       this.bwbcChequeDonate.name = companyInfo.contactName;
       this.bwbcChequeDonate.genderTypeCode = "MALE";
@@ -220,44 +247,14 @@ export default {
       this.bwbcChequeDonate.sin = null;
       this.bwbcChequeDonate.sinLast4 = "0000";
       this.bwbcChequeDonate.cellPhone = companyInfo.contactPhone;
-      this.bwbcChequeDonate.phone_country_code = null;
+      this.phone_country_code = null;
       this.bwbcChequeDonate.homePhone = null;
       this.bwbcChequeDonate.email = companyInfo.contactEmail;
-      this.bwbcChequeDonate.region = null;
-      this.bwbcChequeDonate.useridType = "末四碼";
+      this.region = null;
+      this.useridType = "末四碼";
       this.bwbcChequeDonate.notifyTypeCode = "NONE";
-      this.step = companyInfo.step;
-      console.log(
-        this.bwbcChequeDonate.companyInfo.name +
-          " / " +
-          this.bwbcChequeDonate.companyInfo.sinCompany +
-          " / " +
-          this.bwbcChequeDonate.companyInfo.companyAddress +
-          " / " +
-          this.bwbcChequeDonate.name +
-          " / " +
-          this.bwbcChequeDonate.genderTypeCode +
-          " / " +
-          this.bwbcChequeDonate.sin +
-          " / " +
-          this.bwbcChequeDonate.sinLast4 +
-          " / " +
-          this.bwbcChequeDonate.cellPhone +
-          " / " +
-          this.bwbcChequeDonate.phone_country_code +
-          " / " +
-          this.bwbcChequeDonate.homePhone +
-          " / " +
-          this.bwbcChequeDonate.email +
-          " / " +
-          this.bwbcChequeDonate.region +
-          " / " +
-          this.bwbcChequeDonate.useridType +
-          " / " +
-          this.bwbcChequeDonate.notifyTypeCode +
-          " / " +
-          this.step
-      );
+      // this.step = companyInfo.step;
+      this.donate();
     },
   },
 };
