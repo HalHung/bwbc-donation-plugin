@@ -203,6 +203,7 @@ export default {
       );
     },
     setMemberInfo(memberInfo) {
+      console.log(`cc setMemberInfo`)
       this.bwbcCardDonate.name = memberInfo.name;
       this.bwbcCardDonate.genderTypeCode = memberInfo.genderTypeCode;
       this.bwbcCardDonate.payerTypeCode = memberInfo.payerTypeCode;

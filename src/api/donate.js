@@ -14,6 +14,28 @@ function wpDonateCard(data) {
   });
 }
 
+function wpDonateCheck(data) {
+  var params = {
+    data: data,
+  };
+  return request({
+    url: `wpDonateCheck`,
+    data: params,
+    method: "post"
+  });
+}
+
+function wpDonateSquare(data) {
+  var params = {
+    data: data,
+  };
+  return request({
+    url: `wpDonateSquare`,
+    data: params,
+    method: "post"
+  });
+}
+
 function wpDonationData(donatxnNo) {
   return request({
     url: `wpDonationData?no=${donatxnNo}`,
@@ -23,5 +45,7 @@ function wpDonationData(donatxnNo) {
 
 export default {
   wpDonateCard,
+  wpDonateCheck,
+  wpDonateSquare,
   wpDonationData
 };

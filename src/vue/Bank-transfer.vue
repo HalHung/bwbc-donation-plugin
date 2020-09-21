@@ -1,6 +1,6 @@
 <template>
   <!-- 固定帳號匯款 -->
-  <div id="body">
+  <div id="body" v-loading="loading" element-loading-text="努力傳送資料中...">
     <div v-show="step == '1'" id="step-one">
       <TransferDonation @nextStep="setTransferDonation($event)"></TransferDonation>
     </div>
@@ -32,7 +32,7 @@
           style="font-size:16px; margin:0;"
           v-if="bwbcTransferDonate.donatorTypeCode == 'PERSON'"
         >捐款人：{{bwbcTransferDonate.name}}</p>
-        <p style="font-size:16px; margin:0;" v-else>捐款公司：{{bwbcTransferDonate.companyInfo.name}}</p>
+        <p style="font-size:16px; margin:0;" v-else>捐款公司：{{bwbcTransferDonate.companyName}}</p>
         <p
           style="font-size:16px; margin:0;"
           v-if="bwbcTransferDonate.donatorTypeCode == 'PERSON'"
@@ -66,6 +66,7 @@ import MemberInfo from "./components/member-info";
 import TransferDonation from "./components/transfer-donation";
 import TransferInfo from "./components/transfer-info";
 import CompanyInfo from "./components/company-info";
+import API from "../api";
 export default {
   components: {
     MemberInfo,
@@ -76,6 +77,7 @@ export default {
   data() {
     return {
       step: "1",
+      loading: false,
       bwbcTransferDonate: {
         donatorTypeCode: null, // PERSON自然人捐款 CORPORATION法人捐款
         isForeign: null, // 國籍
@@ -83,33 +85,28 @@ export default {
         receiptTypeCode: null, // 收據開立方式: 1.BY_TIME單筆 2.UNWANTTED不需寄發
         donatorName: null, // 收據抬頭
         address: null, // 地址
-        step: null,
-        transfer: {
-          memo1: null, // 匯款帳號末五碼
-          memo2: null, // 匯款人
-          date1: null, // 匯款日期
-        },
+        memo1: null, // 匯款帳號末五碼
+        memo2: null, // 匯款人
+        date1: null, // 匯款日期
         name: null, // 會員姓名
         genderTypeCode: null, // 性別
         payerTypeCode: null, // 是否參加福智廣論研討班
         sin: null, // 身分證字號
         sinLast4: null, // 身分證字號末四碼
         cellPhone: null, // 手機號碼
-        phone_country_code: null,
         homePhone: null, // 住家電話
         email: null, // 電子信箱
-        region: null, // 居住地
-        useridType: null, // 身分證選填全碼或末四碼
         notifyTypeCode: null, // 通知方式 1.SMS簡訊 2.EMAIL電子信件 3.NONE不通知
-        companyInfo: {
-          name: null, // 公司名稱
-          sinCompany: null, // 公司統編
-          companyAddress: null, // 聯絡地址
-        },
+        companyName: null, // 公司名稱
+        sinCompany: null, // 公司統編
+        companyAddress: null, // 聯絡地址
         donaUseCode: "Z",
         donaItemCode: "W11",
-        fromCard: false,
       },
+      region: null, // 居住地
+      useridType: null, // 身分證選填全碼或末四碼
+      phone_country_code: null,
+      fromCard: false,
       donaDate: null,
       dialog: {
         title: "",
@@ -128,6 +125,64 @@ export default {
       today.getDate();
   },
   methods: {
+    donate() {
+      this.loading = !this.loading;
+      console.log("loading");
+      if (this.useridType == "全碼") {
+        this.bwbcTransferDonate.sinLast4 = this.bwbcTransferDonate.sin.substr(6, 4);
+      } else {
+        this.bwbcTransferDonate.sin = null;
+      }
+      if (this.bwbcTransferDonate.receiptTypeCode == "UNWANTTED") {
+        this.bwbcTransferDonate.donatorName = this.bwbcTransferDonate.name;
+        if (this.region !== null) {
+          this.bwbcTransferDonate.address = {
+            addressType: "TAIWAN",
+            city: this.region,
+          };
+        }
+      }
+      API.donate.wpDonateSquare(this.bwbcTransferDonate).then((res) => {
+        let data = res.data;
+        if (data.status == 200) {
+          this.step = "4";
+        } else {
+          console.log(`data.pageChange:${data.pageChange}`);
+          switch (data.pageChange) {
+            case "NEXT":
+              this.step = "4";
+              var t = "提示";
+              var c = data.message;
+              if (data.message.includes(":")) {
+                t = data.message.split(":")[0];
+                c = data.message.split(":")[1];
+              }
+              this.showMessageBox(t, c);
+              break;
+            case "NONE":
+              var t = "提示";
+              var c = data.message;
+              if (data.message.includes(":")) {
+                t = data.message.split(":")[0];
+                c = data.message.split(":")[1];
+              }
+              this.showMessageBox(t, c);
+              break;
+            default:
+              var t = "提示";
+              var c = data.message;
+              if (data.message.includes(":")) {
+                t = data.message.split(":")[0];
+                c = data.message.split(":")[1];
+              }
+              this.showMessageBox(t, c);
+              break;
+          }
+        }
+        this.loading = !this.loading;
+        console.log("done");
+      });
+    },
     setTransferDonation(transferDonation) {
       this.bwbcTransferDonate.donatorTypeCode =
         transferDonation.donatorTypeCode;
@@ -161,39 +216,18 @@ export default {
       this.bwbcTransferDonate.sin = memberInfo.sin;
       this.bwbcTransferDonate.sinLast4 = memberInfo.sinLast4;
       this.bwbcTransferDonate.cellPhone = memberInfo.cellPhone;
-      this.bwbcTransferDonate.phone_country_code =
+      this.phone_country_code =
         memberInfo.phone_country_code;
       this.bwbcTransferDonate.homePhone = memberInfo.homePhone;
       this.bwbcTransferDonate.email = memberInfo.email;
-      this.bwbcChequeDonate.notifyTypeCode = "NONE";
+      this.bwbcTransferDonate.notifyTypeCode = "NONE";
       this.region = memberInfo.region;
-      this.step = memberInfo.step;
-      console.log(
-        this.bwbcTransferDonate.name +
-          " / " +
-          this.bwbcTransferDonate.genderTypeCode +
-          " / " +
-          this.bwbcTransferDonate.payerTypeCode +
-          " / " +
-          this.bwbcTransferDonate.sin +
-          " / " +
-          this.bwbcTransferDonate.sinLast4 +
-          " / " +
-          this.bwbcTransferDonate.cellPhone +
-          " / " +
-          this.bwbcTransferDonate.phone_country_code +
-          " / " +
-          this.bwbcTransferDonate.homePhone +
-          " / " +
-          this.bwbcTransferDonate.email +
-          " / " +
-          this.step
-      );
+      this.donate();
     },
     setTransferInfo(transferInfo) {
       this.bwbcTransferDonate.memo1 = transferInfo.memo1;
       this.bwbcTransferDonate.memo2 = transferInfo.memo2;
-      this.bwbcTransferDonate.date1 = transferInfo.date1;
+      this.bwbcTransferDonate.date1 = this.getDateString(transferInfo.date1);
       this.step = transferInfo.step;
       console.log(
         "帳號末五碼 =" +
@@ -207,55 +241,28 @@ export default {
       );
     },
     setCorporationInfo(companyInfo) {
-      this.bwbcTransferDonate.companyInfo.name = companyInfo.name;
-      this.bwbcTransferDonate.companyInfo.sinCompany = companyInfo.sinCompany;
-      this.bwbcTransferDonate.companyInfo.companyAddress =
-        companyInfo.companyAddress;
+      this.bwbcTransferDonate.companyName = companyInfo.name;
+      this.bwbcTransferDonate.sinCompany = companyInfo.sinCompany;
+      this.bwbcTransferDonate.companyAddress = companyInfo.companyAddress;
       this.bwbcTransferDonate.name = companyInfo.contactName;
       this.bwbcTransferDonate.genderTypeCode = "MALE";
       this.bwbcTransferDonate.payerTypeCode = "NOT_HEARD";
       this.bwbcTransferDonate.sin = null;
       this.bwbcTransferDonate.sinLast4 = "0000";
       this.bwbcTransferDonate.cellPhone = companyInfo.contactPhone;
-      this.bwbcTransferDonate.phone_country_code = null;
       this.bwbcTransferDonate.homePhone = null;
       this.bwbcTransferDonate.email = companyInfo.contactEmail;
-      this.bwbcTransferDonate.region = null;
-      this.bwbcTransferDonate.useridType = "末四碼";
-      this.bwbcTransferDonate.notifyTypeCode = "NONE";
-      this.step = companyInfo.step;
-      console.log(
-        this.bwbcTransferDonate.companyInfo.name +
-          " / " +
-          this.bwbcTransferDonate.companyInfo.sinCompany +
-          " / " +
-          this.bwbcTransferDonate.companyInfo.companyAddress +
-          " / " +
-          this.bwbcTransferDonate.name +
-          " / " +
-          this.bwbcTransferDonate.genderTypeCode +
-          " / " +
-          this.bwbcTransferDonate.sin +
-          " / " +
-          this.bwbcTransferDonate.sinLast4 +
-          " / " +
-          this.bwbcTransferDonate.cellPhone +
-          " / " +
-          this.bwbcTransferDonate.phone_country_code +
-          " / " +
-          this.bwbcTransferDonate.homePhone +
-          " / " +
-          this.bwbcTransferDonate.email +
-          " / " +
-          this.bwbcTransferDonate.region +
-          " / " +
-          this.bwbcTransferDonate.useridType +
-          " / " +
-          this.bwbcTransferDonate.notifyTypeCode +
-          " / " +
-          this.step
-      );
+      this.bwbcTransferDonate.notifyTypeCode = "NONE";  
+      this.region = null;
+      this.useridType = "末四碼";
+      this.donate() ;
     },
+    getDateString(date1){
+      let year = `${new Date(date1).getFullYear()}`
+      let month = new Date(date1).getMonth()+1
+      let date = new Date(date1).getDate()
+      return `${year}/${month<10?`0${month}`:month}/${date<10?`0${date}`:date}`
+    }
   },
 };
 </script>

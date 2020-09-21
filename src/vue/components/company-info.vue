@@ -245,6 +245,7 @@ export default {
         companyAddress: null, // 聯絡地址
         step: null,
       },
+      companyAddress: null,
       dialog: {
         title: "",
         content: "",
@@ -298,6 +299,7 @@ export default {
     },
     next() {
       this.companyInfo.step = "4";
+      this.companyInfo.companyAddress = this.getAddressString(this.companyAddress);
       console.log("step:" + this.companyInfo.step);
       this.$emit("nextStep", this.companyInfo);
     },
@@ -306,11 +308,47 @@ export default {
       this.dialog.content = content;
       this.dialog.isShow = true;
     },
+    getAddressString(address) {
+      if(address.zipCode==undefined)
+        return null
+      let result = address.addressType+address.zipCode;
+      if(address.city != undefined ){
+              result+= address.city
+      }
+      if(address.district != undefined ){
+              result+= address.district
+      }
+      if(address.road != undefined ){
+              result+= address.road
+      }
+      if(address.lane != undefined ){
+              result+= address.lane+"巷"
+      }
+      if(address.alley != undefined ){
+              result+= address.alley+"弄"
+      }
+      if(address.subAlley != undefined ){
+              result+= address.subAlley+"衖"
+      }
+      if(address.number != undefined ){
+              result+= address.number+"號"
+      }
+      if(address.floor != undefined ){
+              result += address.floor+"樓"
+      }
+      if(address.room != undefined ){
+              result += address.room+"室"
+      }
+      if(address.other != undefined ){
+              result += address
+      }
+      return result
+    },
     adderssValidate() {
       this.$refs["addressEdit"].$refs["address"].validate((valid) => {
         console.log(`address v:${valid}`);
         if (valid) {
-          this.companyInfo.address = this.$refs["addressEdit"].address;
+          this.companyAddress = this.$refs["addressEdit"].address;
           // this.nextStep();
         } else {
           this.showMessageBox("提示", "地址欄無輸入必填欄位或資料不完整！");

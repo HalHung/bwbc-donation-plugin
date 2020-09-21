@@ -335,6 +335,7 @@ export default {
       console.log(typeof(this.donationInfo.isForeign)+', '+this.donationInfo.isForeign);
       if (this.donationInfo.isForeign) {
         console.log("foreigner");
+        return callback();
       } else {
         if (!CheckFunctions.checkCellPhone(value)) {
           return callback(new Error("手機格式錯誤"));
@@ -547,6 +548,7 @@ export default {
         );
       }
       this.$refs[formName].validate((valid) => {
+        console.log(`valid:${valid}`)
         if (valid) {
           this.next();
         } else {

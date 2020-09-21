@@ -187,6 +187,7 @@ export default {
           if (this.chequeDonation.receipt != "UNWANTTED") {
             this.adderssValidate();
           } else {
+            this.transferDonation.address = undefined;
             this.nextStep();
           }
         } else {
