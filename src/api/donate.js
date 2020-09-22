@@ -3,7 +3,7 @@
  */
 import request from "./request";
 function wpDonateCard(data) {
-  data.is3D = true
+  data.is3D = false
   var params = {
     data: data,
   };
