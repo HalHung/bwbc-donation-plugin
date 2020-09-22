@@ -222,7 +222,9 @@ export default {
       this.bwbcTransferDonate.email = memberInfo.email;
       this.bwbcTransferDonate.notifyTypeCode = "NONE";
       this.region = memberInfo.region;
-      this.donate();
+      this.step = memberInfo.step;
+      if(this.step == "4")
+        this.donate();
     },
     setTransferInfo(transferInfo) {
       this.bwbcTransferDonate.memo1 = transferInfo.memo1;
@@ -252,10 +254,12 @@ export default {
       this.bwbcTransferDonate.cellPhone = companyInfo.contactPhone;
       this.bwbcTransferDonate.homePhone = null;
       this.bwbcTransferDonate.email = companyInfo.contactEmail;
-      this.bwbcTransferDonate.notifyTypeCode = "NONE";  
+      this.bwbcTransferDonate.notifyTypeCode = "NONE"; 
       this.region = null;
       this.useridType = "末四碼";
-      this.donate() ;
+      this.step = companyInfo.step; 
+      if(this.step == "4")
+        this.donate() ;
     },
     getDateString(date1){
       let year = `${new Date(date1).getFullYear()}`

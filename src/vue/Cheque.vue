@@ -234,7 +234,9 @@ export default {
       this.bwbcChequeDonate.email = memberInfo.email;
       this.bwbcChequeDonate.notifyTypeCode = "NONE";
       this.region = memberInfo.region;
-      this.donate();
+      this.step = memberInfo.step;
+      if(this.step == "4")
+        this.donate();
     },
     setCorporationInfo(companyInfo) {
       this.bwbcChequeDonate.companyName = companyInfo.name;
@@ -253,8 +255,9 @@ export default {
       this.region = null;
       this.useridType = "末四碼";
       this.bwbcChequeDonate.notifyTypeCode = "NONE";
-      // this.step = companyInfo.step;
-      this.donate();
+      this.step = companyInfo.step;
+      if(this.step == "4")
+        this.donate();
     },
   },
 };
