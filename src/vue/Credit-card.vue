@@ -18,6 +18,7 @@
       </p>
       <div>
         <span style="font-size:18px; color:#9c8044;">以下是您的捐款資訊：</span>
+        <p style="font-size:16px; margin:0;">捐款編號：{{donationNo}}</p>
         <p style="font-size:16px; margin:0;">捐款人：{{bwbcCardDonate.name}}</p>
         <p style="font-size:16px; margin:0;">手機號碼：{{bwbcCardDonate.cellPhone}}</p>
         <p style="font-size:16px; margin:0;">捐款項目：福智佛教學院</p>
@@ -114,6 +115,7 @@ export default {
         isShow: false,
       },
       loading: false,
+      donationNo: null
     };
   },
   mounted() {
@@ -150,6 +152,7 @@ export default {
           document.body.innerHTML = body2;
           document.forms[0].submit();
         } else if (data.status == 200) {
+          this.donationNo = data.data;
           this.step = "4";
         } else {
           console.log(`data.pageChange:${data.pageChange}`);
