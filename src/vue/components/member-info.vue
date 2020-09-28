@@ -18,43 +18,31 @@
         </el-col>
         <el-col>
           <el-form-item prop="name">
-            <el-input type="text" placeholder="請輸入姓名(僅限填寫一位)" v-model="memberInfo.name"></el-input>
+            <el-input
+              type="text"
+              placeholder="請輸入姓名(僅限填寫一位)"
+              v-model="memberInfo.name"
+              maxlength="30"
+            ></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col>
-          <span>性別</span>
+          <span>身份</span>
           <span class="required-mark">*</span>
           <span>:&nbsp;</span>
         </el-col>
         <el-col>
-          <el-form-item prop="genderTypeCode">
-            <el-radio-group v-model="memberInfo.genderTypeCode">
-              <el-radio label="MALE">男</el-radio>
-              <el-radio label="FEMALE">女</el-radio>
+          <el-form-item prop="isForeign">
+            <el-radio-group v-model="memberInfo.isForeign">
+              <el-radio :label="false">本國籍人士</el-radio>
+              <el-radio :label="true">非本國籍人士</el-radio>
             </el-radio-group>
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row>
-        <el-col>
-          <span>是否參加福智廣論研討班</span>
-          <span class="required-mark">*</span>
-          <span>:&nbsp;</span>
-        </el-col>
-        <el-col>
-          <el-form-item prop="payerTypeCode">
-            <el-radio-group v-model="memberInfo.payerTypeCode">
-              <el-radio label="YES">正在參加</el-radio>
-              <el-radio label="EVER">曾經參加過</el-radio>
-              <el-radio label="NO">沒有</el-radio>
-              <el-radio label="NOT_HEARD">沒聽過</el-radio>
-            </el-radio-group>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row v-if="donationInfo.isForeign == false">
+      <el-row v-if="memberInfo.isForeign == false">
         <el-col>
           <span>身分證字號</span>
           <span class="required-mark">*</span>
@@ -91,7 +79,7 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row v-if="donationInfo.isForeign == false">
+      <el-row v-if="memberInfo.isForeign == false">
         <el-col>
           <span>手機號碼</span>
           <span class="required-mark">*</span>
@@ -108,7 +96,7 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row v-if="donationInfo.isForeign == true">
+      <el-row v-if="memberInfo.isForeign == true">
         <el-col>
           <span>手機號碼</span>
           <span class="required-mark">*</span>
@@ -126,7 +114,7 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row>
+      <!-- <el-row>
         <el-col>
           <span>住家電話</span>
           <span>:</span>
@@ -140,7 +128,7 @@
             ></el-input>
           </el-form-item>
         </el-col>
-      </el-row>
+      </el-row>-->
       <el-row>
         <el-col>
           <span>電子信箱</span>
@@ -153,7 +141,102 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <div v-if="donationInfo.isForeign == false">
+      <el-row v-if="donationInfo.fromCard">
+        <el-col>
+          <span>捐款成功通知方式</span>
+          <span class="required-mark">*</span>
+          <span>:&nbsp;</span>
+        </el-col>
+        <el-col>
+          <el-form-item prop="notifyTypeCode">
+            <el-radio-group v-model="memberInfo.notifyTypeCode">
+              <el-radio label="SMS" v-if="memberInfo.isForeign == false">簡訊</el-radio>
+              <el-radio label="EMAIL">Email</el-radio>
+              <el-radio label="NONE">不通知</el-radio>
+            </el-radio-group>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col>
+          <span>性別</span>
+          <span class="required-mark">*</span>
+          <span>:&nbsp;</span>
+        </el-col>
+        <el-col>
+          <el-form-item prop="genderTypeCode">
+            <el-radio-group v-model="memberInfo.genderTypeCode">
+              <el-radio label="MALE">男</el-radio>
+              <el-radio label="FEMALE">女</el-radio>
+            </el-radio-group>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col>
+          <span>是否參加福智廣論研討班</span>
+          <span class="required-mark">*</span>
+          <span>:&nbsp;</span>
+        </el-col>
+        <el-col>
+          <el-form-item prop="payerTypeCode">
+            <el-radio-group v-model="memberInfo.payerTypeCode">
+              <el-radio label="YES">正在參加</el-radio>
+              <el-radio label="EVER">曾經參加過</el-radio>
+              <el-radio label="NO">沒有</el-radio>
+              <el-radio label="NOT_HEARD">沒聽過</el-radio>
+            </el-radio-group>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <!-- 收據 -->
+      <div v-if="memberInfo.isForeign == false">
+        <el-row>
+          <el-col>
+            <span>收據開立方式</span>
+            <span class="required-mark">*</span>
+            <span>(收據寄送資訊):&nbsp;</span>
+          </el-col>
+          <el-col>
+            <el-form-item prop="receiptTypeCode">
+              <el-radio-group v-model="memberInfo.receiptTypeCode">
+                <el-radio label="BY_TIME" v-if="donationInfo.paymentToolCode == 'E'">單筆</el-radio>
+                <el-radio label="ANNUAL">年開</el-radio>
+                <el-radio label="UNWANTTED">不需寄發</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row v-if="memberInfo.receiptTypeCode != 'UNWANTTED' ">
+          <el-col>
+            <span>收據抬頭</span>
+            <span class="required-mark">*</span>
+            <span>:</span>
+          </el-col>
+          <el-col>
+            <el-form-item prop="donatorName">
+              <el-input
+                type="text"
+                placeholder="請輸入姓名(僅限填寫一位)"
+                v-model="memberInfo.donatorName"
+                :validate-event="true"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row v-if="memberInfo.receiptTypeCode != 'UNWANTTED'">
+          <el-col>
+            <span>寄送地址</span>
+            <span class="required-mark">*</span>
+            <span>:</span>
+          </el-col>
+          <el-col>
+            <AddressEdit ref="addressEdit" :oAddress="memberInfo.address"></AddressEdit>
+          </el-col>
+        </el-row>
+      </div>
+      <!-- 收據 -->
+      <div v-if="memberInfo.isForeign == false">
         <el-row v-if="donationInfo.receiptTypeCode == 'UNWANTTED'" style="margin:16px 0px;">
           <el-col>
             <span>居住地(區域性活動通知用)：</span>
@@ -168,22 +251,6 @@
           </el-col>
         </el-row>
       </div>
-      <el-row v-if="donationInfo.fromCard">
-        <el-col>
-          <span>捐款成功通知方式</span>
-          <span class="required-mark">*</span>
-          <span>:&nbsp;</span>
-        </el-col>
-        <el-col>
-          <el-form-item prop="notifyTypeCode">
-            <el-radio-group v-model="memberInfo.notifyTypeCode">
-              <el-radio label="SMS" v-if="donationInfo.isForeign == false">簡訊</el-radio>
-              <el-radio label="EMAIL">Email</el-radio>
-              <el-radio label="NONE">不通知</el-radio>
-            </el-radio-group>
-          </el-form-item>
-        </el-col>
-      </el-row>
       <el-row
         style="background-color: #d8ba5f33; padding: 8px 16px 0; border-radius: 4px; border: solid 1px #decb93; margin-top:24px;"
       >
@@ -300,8 +367,10 @@
 
 <script>
 import { CheckFunctions } from "../../utils/CheckFunctions.js";
+import AddressEdit from "../components/AddressEdit";
 export default {
   name: "MemberInfo",
+  components: { AddressEdit },
   props: {
     donationInfo: Object,
   },
@@ -332,8 +401,10 @@ export default {
     };
     // 國內手機號碼驗證
     var checkDomesticPhoneValidator = (rule, value, callback) => {
-      console.log(typeof(this.donationInfo.isForeign)+', '+this.donationInfo.isForeign);
-      if (this.donationInfo.isForeign) {
+      console.log(
+        typeof this.memberInfo.isForeign + ", " + this.memberInfo.isForeign
+      );
+      if (this.memberInfo.isForeign) {
         console.log("foreigner");
         return callback();
       } else {
@@ -390,6 +461,10 @@ export default {
         region: null, // 居住地
         step: null, // 回傳通知父組件切換
         notifyTypeCode: "NONE", // 通知方式 1.SMS簡訊 2.EMAIL電子信件 3.NONE不通知
+        isForeign: false, // 國籍
+        receiptTypeCode: "UNWANTTED", // 收據開立方式: 1.BY_TIME單筆 2.ANNUAL年開 3.UNWANTTED不需寄發
+        donatorName: null, // 收據抬頭
+        address: null, // 地址
       },
       dialog: {
         title: "",
@@ -490,6 +565,15 @@ export default {
         },
       ],
       rules: {
+        isForeign: [
+          { required: true, message: "請選擇身份", trigger: "change" },
+        ],
+        donatorName: [
+          { required: true, message: "請輸入收據抬頭", trigger: "blur" },
+        ],
+        receiptTypeCode: [
+          { required: true, message: "請選擇收據開立方式", trigger: "change" },
+        ],
         name: [{ required: true, message: "請輸入姓名", trigger: "blur" }],
         genderTypeCode: [
           { required: true, message: "請選擇性別", trigger: "change" },
@@ -531,6 +615,12 @@ export default {
       },
     };
   },
+  watch: {
+    "memberInfo.isForeign"() {
+      this.memberInfo.notifyTypeCode = "NONE";
+      this.memberInfo.receiptTypeCode = "UNWANTTED";
+    },
+  },
   methods: {
     onPhoneInput(phone, value) {
       // console.log(`onPhoneInput:${phone},${JSON.stringify(value)}`);
@@ -539,7 +629,7 @@ export default {
     },
     submitForm(formName) {
       this.declaration = false;
-      if (this.donationInfo.isForeign) {
+      if (this.memberInfo.isForeign) {
         this.memberInfo.useridType = "末四碼";
         this.memberInfo.sinLast4 = "9999";
         this.region = null;
@@ -548,15 +638,35 @@ export default {
         );
       }
       this.$refs[formName].validate((valid) => {
-        console.log(`valid:${valid}`)
+        console.log(`valid:${valid}`);
         if (valid) {
-          this.next();
+          if (this.memberInfo.receiptTypeCode != "UNWANTTED") {
+            this.adderssValidate();
+          } else {
+            this.memberInfo.address = undefined;
+            this.next();
+          }
         } else {
           console.log("error submit member info!!");
           this.showMessageBox("提示", "無輸入必填欄位或格式不符！");
           return false;
         }
       });
+    },
+    adderssValidate() {
+      if (this.memberInfo.receiptTypeCode != "UNWANTTED") {
+        this.$refs["addressEdit"].$refs["address"].validate((valid) => {
+          console.log(`address v:${valid}`);
+          if (valid) {
+            this.memberInfo.address = this.$refs["addressEdit"].address;
+            this.next();
+          } else {
+            this.showMessageBox("提示", "地址欄無輸入必填欄位或資料不完整！");
+          }
+        });
+      } else {
+        this.memberInfo.address = undefined;
+      }
     },
     showMessageBox(title, content) {
       this.dialog.title = title;

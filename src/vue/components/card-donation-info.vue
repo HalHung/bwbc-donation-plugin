@@ -30,7 +30,7 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row>
+      <!-- <el-row>
         <el-col>
           <span>身份</span>
           <span class="required-mark">*</span>
@@ -44,7 +44,7 @@
             </el-radio-group>
           </el-form-item>
         </el-col>
-      </el-row>
+      </el-row> -->
       <el-row>
         <el-col>
           <span>捐款金額</span>
@@ -75,7 +75,7 @@
           <span v-show="cardDonation.paymentToolCode == 'R'">/&nbsp;每月</span>
         </el-col>
       </el-row>
-      <div v-if="cardDonation.isForeign == false">
+      <!-- <div v-if="cardDonation.isForeign == false">
         <el-row>
           <el-col>
             <span>收據開立方式</span>
@@ -116,11 +116,10 @@
             <span>(收據寄送地址):</span>
           </el-col>
           <el-col>
-            <!-- <el-input type="text" placeholder="請輸入地址"></el-input> -->
             <AddressEdit ref="addressEdit" :oAddress="cardDonation.address"></AddressEdit>
           </el-col>
         </el-row>
-      </div>
+      </div> -->
       <el-row>
         <el-col style="text-align:center; margin:16px 0;">
           <el-button @click="submitForm('cardDonation')" v-scroll-to="'#step-two'">下一步</el-button>
@@ -146,19 +145,13 @@
 </template>
 
 <script>
-import AddressEdit from "../components/AddressEdit";
 export default {
   name: "CardDonation",
-  components: { AddressEdit },
   data() {
     return {
       cardDonation: {
-        isForeign: false, // 國籍
         paymentToolCode: "E", // 捐款模式: E單次捐款 R定期定額
         amount: null, // 捐款金額
-        receipt: "UNWANTTED", // 收據開立方式: 1.BY_TIME單筆 2.ANNUAL年開 3.UNWANTTED不需寄發
-        donatorName: null, // 收據抬頭
-        address: null, // 地址
         step: null,
       },
       dialog: {
@@ -167,39 +160,18 @@ export default {
         isShow: false,
       },
       rules: {
-        isForeign: [
-          { required: true, message: "請選擇身份", trigger: "change" },
-        ],
         paymentToolCode: [
           { required: true, message: "請選擇捐款方式", trigger: "change" },
         ],
         amount: [{ required: true, message: "請輸入金額", trigger: "blur" }],
-        receipt: [
-          { required: true, message: "請選擇收據開立方式", trigger: "change" },
-        ],
-        donatorName: [
-          { required: true, message: "請輸入收據抬頭", trigger: "blur" },
-        ],
       },
     };
-  },
-  watch: {
-    "cardDonation.paymentToolCode"() {
-      if (this.cardDonation.paymentToolCode == "R") {
-        this.cardDonation.receipt = "UNWANTTED";
-      }
-    },
   },
   methods: {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          if (this.cardDonation.receipt != "UNWANTTED") {
-            this.adderssValidate();
-          } else {
-            this.transferDonation.address = undefined;
-            this.nextStep();
-          }
+          this.nextStep();
         } else {
           console.log(valid);
           console.log("error submit!!");
@@ -207,21 +179,6 @@ export default {
           return false;
         }
       });
-    },
-    adderssValidate() {
-      if (this.cardDonation.receipt != "UNWANTTED") {
-        this.$refs["addressEdit"].$refs["address"].validate((valid) => {
-          console.log(`address v:${valid}`);
-          if (valid) {
-            this.cardDonation.address = this.$refs["addressEdit"].address;
-            this.nextStep();
-          } else {
-            this.showMessageBox("提示", "地址欄無輸入必填欄位或資料不完整！");
-          }
-        });
-      } else {
-        this.cardDonation.address = undefined;
-      }
     },
     showMessageBox(title, content) {
       this.dialog.title = title;

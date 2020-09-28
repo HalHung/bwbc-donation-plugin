@@ -2,12 +2,12 @@
 <!-- 地址選填 -->
   <div>
     <el-form ref="address" :model="address" :rules="rules">
-      <el-form-item label="地區" prop="addressType">
+      <!-- <el-form-item label="地區" prop="addressType">
         <b-form-select v-model="address.addressType" v-on:change="changeAddressType">
           <b-form-select-option value="TAIWAN">台灣</b-form-select-option>
           <b-form-select-option value="OTHERS">其它</b-form-select-option>
         </b-form-select>
-      </el-form-item>
+      </el-form-item> -->
       <div v-if="address.addressType == 'TAIWAN'">
         <el-form-item label="縣市" prop="city" class="star" ref="city">
           <b-form-select v-model="address.city" :options="cityOptions" v-on:change="getDistrict">
@@ -77,7 +77,7 @@
           <el-col :xs="12" :sm="8">
             <el-form-item>
               <el-col class="ad-small-input">
-                <el-input v-model="address.number" maxlength="20"></el-input>
+                <el-input v-model="address.number" maxlength="20" placeholder="88-10"></el-input>
               </el-col>
               <el-col class="ad-small-label">號</el-col>
             </el-form-item>

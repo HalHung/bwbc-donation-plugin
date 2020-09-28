@@ -10,6 +10,7 @@
         <p style="font-size:16px; margin:0;">捐款人：{{bwbcCardDonate.name}}</p>
         <p style="font-size:16px; margin:0;">手機號碼：{{bwbcCardDonate.cellPhone}}</p>
         <p style="font-size:16px; margin:0;">捐款項目：福智佛教學院</p>
+        <p style="font-size:16px; margin:0;">捐款單號：</p>
         <p style="font-size:16px; margin:0;">捐款日期：{{bwbcCardDonate.donaDateStr}}</p>
         <p style="font-size:16px; margin:0;" v-if="bwbcCardDonate.paymentToolCode == 'R'">捐款方式：定期定額</p>
         <p style="font-size:16px; margin:0;" v-else>捐款方式：單筆捐款</p>

@@ -191,16 +191,7 @@ export default {
     setCardDonationInfo(cardDonationInfo) {
       this.bwbcCardDonate.paymentToolCode = cardDonationInfo.paymentToolCode;
       this.bwbcCardDonate.amount = cardDonationInfo.amount;
-      this.bwbcCardDonate.receiptTypeCode = cardDonationInfo.receipt;
-      this.bwbcCardDonate.donatorName = cardDonationInfo.donatorName;
-      this.bwbcCardDonate.address = cardDonationInfo.address;
-      this.bwbcCardDonate.isForeign = cardDonationInfo.isForeign;
       this.step = cardDonationInfo.step;
-      console.log(
-        typeof this.bwbcCardDonate.isForeign +
-          ", " +
-          this.bwbcCardDonate.isForeign
-      );
     },
     setMemberInfo(memberInfo) {
       console.log(`cc setMemberInfo`)
@@ -216,11 +207,19 @@ export default {
       this.bwbcCardDonate.email = memberInfo.email;
       this.region = memberInfo.region;
       this.bwbcCardDonate.notifyTypeCode = memberInfo.notifyTypeCode;
+      this.bwbcCardDonate.receiptTypeCode = memberInfo.receiptTypeCode;
+      this.bwbcCardDonate.donatorName = memberInfo.donatorName;
+      this.bwbcCardDonate.address = memberInfo.address;
+      this.bwbcCardDonate.isForeign = memberInfo.isForeign;
       console.log(
         "phone_country_code:" +
           this.bwbcCardDonate.phone_country_code +
           " / " +
-          this.bwbcCardDonate.notifyTypeCode
+          this.bwbcCardDonate.notifyTypeCode +
+          "。" +
+          typeof this.bwbcCardDonate.isForeign +
+          ", " +
+          this.bwbcCardDonate.isForeign
       );
       if (memberInfo.step == "4") {
         this.donate();
