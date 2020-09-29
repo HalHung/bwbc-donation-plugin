@@ -102,6 +102,7 @@ export default {
         companyAddress: null, // 聯絡地址
         donaUseCode: "Z",
         donaItemCode: "W11",
+        imgData: null,
       },
       region: null, // 居住地
       useridType: null, // 身分證選填全碼或末四碼
@@ -230,6 +231,7 @@ export default {
       this.bwbcTransferDonate.memo1 = transferInfo.memo1;
       this.bwbcTransferDonate.memo2 = transferInfo.memo2;
       this.bwbcTransferDonate.date1 = this.getDateString(transferInfo.date1);
+      this.bwbcTransferDonate.imgData = transferInfo.imgData;
       this.step = transferInfo.step;
       console.log(
         "帳號末五碼 =" +

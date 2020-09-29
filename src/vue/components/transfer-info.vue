@@ -52,6 +52,22 @@
       </el-row>
       <el-row>
         <el-col>
+          <span>匯款圖片</span>
+          <span>:</span>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item>
+            <input
+              id="upFile"
+              type="file"
+              @change="selectFile"
+              accept="image/*"
+            />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col>
           <el-card class="box-card" shadow="never">
             <div slot="header" class="clearfix">
               <span style="color:white;">捐款注意事項</span>
@@ -130,6 +146,7 @@ export default {
         memo1: null, // 匯款帳號末五碼
         memo2: null, // 匯款人
         date1: null, // 匯款日期
+        imgData: null,
         step: "3",
       },
       dialog: {
@@ -154,6 +171,10 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           console.log("下一步");
+          if(this.transferInfo.imgData == null){
+              this.showMessageBox("提示", "請上傳匯款圖片！");
+              return false;
+          }
           this.nextStep();
         } else {
           console.log("error submit transferInfo!!");
@@ -176,6 +197,23 @@ export default {
       this.transferInfo.step = "3";
       this.$emit("nextStep", this.transferInfo);
       console.log("下一步");
+    },
+    selectFile(e) {
+      var temp = e.target.files[0];
+      console.log(`selectFile size:${temp.size}`);
+      this.transferInfo.imgData = {
+          mimnType: null,
+          name: null,
+          content:null
+        },
+      this.transferInfo.imgData.mimnType = temp.type;
+      this.transferInfo.imgData.name = temp.name;
+      let reader = new FileReader();   //html5讀檔案
+      reader.readAsDataURL(temp); //轉BASE64 
+      reader.onload = (e) => {
+        this.transferInfo.imgData.content = e.target.result.substr(e.target.result.indexOf('base64,')+7);
+        // console.log(`img:${JSON.stringify(this.transferInfo.imgData)}`)
+      }
     },
   },
 };
