@@ -4,9 +4,9 @@
     <el-form :model="cardDonation" :rules="rules" ref="cardDonation">
       <el-row class="step">
         <el-steps :active="1" finish-status="success">
-          <el-step title="步驟１" icon="el-icon-s-order"></el-step>
-          <el-step title="步驟２" icon="el-icon-bank-card"></el-step>
-          <el-step title="步驟３" icon="el-icon-s-custom"></el-step>
+          <el-step title="金額" icon="el-icon-s-order"></el-step>
+          <el-step title="卡號" icon="el-icon-bank-card"></el-step>
+          <el-step title="收據" icon="el-icon-s-custom"></el-step>
         </el-steps>
       </el-row>
       <p style="color:#9c8044; font-weight:500; font-size:24px;">捐款資訊</p>

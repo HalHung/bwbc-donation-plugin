@@ -106,7 +106,7 @@ export default {
       region: null, // 居住地
       useridType: null, // 身分證選填全碼或末四碼
       phone_country_code: null,
-      fromCard: false,
+      fromCheque: false,
       donaDate: null,
       dialog: {
         title: "",

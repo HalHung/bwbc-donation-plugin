@@ -67,7 +67,7 @@
       <span slot="footer" class="dialog-footer">
         <el-row class="top-line">
           <el-col>
-            <el-button @click="dialog.isShow = false" class="primary-color">好喔</el-button>
+            <el-button @click="dialog.isShow = false" class="primary-color">我知道了</el-button>
           </el-col>
         </el-row>
       </span>
@@ -93,7 +93,7 @@ export default {
         amount: null, // 捐款金額
         receiptTypeCode: null, // 收據開立方式: 1.BY_TIME單筆 2.UNWANTTED不需寄發
         donatorName: null, // 收據抬頭
-        address: null, // 地址
+        address: null, // 收據寄送地址
         memo1: null, // 支票末五碼
         memo2: null, // 開票人
         name: null, // 會員姓名
@@ -107,13 +107,13 @@ export default {
         notifyTypeCode: null, // 通知方式 1.SMS簡訊 2.EMAIL電子信件 3.NONE不通知
         companyName: null, // 公司名稱
         sinCompany: null, // 公司統編
-        companyAddress: null, // 聯絡地址
+        companyAddress: null, // 公司聯絡地址
         donaUseCode: "Z",
         donaItemCode: "W11",
+        fromCheque: true,
+        region: null, // 居住地
       },
       phone_country_code: null,
-      fromCard: false,
-      region: null, // 居住地
       useridType: null, // 身分證選填全碼或末四碼
       donaDate: null,
       dialog: {
@@ -121,6 +121,7 @@ export default {
         content: "",
         isShow: false,
       },
+      loading: false,
     };
   },
   mounted() {
@@ -192,26 +193,15 @@ export default {
       });
     },
     setChequeDonationInfo(chequeDonationInfo) {
-      this.bwbcChequeDonate.isForeign = chequeDonationInfo.isForeign;
       this.bwbcChequeDonate.donatorTypeCode =
         chequeDonationInfo.donatorTypeCode;
       this.bwbcChequeDonate.amount = chequeDonationInfo.amount;
-      this.bwbcChequeDonate.receiptTypeCode = chequeDonationInfo.receipt;
-      this.bwbcChequeDonate.donatorName = chequeDonationInfo.donatorName;
-      this.bwbcChequeDonate.address = chequeDonationInfo.address;
+      this.bwbcChequeDonate.isForeign = chequeDonationInfo.isForeign;
       this.step = chequeDonationInfo.step;
       console.log(
-        this.bwbcChequeDonate.isForeign +
-          " / " +
-          this.bwbcChequeDonate.donatorTypeCode +
+        this.bwbcChequeDonate.donatorTypeCode +
           " / " +
           this.bwbcChequeDonate.amount +
-          " / " +
-          this.bwbcChequeDonate.receiptTypeCode +
-          " / " +
-          this.bwbcChequeDonate.donatorName +
-          " / " +
-          this.bwbcChequeDonate.address +
           " / " +
           this.step
       );
@@ -233,16 +223,20 @@ export default {
       this.bwbcChequeDonate.homePhone = memberInfo.homePhone;
       this.bwbcChequeDonate.email = memberInfo.email;
       this.bwbcChequeDonate.notifyTypeCode = "NONE";
-      this.region = memberInfo.region;
-      this.step = memberInfo.step;
-      if(this.step == "4")
+      this.bwbcChequeDonate.region = memberInfo.region;
+      this.bwbcChequeDonate.receiptTypeCode = memberInfo.receiptTypeCode;
+      this.bwbcChequeDonate.address = memberInfo.address;
+      this.bwbcChequeDonate.donatorName = memberInfo.donatorName;
+      if (memberInfo.step == "4") {
         this.donate();
+      } else {
+        this.step = memberInfo.step;
+      }
     },
     setCorporationInfo(companyInfo) {
       this.bwbcChequeDonate.companyName = companyInfo.name;
       this.bwbcChequeDonate.sinCompany = companyInfo.sinCompany;
-      this.bwbcChequeDonate.companyAddress =
-        companyInfo.companyAddress;
+      this.bwbcChequeDonate.companyAddress = companyInfo.companyAddress;
       this.bwbcChequeDonate.name = companyInfo.contactName;
       this.bwbcChequeDonate.genderTypeCode = "MALE";
       this.bwbcChequeDonate.payerTypeCode = "NOT_HEARD";
@@ -255,9 +249,14 @@ export default {
       this.region = null;
       this.useridType = "末四碼";
       this.bwbcChequeDonate.notifyTypeCode = "NONE";
+      this.bwbcChequeDonate.address = companyInfo.address;
+      this.bwbcChequeDonate.donatorName = companyInfo.donatorName;
       this.step = companyInfo.step;
-      if(this.step == "4")
+      if (companyInfo.step == "4") {
         this.donate();
+      } else {
+        this.step = companyInfo.step;
+      }
     },
   },
 };

@@ -29,7 +29,7 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row v-if="transferDonation.donatorTypeCode == 'PERSON'">
+      <!-- <el-row v-if="transferDonation.donatorTypeCode == 'PERSON'">
         <el-col>
           <span>身份</span>
           <span class="required-mark">*</span>
@@ -43,7 +43,7 @@
             </el-radio-group>
           </el-form-item>
         </el-col>
-      </el-row>
+      </el-row> -->
       <el-row>
         <el-col>
           <span>捐款金額</span>
@@ -66,7 +66,7 @@
           <span>&nbsp;元</span>
         </el-col>
       </el-row>
-      <div v-if="transferDonation.isForeign == false">
+      <!-- <div v-if="transferDonation.isForeign == false">
         <el-row>
           <el-col>
             <span>收據開立方式</span>
@@ -106,11 +106,10 @@
             <span>(收據寄送地址):</span>
           </el-col>
           <el-col>
-            <!-- <el-input type="text" placeholder="請輸入地址"></el-input> -->
             <AddressEdit ref="addressEdit" :oAddress="transferDonation.address"></AddressEdit>
           </el-col>
         </el-row>
-      </div>
+      </div> -->
       <el-row>
         <el-col style="text-align:center; margin:16px 0;">
           <el-button @click="submitForm('transferDonation')" v-scroll-to="'#step-two'">下一步</el-button>
@@ -145,7 +144,7 @@ export default {
       transferDonation: {
         donatorTypeCode: "PERSON", // PERSON自然人捐款 CORPORATION法人捐款
         isForeign: false, // 國籍: T台灣人 F外國人
-        amount: null, // 捐款金額
+        amount: 10000, // 捐款金額
         receipt: "UNWANTTED", // 收據開立方式: 1.BY_TIME單筆 2.UNWANTTED不需寄發
         donatorName: null, // 收據抬頭
         address: null, // 地址
@@ -177,6 +176,7 @@ export default {
     "transferDonation.donatorTypeCode"() {
       if (this.transferDonation.donatorTypeCode == "CORPORATION") {
         this.transferDonation.isForeign = false;
+        console.log("isForeign:"+this.transferDonation.isForeign);
       }
     },
   },

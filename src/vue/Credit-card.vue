@@ -104,9 +104,9 @@ export default {
         notifyTypeCode: "NONE", // 通知方式 1.SMS簡訊 2.EMAIL電子信件 3.NONE不通知
         donaUseCode: "Z",
         donaItemCode: "W11",
-        fromCard: true,
+        fromCheque: false,
+        region: null, // 居住地
       },
-      region: null, // 居住地
       useridType: null, // 身分證選填全碼或末四碼
       donaDate: null,
       dialog: {
@@ -115,7 +115,7 @@ export default {
         isShow: false,
       },
       loading: false,
-      donationNo: null
+      donationNo: null,
     };
   },
   mounted() {
@@ -197,7 +197,7 @@ export default {
       this.step = cardDonationInfo.step;
     },
     setMemberInfo(memberInfo) {
-      console.log(`cc setMemberInfo`)
+      console.log(`cc setMemberInfo`);
       this.bwbcCardDonate.name = memberInfo.name;
       this.bwbcCardDonate.genderTypeCode = memberInfo.genderTypeCode;
       this.bwbcCardDonate.payerTypeCode = memberInfo.payerTypeCode;

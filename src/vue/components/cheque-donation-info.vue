@@ -29,7 +29,7 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row v-if="chequeDonation.donatorTypeCode == 'PERSON'">
+      <!-- <el-row v-if="chequeDonation.donatorTypeCode == 'PERSON'">
         <el-col>
           <span>身份</span>
           <span class="required-mark">*</span>
@@ -43,7 +43,7 @@
             </el-radio-group>
           </el-form-item>
         </el-col>
-      </el-row>
+      </el-row> -->
       <el-row>
         <el-col>
           <span>捐款金額</span>
@@ -66,7 +66,7 @@
           <span>&nbsp;元</span>
         </el-col>
       </el-row>
-      <div v-if="chequeDonation.isForeign == false">
+      <!-- <div v-if="chequeDonation.isForeign == false">
         <el-row>
           <el-col>
             <span>收據開立方式</span>
@@ -101,16 +101,15 @@
         </el-row>
         <el-row v-if="chequeDonation.receipt == 'BY_TIME' ">
           <el-col>
-            <span>聯絡地址</span>
+            <span>寄送地址</span>
             <span class="required-mark">*</span>
-            <span>(收據寄送地址):</span>
+            <span>:</span>
           </el-col>
           <el-col>
-            <!-- <el-input type="text" placeholder="請輸入地址"></el-input> -->
             <AddressEdit ref="addressEdit" :oAddress="chequeDonation.address"></AddressEdit>
           </el-col>
         </el-row>
-      </div>
+      </div> -->
       <el-row>
         <el-col style="text-align:center; margin:16px 0;">
           <el-button @click="submitForm('chequeDonation')" v-scroll-to="'#step-two'">下一步</el-button>
@@ -145,7 +144,7 @@ export default {
       chequeDonation: {
         donatorTypeCode: "PERSON", // PERSON自然人捐款 CORPORATION法人捐款
         isForeign: false, // 國籍: T台灣人 F外國人
-        amount: null, // 捐款金額
+        amount: 10000, // 捐款金額
         receipt: "UNWANTTED", // 收據開立方式: 1.BY_TIME單筆 2.UNWANTTED不需寄發
         donatorName: null, // 收據抬頭
         address: null, // 地址
@@ -177,6 +176,7 @@ export default {
     "chequeDonation.donatorTypeCode"() {
       if (this.chequeDonation.donatorTypeCode == "CORPORATION") {
         this.chequeDonation.isForeign = false;
+        console.log("isForeign:"+this.chequeDonation.isForeign);
       }
     },
   },

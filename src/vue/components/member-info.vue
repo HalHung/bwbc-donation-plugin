@@ -4,9 +4,9 @@
     <el-form :model="memberInfo" :rules="rules" ref="memberInfo">
       <el-row class="step">
         <el-steps :active="3" finish-status="success">
-          <el-step title="步驟１" icon="el-icon-s-order"></el-step>
-          <el-step title="步驟２" icon="el-icon-bank-card"></el-step>
-          <el-step title="步驟３" icon="el-icon-s-custom"></el-step>
+          <el-step title="金額" icon="el-icon-s-order"></el-step>
+          <el-step title="卡號" icon="el-icon-bank-card"></el-step>
+          <el-step title="收據" icon="el-icon-s-custom"></el-step>
         </el-steps>
       </el-row>
       <p style="color:#9c8044; font-weight:500; font-size:24px;">捐款人資訊</p>
@@ -27,7 +27,7 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row>
+      <el-row v-if="!donationInfo.fromCheque">
         <el-col>
           <span>身份</span>
           <span class="required-mark">*</span>
@@ -141,7 +141,7 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row v-if="donationInfo.fromCard">
+      <el-row v-if="!donationInfo.fromCheque">
         <el-col>
           <span>捐款成功通知方式</span>
           <span class="required-mark">*</span>
@@ -237,7 +237,7 @@
       </div>
       <!-- 收據 -->
       <div v-if="memberInfo.isForeign == false">
-        <el-row v-if="donationInfo.receiptTypeCode == 'UNWANTTED'" style="margin:16px 0px;">
+        <el-row v-if="memberInfo.receiptTypeCode == 'UNWANTTED'" style="margin:16px 0px;">
           <el-col>
             <span>居住地(區域性活動通知用)：</span>
             <el-select v-model="memberInfo.region" placeholder="請選擇">
@@ -270,7 +270,7 @@
       <el-row>
         <el-col style="text-align:center; margin:16px 0;">
           <el-button @click="previous()" v-scroll-to="'#step-two'">上一步</el-button>
-          <el-button @click="submitForm('memberInfo')">送出</el-button>
+          <el-button @click="submitForm('memberInfo')" v-scroll-to="'#step-one'">送出</el-button>
         </el-col>
       </el-row>
     </el-form>
@@ -285,7 +285,7 @@
       <span slot="footer" class="dialog-footer">
         <el-row class="top-line">
           <el-col>
-            <el-button @click="dialog.isShow = false" class="primary-color">好喔</el-button>
+            <el-button @click="dialog.isShow = false" class="primary-color">我知道了</el-button>
           </el-col>
         </el-row>
       </span>
@@ -620,6 +620,10 @@ export default {
       this.memberInfo.notifyTypeCode = "NONE";
       this.memberInfo.receiptTypeCode = "UNWANTTED";
     },
+    "memberInfo.name"() {
+      this.memberInfo.donatorName = this.memberInfo.name;
+      console.log(`set donatorName`);
+    }
   },
   methods: {
     onPhoneInput(phone, value) {

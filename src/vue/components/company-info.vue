@@ -60,10 +60,7 @@
         </el-col>
         <el-col>
           <el-form-item prop="contactPhone">
-            <el-input
-              type="text"
-              v-model="companyInfo.contactPhone"
-            ></el-input>
+            <el-input type="text" v-model="companyInfo.contactPhone"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -80,13 +77,82 @@
         </el-col>
       </el-row>
       <el-row>
+          <el-col>
+            <span>收據抬頭</span>
+            <span class="required-mark">*</span>
+            <span>:</span>
+          </el-col>
+          <el-col>
+            <el-form-item prop="donatorName">
+              <el-input
+                type="text"
+                placeholder="請輸入姓名(僅限填寫一位)"
+                v-model="companyInfo.donatorName"
+                :validate-event="true"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      <el-row>
         <el-col>
           <span>公司聯絡地址</span>
           <span class="required-mark">*</span>
-          <span>:</span>
+          <span>(收據寄送地址):</span>
         </el-col>
       </el-row>
       <AddressEdit ref="addressEdit" :oAddress="companyInfo.companyAddress"></AddressEdit>
+      <!-- 收據 -->
+      <!-- <div>
+        <el-row>
+          <el-col>
+            <span>收據開立方式</span>
+            <span class="required-mark">*</span>
+            <span>(收據寄送資訊):&nbsp;</span>
+          </el-col>
+          <el-col>
+            <el-form-item prop="receiptTypeCode">
+              <el-radio-group v-model="companyInfo.receiptTypeCode">
+                <el-radio label="BY_TIME">單筆</el-radio>
+                <el-radio label="UNWANTTED">不需寄發</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row v-if="companyInfo.receiptTypeCode != 'UNWANTTED' " id="center">
+          <el-col>
+            <span>收據抬頭</span>
+            <span class="required-mark">*</span>
+            <span>:</span>
+          </el-col>
+          <el-col>
+            <el-form-item prop="donatorName">
+              <el-input
+                type="text"
+                placeholder="請輸入姓名(僅限填寫一位)"
+                v-model="companyInfo.donatorName"
+                :validate-event="true"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row v-if="companyInfo.receiptTypeCode != 'UNWANTTED'">
+          <el-col>
+            <span>寄送地址</span>
+            <span class="required-mark">*</span>
+            <span>:</span>
+          </el-col>
+          <el-col>
+            <el-radio-group v-model="receiptAddress">
+              <el-radio label="SAME">同聯絡地址</el-radio>
+              <el-radio label="NEW">新增地址</el-radio>
+            </el-radio-group>
+          </el-col>
+          <el-col v-if="receiptAddress == 'NEW'">
+            <AddressEdit ref="addressEdit" :oAddress="companyInfo.address"></AddressEdit>
+          </el-col>
+        </el-row>
+      </div> -->
+      <!-- 收據 -->
       <el-row
         style="background-color: #d8ba5f33; padding: 8px 16px 0; border-radius: 4px; border: solid 1px #decb93; margin-top:24px;"
       >
@@ -106,7 +172,7 @@
       <el-row>
         <el-col style="text-align:center; margin:16px 0;">
           <el-button @click="previous()" v-scroll-to="'#step-two'">上一步</el-button>
-          <el-button @click="submitForm('companyInfo')" v-scroll-to="'#step-four'">送出</el-button>
+          <el-button @click="submitForm('companyInfo')" v-scroll-to="'#step-one'">送出</el-button>
         </el-col>
       </el-row>
     </el-form>
@@ -121,7 +187,7 @@
       <span slot="footer" class="dialog-footer">
         <el-row class="top-line">
           <el-col>
-            <el-button @click="dialog.isShow = false" class="primary-color">好喔</el-button>
+            <el-button @click="dialog.isShow = false" class="primary-color">我知道了</el-button>
           </el-col>
         </el-row>
       </span>
@@ -244,8 +310,11 @@ export default {
         contactEmail: null, // 聯絡電子信箱
         companyAddress: null, // 聯絡地址
         step: null,
+        receiptTypeCode: "BY_TIME", // 收據開立方式: 1.BY_TIME單筆 2.UNWANTTED不需寄發
+        donatorName: null, // 收據抬頭
+        address: null, // 地址
       },
-      companyAddress: null,
+      receiptAddress: "SAME",
       dialog: {
         title: "",
         content: "",
@@ -254,9 +323,10 @@ export default {
       declaration: false, // 個資聲明顯示
       acceptDeclaration: false, // 接受個資聲明
       rules: {
-        name: [
-          { required: true, message: "請輸入公司名稱", trigger: "blur" },
+        donatorName: [
+          { required: true, message: "請輸入收據抬頭", trigger: "blur" },
         ],
+        name: [{ required: true, message: "請輸入公司名稱", trigger: "blur" }],
         sinCompany: [
           { required: true, message: "請輸入統一編號", trigger: "blur" },
           { min: 8, max: 8, message: "請檢查統一編號", trigger: "blur" },
@@ -277,6 +347,18 @@ export default {
         ],
       },
     };
+  },
+  watch: {
+    receiptAddress() {
+      if (this.receiptAddress == "SAME") {
+        this.companyInfo.address = this.companyInfo.companyAddress;
+        console.log("address:" + this.companyInfo.address);
+      }
+    },
+    "companyInfo.name"() {
+      this.companyInfo.donatorName = this.companyInfo.name;
+      console.log(`set donatorName`);
+    }
   },
   methods: {
     submitForm(formName) {
@@ -299,7 +381,10 @@ export default {
     },
     next() {
       this.companyInfo.step = "4";
-      this.companyInfo.companyAddress = this.getAddressString(this.companyAddress);
+      this.companyInfo.address = this.companyInfo.companyAddress;
+      this.companyInfo.companyAddress = this.getAddressString(
+        this.companyInfo.companyAddress
+      );
       console.log("step:" + this.companyInfo.step);
       this.$emit("nextStep", this.companyInfo);
     },
@@ -309,40 +394,40 @@ export default {
       this.dialog.isShow = true;
     },
     getAddressString(address) {
-      if(address.zipCode==undefined)
-        return null
-      let result = address.addressType+address.zipCode;
-      if(address.city != undefined ){
-              result+= address.city
+      if(address==null) return null;
+      if (address.zipCode == undefined || address.zipCode == null) return null;
+      let result = address.addressType + address.zipCode;
+      if (address.city != undefined) {
+        result += address.city;
       }
-      if(address.district != undefined ){
-              result+= address.district
+      if (address.district != undefined) {
+        result += address.district;
       }
-      if(address.road != undefined ){
-              result+= address.road
+      if (address.road != undefined) {
+        result += address.road;
       }
-      if(address.lane != undefined ){
-              result+= address.lane+"巷"
+      if (address.lane != undefined) {
+        result += address.lane + "巷";
       }
-      if(address.alley != undefined ){
-              result+= address.alley+"弄"
+      if (address.alley != undefined) {
+        result += address.alley + "弄";
       }
-      if(address.subAlley != undefined ){
-              result+= address.subAlley+"衖"
+      if (address.subAlley != undefined) {
+        result += address.subAlley + "衖";
       }
-      if(address.number != undefined ){
-              result+= address.number+"號"
+      if (address.number != undefined) {
+        result += address.number + "號";
       }
-      if(address.floor != undefined ){
-              result += address.floor+"樓"
+      if (address.floor != undefined) {
+        result += address.floor + "樓";
       }
-      if(address.room != undefined ){
-              result += address.room+"室"
+      if (address.room != undefined) {
+        result += address.room + "室";
       }
-      if(address.other != undefined ){
-              result += address
+      if (address.other != undefined) {
+        result += address;
       }
-      return result
+      return result;
     },
     adderssValidate() {
       this.$refs["addressEdit"].$refs["address"].validate((valid) => {
