@@ -4,7 +4,8 @@ import axios from "axios";
 // 创建axios实例
 const service = axios.create({
   // api的base_url
-  baseURL: "https://byheartapitest.luciditv.org/wordpress/"
+  // baseURL: "https://byheartapitest.luciditv.org/wordpress/"
+  baseURL: "https://appapi.bwbyheart.org//wordpress/"
   // timeout: 10000 // 请求超时时间
 });
 

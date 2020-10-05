@@ -54,7 +54,6 @@
           <el-form-item prop="amount">
             <el-input-number
               v-model="transferDonation.amount"
-              controls-position="right"
               :min="100"
               :max="10000000"
               placeholder="請輸入金額"
@@ -126,7 +125,7 @@
       <span slot="footer" class="dialog-footer">
         <el-row class="top-line">
           <el-col>
-            <el-button @click="dialog.isShow = false" class="primary-color">好喔</el-button>
+            <el-button @click="dialog.isShow = false" class="primary-color">我知道了</el-button>
           </el-col>
         </el-row>
       </span>
