@@ -52,7 +52,8 @@
       </el-row>
       <el-row>
         <el-col>
-          <span>匯款圖片</span>
+          <span>匯款單照片</span>
+           <span class="required-mark">*</span>
           <span>:</span>
         </el-col>
         <el-col :span="8">

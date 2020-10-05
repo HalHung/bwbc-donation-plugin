@@ -112,6 +112,7 @@ export default {
         donaItemCode: "W11",
         fromCheque: true,
         region: null, // 居住地
+        imgData: null
       },
       phone_country_code: null,
       useridType: null, // 身分證選填全碼或末四碼
@@ -209,6 +210,8 @@ export default {
     setChequeInfo(chequeInfo) {
       this.bwbcChequeDonate.memo1 = chequeInfo.memo1;
       this.bwbcChequeDonate.memo2 = chequeInfo.memo2;
+      this.bwbcChequeDonate.imgData = chequeInfo.imgData;
+
       this.step = chequeInfo.step;
     },
     setMemberInfo(memberInfo) {
