@@ -104,7 +104,7 @@ export default {
         notifyTypeCode: "NONE", // 通知方式 1.SMS簡訊 2.EMAIL電子信件 3.NONE不通知
         donaUseCode: "Z",
         donaItemCode: "W11",
-        fromCheque: false,
+        from: "card",
         region: null, // 居住地
       },
       useridType: null, // 身分證選填全碼或末四碼

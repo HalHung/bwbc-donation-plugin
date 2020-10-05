@@ -12,14 +12,14 @@
       <p style="color:#9c8044; font-weight:500; font-size:24px;">捐款資訊</p>
       <el-row>
         <el-col>
-          <span class="title">捐款項目：福智佛教學院</span>
+          <span class="sub-title">捐款項目：福智佛教學院</span>
         </el-col>
       </el-row>
       <el-row>
         <el-col>
-          <span>捐款方式</span>
+          <span class="sub-title">捐款方式</span>
           <span class="required-mark">*</span>
-          <span>:&nbsp;</span>
+          <span class="sub-title">:&nbsp;</span>
         </el-col>
         <el-col>
           <el-form-item prop="paymentToolCode">
@@ -47,9 +47,16 @@
       </el-row> -->
       <el-row>
         <el-col>
-          <span>捐款金額</span>
+          <span class="sub-title">捐款金額</span>
           <span class="required-mark">*</span>
-          <span>:</span>
+          <span class="sub-title">:</span>
+        </el-col>
+        <el-col v-show="cardDonation.paymentToolCode == 'E'">
+          <el-button @click="cardDonation.amount = 500" size="mini">500</el-button>
+          <el-button @click="cardDonation.amount = 1000" size="mini">1000</el-button>
+          <el-button @click="cardDonation.amount = 3000" size="mini">3000</el-button>
+          <el-button @click="cardDonation.amount = 5000" size="mini">5000</el-button>
+          <el-button @click="cardDonation.amount = 6000" size="mini">6000</el-button>
         </el-col>
         <el-col v-show="cardDonation.paymentToolCode == 'R'">
           <el-button @click="cardDonation.amount = 199" size="mini">199</el-button>
@@ -69,9 +76,9 @@
             ></el-input-number>
           </el-form-item>
         </el-col>
-        <el-col style="width:fit-content; margin-top:6px;">
-          <span>&nbsp;元</span>
-          <span v-show="cardDonation.paymentToolCode == 'R'">/&nbsp;每月</span>
+        <el-col style="width:fit-content; margin-top:14px;">
+          <span class="sub-title">&nbsp;元</span>
+          <span v-show="cardDonation.paymentToolCode == 'R'" class="sub-title">/&nbsp;每月</span>
         </el-col>
       </el-row>
       <!-- <div v-if="cardDonation.isForeign == false">
@@ -194,7 +201,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-span {
+.sub-title {
+  color: #424242;
   font-size: 16px;
   font-weight: bold;
 }
@@ -208,11 +216,11 @@ span {
   line-height: 0%;
 }
 /deep/ .el-button {
-  color: #9c8044;
+  color: #9c8044 !important;
   border-color: #9c8044;
   background-color: #fff9ee;
   &:hover {
-    color: white;
+    color: white !important;
     background-color: #9c8044;
     border-color: #9c8044;
   }
@@ -229,5 +237,8 @@ span {
 // build 後被押上的樣式把它改掉
 .el-button + .el-button {
   margin: 0;
+}
+/deep/ .el-step__title {
+  padding-left: 2px;
 }
 </style>

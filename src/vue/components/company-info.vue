@@ -448,4 +448,12 @@ export default {
 .required-mark {
   color: red;
 }
+/deep/ .el-step__title {
+  padding-left: 2px;
+}
+.sub-title {
+  color: #424242;
+  font-size: 16px;
+  font-weight: bold;
+}
 </style>

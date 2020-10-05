@@ -110,7 +110,7 @@ export default {
         companyAddress: null, // 公司聯絡地址
         donaUseCode: "Z",
         donaItemCode: "W11",
-        fromCheque: true,
+        from: "cheque",
         region: null, // 居住地
         imgData: null
       },

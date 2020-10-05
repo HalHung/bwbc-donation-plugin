@@ -12,9 +12,9 @@
       <p style="color:#9c8044; font-weight:500; font-size:24px;">信用卡資訊</p>
       <el-row>
         <el-col>
-          <span>信用卡卡號</span>
+          <span class="sub-title">信用卡卡號</span>
           <span class="required-mark">*</span>
-          <span>:</span>
+          <span class="sub-title">:</span>
         </el-col>
         <el-col>
           <el-form-item prop="cardNumber">
@@ -32,9 +32,9 @@
       </el-row>
       <el-row>
         <el-col>
-          <span>有效期限</span>
+          <span class="sub-title">有效期限</span>
           <span class="required-mark">*</span>
-          <span>:</span>
+          <span class="sub-title">:</span>
         </el-col>
         <el-col :span="12">
           <el-form-item prop="cardMonth">
@@ -53,9 +53,9 @@
       </el-row>
       <el-row>
         <el-col>
-          <span>安全碼</span>
+          <span class="sub-title">安全碼</span>
           <span class="required-mark">*</span>
-          <span>(CVC):</span>
+          <span class="sub-title">(CVC):</span>
         </el-col>
         <el-col>
           <el-form-item prop="cvc">
@@ -66,7 +66,9 @@
       <el-row>
         <el-col>
           <span class="reminder">捐款金額：</span>
+          <span class="reminder" v-if="donationInfo.paymentToolCode == 'R'">每月</span>
           <span class="reminder">{{donationInfo.amount}}</span>
+          <span class="reminder">元</span>
           <span class="reminder" v-if="donationInfo.paymentToolCode == 'R'">(定期定額)</span>
           <span class="reminder" v-else>(單筆捐款)</span>
         </el-col>
@@ -83,7 +85,7 @@
                   <el-checkbox v-model="isAcceptPdpa"></el-checkbox>
                 </el-form-item>
               </el-col>
-              <el-col :span="22">
+              <el-col :span="22" style="padding-top:6px;">
                 <label class="notice">
                   我同意遵守本網站個人
                   <a
@@ -231,10 +233,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-span {
-  font-size: 16px;
-  font-weight: bold;
-}
 .required-mark {
   color: red;
 }
@@ -256,6 +254,7 @@ span {
 }
 .reminder {
   font-size: 20px;
+  color: #424242;
 }
 .el-select-dropdown__item {
   font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
@@ -276,5 +275,16 @@ span {
     background-color: #9c8044;
     border-color: #9c8044;
   }
+}
+/deep/ .el-step__title {
+  padding-left: 2px;
+}
+.sub-title {
+  color: #424242;
+  font-size: 16px;
+  font-weight: bold;
+}
+/deep/.el-input__inner {
+  background-color: #fff;
 }
 </style>

@@ -5,16 +5,18 @@
       <el-row class="step">
         <el-steps :active="3" finish-status="success">
           <el-step title="金額" icon="el-icon-s-order"></el-step>
-          <el-step title="卡號" icon="el-icon-bank-card"></el-step>
+          <el-step title="卡號" icon="el-icon-bank-card" v-if="!donationInfo.from == 'card'"></el-step>
+          <el-step title="匯款" icon="el-icon-bank-card" v-if="!donationInfo.from == 'transfer'"></el-step>
+          <el-step title="支票" icon="el-icon-bank-card" v-if="!donationInfo.from == 'cheque'"></el-step>
           <el-step title="收據" icon="el-icon-s-custom"></el-step>
         </el-steps>
       </el-row>
       <p style="color:#9c8044; font-weight:500; font-size:24px;">捐款人資訊</p>
       <el-row>
         <el-col>
-          <span>姓名</span>
+          <span class="sub-title">姓名</span>
           <span class="required-mark">*</span>
-          <span>:</span>
+          <span class="sub-title">:</span>
         </el-col>
         <el-col>
           <el-form-item prop="name">
@@ -27,11 +29,11 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row v-if="!donationInfo.fromCheque">
+      <el-row v-if="!donationInfo.from == 'cheque'">
         <el-col>
-          <span>身份</span>
+          <span class="sub-title">身份</span>
           <span class="required-mark">*</span>
-          <span>:&nbsp;</span>
+          <span class="sub-title">:&nbsp;</span>
         </el-col>
         <el-col>
           <el-form-item prop="isForeign">
@@ -44,9 +46,9 @@
       </el-row>
       <el-row v-if="memberInfo.isForeign == false">
         <el-col>
-          <span>身分證字號</span>
+          <span class="sub-title">身分證字號</span>
           <span class="required-mark">*</span>
-          <span>:&nbsp;</span>
+          <span class="sub-title">:&nbsp;</span>
         </el-col>
         <el-col>
           <el-form-item prop="useridType">
@@ -81,9 +83,9 @@
       </el-row>
       <el-row v-if="memberInfo.isForeign == false">
         <el-col>
-          <span>手機號碼</span>
+          <span class="sub-title">手機號碼</span>
           <span class="required-mark">*</span>
-          <span>:</span>
+          <span class="sub-title">:</span>
         </el-col>
         <el-col>
           <el-form-item prop="cellPhone">
@@ -98,9 +100,9 @@
       </el-row>
       <el-row v-if="memberInfo.isForeign == true">
         <el-col>
-          <span>手機號碼</span>
+          <span class="sub-title">手機號碼</span>
           <span class="required-mark">*</span>
-          <span>:</span>
+          <span class="sub-title">:</span>
         </el-col>
         <el-col>
           <el-form-item prop="cellPhone">
@@ -131,9 +133,9 @@
       </el-row>-->
       <el-row>
         <el-col>
-          <span>電子信箱</span>
+          <span class="sub-title">電子信箱</span>
           <span class="required-mark">*</span>
-          <span>:</span>
+          <span class="sub-title">:</span>
         </el-col>
         <el-col>
           <el-form-item prop="email">
@@ -141,11 +143,11 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row v-if="!donationInfo.fromCheque">
+      <el-row v-if="!donationInfo.from == 'cheque'">
         <el-col>
-          <span>捐款成功通知方式</span>
+          <span class="sub-title">捐款成功通知方式</span>
           <span class="required-mark">*</span>
-          <span>:&nbsp;</span>
+          <span class="sub-title">:&nbsp;</span>
         </el-col>
         <el-col>
           <el-form-item prop="notifyTypeCode">
@@ -159,9 +161,9 @@
       </el-row>
       <el-row>
         <el-col>
-          <span>性別</span>
+          <span class="sub-title">性別</span>
           <span class="required-mark">*</span>
-          <span>:&nbsp;</span>
+          <span class="sub-title">:&nbsp;</span>
         </el-col>
         <el-col>
           <el-form-item prop="genderTypeCode">
@@ -174,9 +176,9 @@
       </el-row>
       <el-row>
         <el-col>
-          <span>是否參加福智廣論研討班</span>
+          <span class="sub-title">是否參加福智廣論研討班</span>
           <span class="required-mark">*</span>
-          <span>:&nbsp;</span>
+          <span class="sub-title">:&nbsp;</span>
         </el-col>
         <el-col>
           <el-form-item prop="payerTypeCode">
@@ -193,9 +195,9 @@
       <div v-if="memberInfo.isForeign == false">
         <el-row>
           <el-col>
-            <span>收據開立方式</span>
+            <span class="sub-title">收據開立方式</span>
             <span class="required-mark">*</span>
-            <span>(收據寄送資訊):&nbsp;</span>
+            <span class="sub-title">(收據寄送資訊):&nbsp;</span>
           </el-col>
           <el-col>
             <el-form-item prop="receiptTypeCode">
@@ -209,9 +211,9 @@
         </el-row>
         <el-row v-if="memberInfo.receiptTypeCode != 'UNWANTTED' ">
           <el-col>
-            <span>收據抬頭</span>
+            <span class="sub-title">收據抬頭</span>
             <span class="required-mark">*</span>
-            <span>:</span>
+            <span class="sub-title">:</span>
           </el-col>
           <el-col>
             <el-form-item prop="donatorName">
@@ -226,9 +228,9 @@
         </el-row>
         <el-row v-if="memberInfo.receiptTypeCode != 'UNWANTTED'">
           <el-col>
-            <span>寄送地址</span>
+            <span class="sub-title">寄送地址</span>
             <span class="required-mark">*</span>
-            <span>:</span>
+            <span class="sub-title">:</span>
           </el-col>
           <el-col>
             <AddressEdit ref="addressEdit" :oAddress="memberInfo.address"></AddressEdit>
@@ -239,7 +241,7 @@
       <div v-if="memberInfo.isForeign == false">
         <el-row v-if="memberInfo.receiptTypeCode == 'UNWANTTED'" style="margin:16px 0px;">
           <el-col>
-            <span>居住地(區域性活動通知用)：</span>
+            <span class="sub-title">居住地(區域性活動通知用)：</span>
             <el-select v-model="memberInfo.region" placeholder="請選擇">
               <el-option
                 v-for="item in regions"
@@ -259,8 +261,8 @@
             <el-checkbox v-model="acceptDeclaration"></el-checkbox>
           </el-form-item>
         </el-col>
-        <el-col :span="22">
-          <span>
+        <el-col :span="22" style="padding-top:6px;">
+          <span class="sub-title">
             請詳閱
             <a @click="declaration = true" style="color:blue; text-decoration:none;">《個資聲明》</a>
             ，進行下一步即表示同意個資聲明。
@@ -692,10 +694,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-span {
-  font-size: 16px;
-  font-weight: bold;
-}
 .required-mark {
   color: red;
 }
@@ -753,5 +751,16 @@ span {
     /* Microsoft Edge */
     color: #cccccc;
   }
+}
+/deep/ .el-step__title {
+  padding-left: 2px;
+}
+.sub-title {
+  color: #424242;
+  font-size: 16px;
+  font-weight: bold;
+}
+/deep/.el-input__inner {
+  background-color: #fff;
 }
 </style>

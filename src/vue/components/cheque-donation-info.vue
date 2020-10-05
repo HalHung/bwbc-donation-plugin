@@ -144,7 +144,7 @@ export default {
         donatorTypeCode: "PERSON", // PERSON自然人捐款 CORPORATION法人捐款
         isForeign: false, // 國籍: T台灣人 F外國人
         amount: 10000, // 捐款金額
-        receipt: "UNWANTTED", // 收據開立方式: 1.BY_TIME單筆 2.UNWANTTED不需寄發
+        receipt: "BY_TIME", // 收據開立方式: 1.BY_TIME單筆 2.UNWANTTED不需寄發
         donatorName: null, // 收據抬頭
         address: null, // 地址
         step: null,
@@ -199,15 +199,16 @@ export default {
     },
     adderssValidate() {
       if (this.chequeDonation.receipt != "UNWANTTED") {
-        this.$refs["addressEdit"].$refs["address"].validate((valid) => {
-          console.log(`address v:${valid}`);
-          if (valid) {
-            this.chequeDonation.address = this.$refs["addressEdit"].address;
-            this.nextStep();
-          } else {
-            this.showMessageBox("提示", "地址欄無輸入必填欄位或資料不完整！");
-          }
-        });
+        // this.$refs["addressEdit"].$refs["address"].validate((valid) => {
+        //   console.log(`address v:${valid}`);
+        //   if (valid) {
+        //     this.chequeDonation.address = this.$refs["addressEdit"].address;
+        //     this.nextStep();
+        //   } else {
+        //     this.showMessageBox("提示", "地址欄無輸入必填欄位或資料不完整！");
+        //   }
+        // });
+        this.nextStep();
       } else {
         this.chequeDonation.address = undefined;
       }
