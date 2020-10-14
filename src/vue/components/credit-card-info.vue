@@ -1,5 +1,4 @@
 <template>
-  <!-- 信用卡資訊(信用卡捐款流程3) -->
   <div id="component-body">
     <el-form :model="card" :rules="rules" ref="creditCardInfo">
       <el-row class="step">
@@ -69,15 +68,13 @@
           <span class="reminder" v-if="donationInfo.paymentToolCode == 'R'">每月</span>
           <span class="reminder">{{donationInfo.amount}}</span>
           <span class="reminder">元</span>
-          <span class="reminder" v-if="donationInfo.paymentToolCode == 'R'">(定期定額)</span>
-          <span class="reminder" v-else>(單筆捐款)</span>
         </el-col>
       </el-row>
       <el-row>
         <el-col>
           <el-card class="box-card" shadow="never">
-            <div slot="header" class="clearfix">
-              <span style="color:white;">捐款注意事項</span>
+            <div slot="header" class="clearfix" style="text-align:center;">
+              <span style="color:white;" class="sub-title">捐款注意事項</span>
             </div>
             <el-row>
               <el-col :span="2">
@@ -96,7 +93,7 @@
                 </label>
               </el-col>
             </el-row>
-            <el-row style="background-color:#F0F0F0;">
+            <el-row style="background-color:#F0F0F0; margin-top:20px;">
               <el-col>
                 <label class="notice" style="margin:16px;">
                   依財團法人法第25條規定，除捐贈者事先書面表示反對外，各財團法人均需主動公開捐贈者之「姓名」及「捐款金額」，詳見

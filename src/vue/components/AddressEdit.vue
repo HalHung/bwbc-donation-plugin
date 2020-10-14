@@ -99,8 +99,8 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <label style="font-size:16px; font-weight:500;">備註：請含有○○之○的巷、弄、號地址，以○○-○方式輸入</label>
-        <label style="font-size:16px; font-weight:500;">如：88之10號→88-10號</label>
+        <label style="font-size:16px; font-weight:500; color:#494949;">備註：請含有○○之○的巷、弄、號地址，以○○-○方式輸入</label>
+        <label style="font-size:16px; font-weight:500; color:#494949;">如：88之10號→88-10號</label>
       </div>
       <div v-else>
         <el-form-item prop="other">
@@ -288,6 +288,8 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
+@import 'node_modules/bootstrap/scss/bootstrap';
+@import 'node_modules/bootstrap-vue/src/index.scss';
 .star {
   .el-form-item__label:before {
     content: "";
@@ -298,10 +300,11 @@ export default {
 .ad-small-label {
   padding-left: 4px;
   width: 20px !important;
+  color: #424242;
 }
 
 .ad-small-input {
-  width: 85% !important;
+  width: 65% !important;
 }
 
 .font-size-title {

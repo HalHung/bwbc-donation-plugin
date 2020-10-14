@@ -1,20 +1,19 @@
 <template>
-  <!-- 支票捐款資訊(支票捐款流程3) -->
   <div id="component-body">
     <el-form :model="chequeInfo" :rules="rules" ref="chequeInfo">
       <el-row class="step">
         <el-steps :active="2" finish-status="success">
-          <el-step title="步驟１" icon="el-icon-s-order"></el-step>
-          <el-step title="步驟２" icon="el-icon-tickets"></el-step>
-          <el-step title="步驟３" icon="el-icon-s-custom"></el-step>
+          <el-step title="金額" icon="el-icon-tickets"></el-step>
+          <el-step title="支票" icon="el-icon-s-order"></el-step>
+          <el-step title="收據" icon="el-icon-s-custom"></el-step>
         </el-steps>
       </el-row>
-      <p>支票資訊</p>
+      <p style="color:#9c8044; font-weight:500; font-size:24px;">支票資訊</p>
       <el-row>
         <el-col>
-          <span>支票號碼末五碼</span>
+          <span class="sub-title">支票號碼末五碼</span>
           <span class="required-mark">*</span>
-          <span>:</span>
+          <span class="sub-title">:</span>
         </el-col>
         <el-col>
           <el-form-item prop="memo1">
@@ -29,8 +28,7 @@
       </el-row>
       <el-row>
         <el-col>
-          <span>開票人</span>
-          <span>:</span>
+          <span class="sub-title">開票人：</span>
         </el-col>
         <el-col>
           <el-form-item>
@@ -40,9 +38,7 @@
       </el-row>
       <el-row>
         <el-col>
-          <span>支票照片</span>
-           <span class="required-mark">*</span>
-          <span>:</span>
+          <span class="sub-title">支票照片:</span>
         </el-col>
         <el-col :span="8">
           <el-form-item>
@@ -58,8 +54,8 @@
       <el-row>
         <el-col>
           <el-card class="box-card" shadow="never">
-            <div slot="header" class="clearfix">
-              <span style="color:white;">捐款注意事項</span>
+            <div slot="header" class="clearfix" style="text-align:center;">
+              <span style="color:white;" class="sub-title">捐款注意事項</span>
             </div>
             <el-row>
               <el-col :span="2">
@@ -67,7 +63,7 @@
                   <input type="checkbox" v-model="isAcceptPdpa" required />
                 </el-form-item>
               </el-col>
-              <el-col :span="22">
+              <el-col :span="22" style="margin-top:8px;">
                 <label class="notice">
                   我同意遵守本網站個人
                   <a
@@ -78,9 +74,9 @@
                 </label>
               </el-col>
             </el-row>
-            <el-row style="background-color:#F0F0F0;">
-              <el-col>
-                <label class="notice" style="margin:16px;">
+            <el-row style="background-color:#F0F0F0; margin-top:20px;">
+              <el-col style="padding: 16px;">
+                <label class="notice">
                   依財團法人法第25條規定，除捐贈者事先書面表示反對外，各財團法人均需主動公開捐贈者之「姓名」及「捐款金額」，詳見
                   <a
                     href="https://www.blisswisdom.org/donate/qanda#q2"
@@ -161,10 +157,6 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          if(this.chequeInfo.imgData == null){
-              this.showMessageBox("提示", "請上傳匯款圖片！");
-              return false;
-          }
           this.chequeInfo.step = "3";
           console.log("step:" + this.chequeInfo.step);
           this.$emit("nextStep", this.chequeInfo);
@@ -206,7 +198,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-span {
+.sub-title {
+  color: #424242;
   font-size: 16px;
   font-weight: bold;
 }

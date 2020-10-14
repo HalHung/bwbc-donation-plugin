@@ -19,8 +19,8 @@
       ></CompanyInfo>
     </div>
     <div v-if="step == '4'">
-      <span style="font-weight:500; font-size:20px; color:#9c8044;">感謝您進行了線上捐款</span>
-      <p style="font-size:16px;">
+      <span style="font-weight:500; font-size:20px; color:#9c8044;">感謝您的支持</span>
+      <p style="font-size:16px; color:#424242;">
         謝謝您認同我們的教育理念，更為了教育環境盡一份力！
         <br />若捐款有問題我們將主動跟您聯繫。
       </p>
@@ -28,31 +28,31 @@
         <span style="font-size:18px; color:#9c8044;">以下是您回報的資訊：</span>
         <p style="font-size:16px; margin:0;">捐款方式：支票捐款</p>
         <p
-          style="font-size:16px; margin:0;"
+          style="font-size:16px; margin:0; color:#424242;"
           v-if="bwbcChequeDonate.donatorTypeCode == 'PERSON'"
         >捐款人：{{bwbcChequeDonate.name}}</p>
-        <p style="font-size:16px; margin:0;" v-else>捐款公司：{{bwbcChequeDonate.companyName}}</p>
+        <p style="font-size:16px; margin:0; color:#424242;" v-else>捐款公司：{{bwbcChequeDonate.companyName}}</p>
         <p
-          style="font-size:16px; margin:0;"
+          style="font-size:16px; margin:0; color:#424242;"
           v-if="bwbcChequeDonate.donatorTypeCode == 'PERSON'"
         >手機號碼：{{bwbcChequeDonate.cellPhone}}</p>
-        <p style="font-size:16px; margin:0;" v-else>聯絡電話：{{bwbcChequeDonate.cellPhone}}</p>
-        <p style="font-size:16px; margin:0;">捐款項目：福智佛教學院</p>
-        <p style="font-size:16px; margin:0;">回報日期：{{donaDate}}</p>
-        <p style="font-size:16px; margin:0;">捐款金額：{{bwbcChequeDonate.amount}}</p>
+        <p style="font-size:16px; margin:0; color:#424242;" v-else>聯絡電話：{{bwbcChequeDonate.cellPhone}}</p>
+        <p style="font-size:16px; margin:0; color:#424242;">捐款項目：福智佛教學院</p>
+        <p style="font-size:16px; margin:0; color:#424242;">回報日期：{{donaDate}}</p>
+        <p style="font-size:16px; margin:0; color:#424242;">捐款金額：{{bwbcChequeDonate.amount}}</p>
         <p
-          style="font-size:16px; margin:0;"
+          style="font-size:16px; margin:0; color:#424242;"
           v-show="bwbcChequeDonate.receiptTypeCode == 'BY_TIME'"
         >收據開立方式：單筆開立</p>
         <p
-          style="font-size:16px; margin:0;"
+          style="font-size:16px; margin:0; color:#424242;"
           v-show="bwbcChequeDonate.receiptTypeCode == 'UNWANTTED'"
         >收據開立方式：不需寄發</p>
       </div>
-      <p style="font-size:16px;">再次誠摯感謝您！</p>
-      <p style="font-size:16px;">
+      <p style="font-size:16px; color:#424242;">再次誠摯感謝您！</p>
+      <p style="font-size:16px; color:#424242;">
         若您有疑惑，歡迎您透過以下方式聯繫我們：
-        <br />捐款專線：05-582-8222 分機6085
+        <br />籌備處募款組辦公室電話02-7730-0016
         <br />福智佛教學院籌備處信箱：bwbc.po@blisswisdom.org
         <br />
       </p>
@@ -89,6 +89,7 @@ export default {
       step: "1",
       bwbcChequeDonate: {
         donatorTypeCode: null, // PERSON自然人捐款 CORPORATION法人捐款
+        paymentToolCode: "E", // 捐款模式: E單次捐款 R定期定額
         isForeign: null, // 國籍
         amount: null, // 捐款金額
         receiptTypeCode: null, // 收據開立方式: 1.BY_TIME單筆 2.UNWANTTED不需寄發
@@ -254,6 +255,7 @@ export default {
       this.bwbcChequeDonate.notifyTypeCode = "NONE";
       this.bwbcChequeDonate.address = companyInfo.address;
       this.bwbcChequeDonate.donatorName = companyInfo.donatorName;
+      this.bwbcChequeDonate.receiptTypeCode = companyInfo.receiptTypeCode;
       this.step = companyInfo.step;
       if (companyInfo.step == "4") {
         this.donate();
@@ -265,16 +267,10 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+@import 'node_modules/bootstrap/scss/bootstrap';
+@import 'node_modules/bootstrap-vue/src/index.scss';
 #body {
-  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
-    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
-
-  /deep/ .el-input__inner {
-    font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
-      "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
-  }
-
   .el-row {
     margin: 8px 0px 10px;
   }

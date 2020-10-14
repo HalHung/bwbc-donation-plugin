@@ -1,6 +1,6 @@
 <template>
   <div id="body">
-    <span style="font-weight:500; font-size:20px;">感謝您進行了線上捐款</span>
+    <span style="font-weight:500; font-size:20px;">感謝您的支持</span>
     <p style="font-size:16px;">
       謝謝您認同我們的教育理念，更為了教育環境盡一份力！
       <br />若捐款有問題我們將主動跟您聯繫。
@@ -23,7 +23,7 @@
     <p style="font-size:16px;">再次誠摯感謝您！</p>
     <p style="font-size:16px;">
       若您有疑惑，歡迎您透過以下方式聯繫我們：
-      <br />捐款專線：05-582-8222 分機6085
+      <br />籌備處募款組辦公室電話02-7730-0016
       <br />福智佛教學院籌備處信箱：bwbc.po@blisswisdom.org
       <br />
     </p>
@@ -86,8 +86,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#body {
-  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
-    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
-}
+@import 'node_modules/bootstrap/scss/bootstrap';
+@import 'node_modules/bootstrap-vue/src/index.scss';
 </style>

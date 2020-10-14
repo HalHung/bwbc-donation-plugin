@@ -30,21 +30,6 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <!-- <el-row>
-        <el-col>
-          <span>身份</span>
-          <span class="required-mark">*</span>
-          <span>:&nbsp;</span>
-        </el-col>
-        <el-col>
-          <el-form-item prop="isForeign">
-            <el-radio-group v-model="cardDonation.isForeign">
-              <el-radio :label="false">本國籍人士</el-radio>
-              <el-radio :label="true">非本國籍人士</el-radio>
-            </el-radio-group>
-          </el-form-item>
-        </el-col>
-      </el-row> -->
       <el-row>
         <el-col>
           <span class="sub-title">捐款金額</span>
@@ -81,51 +66,6 @@
           <span v-show="cardDonation.paymentToolCode == 'R'" class="sub-title">/&nbsp;每月</span>
         </el-col>
       </el-row>
-      <!-- <div v-if="cardDonation.isForeign == false">
-        <el-row>
-          <el-col>
-            <span>收據開立方式</span>
-            <span class="required-mark">*</span>
-            <span>(收據寄送資訊):&nbsp;</span>
-          </el-col>
-          <el-col>
-            <el-form-item prop="receipt">
-              <el-radio-group v-model="cardDonation.receipt">
-                <el-radio label="BY_TIME" v-if="cardDonation.paymentToolCode == 'E'">單筆</el-radio>
-                <el-radio label="ANNUAL">年開</el-radio>
-                <el-radio label="UNWANTTED">不需寄發</el-radio>
-              </el-radio-group>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row v-if="cardDonation.receipt != 'UNWANTTED' ">
-          <el-col>
-            <span>收據抬頭</span>
-            <span class="required-mark">*</span>
-            <span>:</span>
-          </el-col>
-          <el-col>
-            <el-form-item prop="donatorName">
-              <el-input
-                type="text"
-                placeholder="請輸入姓名(僅限填寫一位)"
-                v-model="cardDonation.donatorName"
-                :validate-event="true"
-              ></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row v-if="cardDonation.receipt != 'UNWANTTED'">
-          <el-col>
-            <span>聯絡地址</span>
-            <span class="required-mark">*</span>
-            <span>(收據寄送地址):</span>
-          </el-col>
-          <el-col>
-            <AddressEdit ref="addressEdit" :oAddress="cardDonation.address"></AddressEdit>
-          </el-col>
-        </el-row>
-      </div> -->
       <el-row>
         <el-col style="text-align:center; margin:16px 0;">
           <el-button @click="submitForm('cardDonation')" v-scroll-to="'#step-two'">下一步</el-button>
