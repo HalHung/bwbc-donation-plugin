@@ -94,8 +94,8 @@
               </el-col>
             </el-row>
             <el-row style="background-color:#F0F0F0; margin-top:20px;">
-              <el-col>
-                <label class="notice" style="margin:16px;">
+              <el-col style="padding: 16px;">
+                <label class="notice">
                   依財團法人法第25條規定，除捐贈者事先書面表示反對外，各財團法人均需主動公開捐贈者之「姓名」及「捐款金額」，詳見
                   <a
                     href="https://www.blisswisdom.org/donate/qanda#q2"

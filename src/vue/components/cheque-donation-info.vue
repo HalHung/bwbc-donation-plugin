@@ -46,7 +46,7 @@
             ></el-input-number>
           </el-form-item>
         </el-col>
-        <el-col style="width:fit-content; margin-top:6px;">
+        <el-col style="width:fit-content; margin-top:13px;">
           <span class="sub-title">&nbsp;元</span>
         </el-col>
       </el-row>
@@ -166,6 +166,9 @@ export default {
 }
 .required-mark {
   color: red;
+}
+.el-row {
+  margin: 16px 0;
 }
 .step {
   line-height: 0%;

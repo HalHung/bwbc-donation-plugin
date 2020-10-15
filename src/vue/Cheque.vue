@@ -1,7 +1,9 @@
 <template>
   <div id="body" v-loading="loading" element-loading-text="努力傳送資料中...">
     <div v-show="step == '1'" id="step-one">
-      <ChequeDonationInfo @nextStep="setChequeDonationInfo($event)"></ChequeDonationInfo>
+      <ChequeDonationInfo
+        @nextStep="setChequeDonationInfo($event)"
+      ></ChequeDonationInfo>
     </div>
     <div v-show="step == '2'" id="step-two">
       <ChequeInfo @nextStep="setChequeInfo($event)"></ChequeInfo>
@@ -19,38 +21,62 @@
       ></CompanyInfo>
     </div>
     <div v-if="step == '4'">
-      <span style="font-weight:500; font-size:20px; color:#9c8044;">感謝您的支持</span>
-      <p style="font-size:16px; color:#424242;">
+      <span style="font-weight: 500; font-size: 20px; color: #9c8044"
+        >感謝您的支持</span
+      >
+      <p style="font-size: 16px; color: #424242">
         謝謝您認同我們的教育理念，更為了教育環境盡一份力！
         <br />若捐款有問題我們將主動跟您聯繫。
       </p>
       <div>
-        <span style="font-size:18px; color:#9c8044;">以下是您回報的資訊：</span>
-        <p style="font-size:16px; margin:0;">捐款方式：支票捐款</p>
+        <span style="font-size: 18px; color: #9c8044"
+          >以下是您回報的資訊：</span
+        >
+        <p style="font-size: 16px; margin: 0; color: #424242">
+          捐款方式：支票捐款
+        </p>
         <p
-          style="font-size:16px; margin:0; color:#424242;"
+          style="font-size: 16px; margin: 0; color: #424242"
           v-if="bwbcChequeDonate.donatorTypeCode == 'PERSON'"
-        >捐款人：{{bwbcChequeDonate.name}}</p>
-        <p style="font-size:16px; margin:0; color:#424242;" v-else>捐款公司：{{bwbcChequeDonate.companyName}}</p>
+        >
+          捐款人：{{ bwbcChequeDonate.name }}
+        </p>
+        <p style="font-size: 16px; margin: 0; color: #424242" v-else>
+          捐款公司：{{ bwbcChequeDonate.companyName }}
+        </p>
         <p
-          style="font-size:16px; margin:0; color:#424242;"
+          style="font-size: 16px; margin: 0; color: #424242"
           v-if="bwbcChequeDonate.donatorTypeCode == 'PERSON'"
-        >手機號碼：{{bwbcChequeDonate.cellPhone}}</p>
-        <p style="font-size:16px; margin:0; color:#424242;" v-else>聯絡電話：{{bwbcChequeDonate.cellPhone}}</p>
-        <p style="font-size:16px; margin:0; color:#424242;">捐款項目：福智佛教學院</p>
-        <p style="font-size:16px; margin:0; color:#424242;">回報日期：{{donaDate}}</p>
-        <p style="font-size:16px; margin:0; color:#424242;">捐款金額：{{bwbcChequeDonate.amount}}</p>
+        >
+          手機號碼：{{ bwbcChequeDonate.cellPhone }}
+        </p>
+        <p style="font-size: 16px; margin: 0; color: #424242" v-else>
+          聯絡電話：{{ bwbcChequeDonate.cellPhone }}
+        </p>
+        <p style="font-size: 16px; margin: 0; color: #424242">
+          捐款項目：福智佛教學院
+        </p>
+        <p style="font-size: 16px; margin: 0; color: #424242">
+          回報日期：{{ donaDate }}
+        </p>
+        <p style="font-size: 16px; margin: 0; color: #424242">
+          捐款金額：{{ bwbcChequeDonate.amount }}
+        </p>
         <p
-          style="font-size:16px; margin:0; color:#424242;"
+          style="font-size: 16px; margin: 0; color: #424242"
           v-show="bwbcChequeDonate.receiptTypeCode == 'BY_TIME'"
-        >收據開立方式：單筆開立</p>
+        >
+          收據開立方式：單筆開立
+        </p>
         <p
-          style="font-size:16px; margin:0; color:#424242;"
+          style="font-size: 16px; margin: 0; color: #424242"
           v-show="bwbcChequeDonate.receiptTypeCode == 'UNWANTTED'"
-        >收據開立方式：不需寄發</p>
+        >
+          收據開立方式：不需寄發
+        </p>
       </div>
-      <p style="font-size:16px; color:#424242;">再次誠摯感謝您！</p>
-      <p style="font-size:16px; color:#424242;">
+      <p style="font-size: 16px; color: #424242">再次誠摯感謝您！</p>
+      <p style="font-size: 16px; color: #424242">
         若您有疑惑，歡迎您透過以下方式聯繫我們：
         <br />籌備處募款組辦公室電話02-7730-0016
         <br />福智佛教學院籌備處信箱：bwbc.po@blisswisdom.org
@@ -67,7 +93,9 @@
       <span slot="footer" class="dialog-footer">
         <el-row class="top-line">
           <el-col>
-            <el-button @click="dialog.isShow = false" class="primary-color">我知道了</el-button>
+            <el-button @click="dialog.isShow = false" class="primary-color"
+              >我知道了</el-button
+            >
           </el-col>
         </el-row>
       </span>
@@ -112,9 +140,9 @@ export default {
         donaUseCode: "Z",
         donaItemCode: "W11",
         from: "cheque",
-        region: null, // 居住地
-        imgData: null
+        imgData: null,
       },
+      region: null, // 居住地
       phone_country_code: null,
       useridType: null, // 身分證選填全碼或末四碼
       donaDate: null,
@@ -227,7 +255,7 @@ export default {
       this.bwbcChequeDonate.homePhone = memberInfo.homePhone;
       this.bwbcChequeDonate.email = memberInfo.email;
       this.bwbcChequeDonate.notifyTypeCode = "NONE";
-      this.bwbcChequeDonate.region = memberInfo.region;
+      this.region = memberInfo.region;
       this.bwbcChequeDonate.receiptTypeCode = memberInfo.receiptTypeCode;
       this.bwbcChequeDonate.address = memberInfo.address;
       this.bwbcChequeDonate.donatorName = memberInfo.donatorName;
@@ -268,8 +296,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'node_modules/bootstrap/scss/bootstrap';
-@import 'node_modules/bootstrap-vue/src/index.scss';
+@import "node_modules/bootstrap/scss/bootstrap";
+@import "node_modules/bootstrap-vue/src/index.scss";
 #body {
   .el-row {
     margin: 8px 0px 10px;

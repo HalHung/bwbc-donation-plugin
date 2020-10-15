@@ -167,6 +167,9 @@ export default {
 .required-mark {
   color: red;
 }
+.el-row {
+  margin: 16px 0;
+}
 .step {
   line-height: 0%;
 }
