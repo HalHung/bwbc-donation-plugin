@@ -31,6 +31,7 @@
               type="text"
               placeholder="請輸入公司名稱"
               v-model="companyInfo.name"
+              maxlength="10"
             ></el-input>
           </el-form-item>
         </el-col>
@@ -82,6 +83,7 @@
               placeholder="請輸入姓名(僅限填寫一位)"
               v-model="companyInfo.donatorName"
               :validate-event="true"
+              maxlength="10"
             ></el-input>
           </el-form-item>
         </el-col>
@@ -128,6 +130,44 @@
           <el-form-item prop="contactPhone">
             <el-input type="text" v-model="companyInfo.contactPhone"></el-input>
           </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col>
+          <el-card class="box-card" shadow="never">
+            <div slot="header" class="clearfix" style="text-align:center;">
+              <span style="color:white;" class="sub-title">捐款注意事項</span>
+            </div>
+            <el-row>
+              <el-col :span="2">
+                <el-form-item prop="isAcceptPdpa">
+                  <input type="checkbox" v-model="isAcceptPdpa" required />
+                </el-form-item>
+              </el-col>
+              <el-col :span="22" style="margin-top:8px;">
+                <label class="notice">
+                  我同意遵守本網站個人
+                  <a
+                    href="https://bwbc.blisswisdom.org/%e3%80%90%e6%8d%90%e6%ac%be%e6%b3%a8%e6%84%8f%e4%ba%8b%e9%a0%85%e3%80%91/"
+                    target="_blank"
+                    style="color:#2B63E0;"
+                  >捐款注意事項</a>及其他有關著作權、版權、商標專用權、網路智慧財產權等之法律規定。
+                </label>
+              </el-col>
+            </el-row>
+            <el-row style="background-color:#F0F0F0; margin-top:20px;">
+              <el-col style="padding: 16px;">
+                <label class="notice">
+                  依財團法人法第25條規定，除捐贈者事先書面表示反對外，各財團法人均需主動公開捐贈者之「姓名」及「捐款金額」，詳見
+                  <a
+                    href="https://www.blisswisdom.org/donate/qanda#q2"
+                    target="_blank"
+                    style="color:#2B63E0;"
+                  >捐款徵信說明</a>
+                </label>
+              </el-col>
+            </el-row>
+          </el-card>
         </el-col>
       </el-row>
       <el-row
@@ -295,6 +335,12 @@ export default {
     donationInfo: Object,
   },
   data() {
+    var checkIsAcceptPdpaValidator = (rule, value, callback) => {
+      if (!this.isAcceptPdpa) {
+        console.log(this.isAcceptPdpa);
+        return callback(new Error("請勾選"));
+      } else return callback();
+    };
     // 電子信箱驗證
     var checkEmailValidator = (rule, value, callback) => {
       if (!CheckFunctions.checkEmail(value)) {
@@ -302,6 +348,13 @@ export default {
       } else {
         return callback();
       }
+    };
+    // 捐款注意事項驗證
+    var checkIsAcceptPdpaValidator = (rule, value, callback) => {
+      if (!this.isAcceptPdpa) {
+        console.log(this.isAcceptPdpa);
+        return callback(new Error("請勾選"));
+      } else return callback();
     };
     // 個資聲明勾選驗證
     var checkAcceptDeclarationValidator = (rule, value, callback) => {
@@ -341,6 +394,7 @@ export default {
       },
       declaration: false, // 個資聲明顯示
       acceptDeclaration: false, // 接受個資聲明
+      isAcceptPdpa: false, // 同意遵守捐款注意事項
       rules: {
         donatorName: [
           { required: true, message: "請輸入收據抬頭", trigger: "blur" },
@@ -360,6 +414,9 @@ export default {
         contactEmail: [
           { required: true, message: "請輸入電子信箱", trigger: "blur" },
           { validator: checkEmailValidator, trigger: "blur" },
+        ],
+        isAcceptPdpa: [
+          { validator: checkIsAcceptPdpaValidator, trigger: "change" },
         ],
         acceptDeclaration: [
           { validator: checkAcceptDeclarationValidator, trigger: "change" },
@@ -466,7 +523,7 @@ export default {
 
 <style lang="scss" scoped>
 .el-row {
-  margin: 8px 0;
+  margin: 16px 0;
 }
 .el-form-item {
   margin: 0%;
@@ -491,5 +548,11 @@ export default {
     background-color: #9c8044;
     border-color: #9c8044;
   }
+}
+/deep/.el-card__header {
+  padding: 3px 20px;
+  background-color: #bda268;
+  color: white;
+  text-align: center;
 }
 </style>

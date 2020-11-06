@@ -1,14 +1,27 @@
 <template>
   <!-- 信用卡捐款 -->
-  <div id="body" v-loading="loading" element-loading-text="努力傳送資料中..." class="wp">
+  <div
+    id="body"
+    v-loading="loading"
+    element-loading-text="努力傳送資料中..."
+    class="wp"
+  >
     <div v-show="step == '1'" id="step-one">
-      <CardDonationInfo @nextStep="setCardDonationInfo($event)"></CardDonationInfo>
+      <CardDonationInfo
+        @nextStep="setCardDonationInfo($event)"
+      ></CardDonationInfo>
     </div>
     <div v-show="step == '2'" id="step-two">
-      <CreditCardInfo :donationInfo="bwbcCardDonate" @nextStep="setCreditCardInfo($event)"></CreditCardInfo>
+      <CreditCardInfo
+        :donationInfo="bwbcCardDonate"
+        @nextStep="setCreditCardInfo($event)"
+      ></CreditCardInfo>
     </div>
     <div v-show="step == '3'" id="step-three">
-      <MemberInfo :donationInfo="bwbcCardDonate" @nextStep="setMemberInfo($event)"></MemberInfo>
+      <MemberInfo
+        :donationInfo="bwbcCardDonate"
+        @nextStep="setMemberInfo($event)"
+      ></MemberInfo>
     </div>
     <el-dialog
       custom-class="dialog-message-box"
@@ -20,7 +33,9 @@
       <span slot="footer" class="dialog-footer">
         <el-row class="top-line">
           <el-col>
-            <el-button @click="dialog.isShow = false" class="primary-color">我知道了</el-button>
+            <el-button @click="dialog.isShow = false" class="primary-color"
+              >我知道了</el-button
+            >
           </el-col>
         </el-row>
       </span>
@@ -61,8 +76,8 @@ export default {
           cvc: null, // 安全碼
         },
         notifyTypeCode: "NONE", // 通知方式 1.SMS簡訊 2.EMAIL電子信件 3.NONE不通知
-        donaUseCode: "Z",
-        donaItemCode: "W11",
+        donaUseCode: "Z", // 佛教學校
+        donaItemCode: "", // 佛教學校
         from: "card",
         region: null, // 居住地
       },
@@ -105,6 +120,11 @@ export default {
         }
       }
       API.donate.wpDonateCard(this.bwbcCardDonate).then((res) => {
+        if (this.bwbcCardDonate.paymentToolCode === "E") {
+          this.bwbcCardDonate.donaItemCode = "W851";
+        } else if (this.bwbcCardDonate.paymentToolCode === "R") {
+          this.bwbcCardDonate.donaItemCode = "W852";
+        }
         let data = res.data;
         if (data.status == 200 && data.message == "成功取得3D HTML") {
           var body2 = data.data.Result;
@@ -206,6 +226,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'node_modules/bootstrap/scss/bootstrap';
-@import 'node_modules/bootstrap-vue/src/index.scss';
+@import "node_modules/bootstrap/scss/bootstrap";
+@import "node_modules/bootstrap-vue/src/index.scss";
 </style>

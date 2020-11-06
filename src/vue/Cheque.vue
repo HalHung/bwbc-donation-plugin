@@ -74,6 +74,17 @@
         >
           收據開立方式：不需寄發
         </p>
+        <p
+          style="
+            font-size: 16px;
+            margin: 16px 0px;
+            color: #9e1818;
+            font-weight: 500;
+          "
+        >
+          敬請填妥新臺幣支票抬頭「福智學校財團法人」，請註明禁止背書轉讓，將本同意書及支票掛號郵寄至「10553台北市松山區南京東路四段152號10樓
+          福智佛教學院籌備處」。
+        </p>
       </div>
       <p style="font-size: 16px; color: #424242">再次誠摯感謝您！</p>
       <p style="font-size: 16px; color: #424242">
@@ -116,7 +127,7 @@ export default {
     return {
       step: "1",
       bwbcChequeDonate: {
-        donatorTypeCode: null, // PERSON自然人捐款 CORPORATION法人捐款
+        donatorTypeCode: null, // PERSON個人捐款 CORPORATION公司捐款
         paymentToolCode: "E", // 捐款模式: E單次捐款 R定期定額
         isForeign: null, // 國籍
         amount: null, // 捐款金額
@@ -138,7 +149,7 @@ export default {
         sinCompany: null, // 公司統編
         companyAddress: null, // 公司聯絡地址
         donaUseCode: "Z",
-        donaItemCode: "W11",
+        donaItemCode: "W853",
         from: "cheque",
         imgData: null,
       },
@@ -236,6 +247,11 @@ export default {
           this.step
       );
     },
+    showMessageBox(title, content) {
+      this.dialog.title = title;
+      this.dialog.content = content;
+      this.dialog.isShow = true;
+    },
     setChequeInfo(chequeInfo) {
       this.bwbcChequeDonate.memo1 = chequeInfo.memo1;
       this.bwbcChequeDonate.memo2 = chequeInfo.memo2;
@@ -300,7 +316,7 @@ export default {
 @import "node_modules/bootstrap-vue/src/index.scss";
 #body {
   .el-row {
-    margin: 8px 0px 10px;
+    margin: 16px 0;
   }
 
   /deep/ .el-button {

@@ -28,13 +28,13 @@
       </el-row>
       <el-row>
         <el-col>
-          <span class="sub-title">匯款人：</span>
+          <span class="sub-title">匯款戶名：</span>
         </el-col>
         <el-col>
           <el-form-item>
             <el-input
               type="text"
-              placeholder="請輸入匯款人姓名"
+              placeholder="請輸入匯款戶名"
               v-model="transferInfo.memo2"
             ></el-input>
           </el-form-item>
@@ -71,7 +71,7 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row>
+      <!-- <el-row>
         <el-col>
           <el-card class="box-card" shadow="never">
             <div slot="header" class="clearfix" style="text-align:center;">
@@ -110,7 +110,7 @@
             </el-row>
           </el-card>
         </el-col>
-      </el-row>
+      </el-row> -->
       <el-row>
         <el-col style="text-align: center; margin: 16px 0">
           <el-button
@@ -163,7 +163,7 @@ export default {
     return {
       transferInfo: {
         memo1: null, // 匯款帳號末五碼
-        memo2: null, // 匯款人
+        memo2: null, // 匯款戶名
         date1: null, // 匯款日期
         imgData: null,
         step: "3",

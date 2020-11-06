@@ -9,7 +9,7 @@
           <el-step title="收據" icon="el-icon-s-custom"></el-step>
         </el-steps>
       </el-row>
-      <p style="color:#9c8044; font-weight:500; font-size:24px;">捐款資訊</p>
+      <p style="color: #9c8044; font-weight: 500; font-size: 24px">捐款資訊</p>
       <el-row>
         <el-col>
           <span class="sub-title">捐款項目：福智佛教學院</span>
@@ -37,38 +37,84 @@
           <span class="sub-title">:</span>
         </el-col>
         <el-col v-show="cardDonation.paymentToolCode == 'E'">
-          <el-button @click="cardDonation.amount = 500" size="mini">500</el-button>
-          <el-button @click="cardDonation.amount = 1000" size="mini">1000</el-button>
-          <el-button @click="cardDonation.amount = 3000" size="mini">3000</el-button>
-          <el-button @click="cardDonation.amount = 5000" size="mini">5000</el-button>
-          <el-button @click="cardDonation.amount = 6000" size="mini">6000</el-button>
+          <el-button @click="cardDonation.amount1 = 100" size="mini"
+            >100</el-button
+          >
+          <el-button @click="cardDonation.amount1 = 500" size="mini"
+            >500</el-button
+          >
+          <el-button @click="cardDonation.amount1 = 1000" size="mini"
+            >1000</el-button
+          >
+          <el-button @click="cardDonation.amount1 = 3000" size="mini"
+            >3000</el-button
+          >
+          <el-button @click="cardDonation.amount1 = 5000" size="mini"
+            >5000</el-button
+          >
         </el-col>
         <el-col v-show="cardDonation.paymentToolCode == 'R'">
-          <el-button @click="cardDonation.amount = 199" size="mini">199</el-button>
-          <el-button @click="cardDonation.amount = 299" size="mini">299</el-button>
-          <el-button @click="cardDonation.amount = 599" size="mini">599</el-button>
-          <el-button @click="cardDonation.amount = 799" size="mini">799</el-button>
-          <el-button @click="cardDonation.amount = 999" size="mini">999</el-button>
+          <el-button @click="cardDonation.amount2 = 99" size="mini"
+            >99</el-button
+          >
+          <el-button @click="cardDonation.amount2 = 199" size="mini"
+            >199</el-button
+          >
+          <el-button @click="cardDonation.amount2 = 399" size="mini"
+            >399</el-button
+          >
+          <el-button @click="cardDonation.amount2 = 599" size="mini"
+            >599</el-button
+          >
+          <el-button @click="cardDonation.amount2 = 999" size="mini"
+            >999</el-button
+          >
         </el-col>
-        <el-col style="width:fit-content; margin-top:8px;">
-          <el-form-item prop="amount">
+        <el-col style="width: fit-content; margin-top: 8px">
+          <el-form-item
+            prop="amount1"
+            v-if="cardDonation.paymentToolCode == 'E'"
+          >
             <el-input-number
-              v-model="cardDonation.amount"
+              v-model="cardDonation.amount1"
               :min="100"
               :max="100000"
               placeholder="請輸入金額"
               :step="100"
             ></el-input-number>
           </el-form-item>
+          <el-form-item prop="amount2" v-else>
+            <el-input-number
+              v-model="cardDonation.amount2"
+              :min="99"
+              :max="100000"
+              placeholder="請輸入金額"
+              :step="100"
+            ></el-input-number>
+          </el-form-item>
         </el-col>
-        <el-col style="width:fit-content; margin-top:14px;">
+        <el-col style="width: fit-content; margin-top: 14px">
           <span class="sub-title">&nbsp;元</span>
-          <span v-show="cardDonation.paymentToolCode == 'R'" class="sub-title">/&nbsp;每月</span>
+          <span v-show="cardDonation.paymentToolCode == 'R'" class="sub-title"
+            >/&nbsp;每月</span
+          >
         </el-col>
       </el-row>
       <el-row>
-        <el-col style="text-align:center; margin:16px 0;">
-          <el-button @click="submitForm('cardDonation')" v-scroll-to="'#step-two'">下一步</el-button>
+        <el-col v-show="cardDonation.paymentToolCode == 'E'" style="color: gray"
+          >最低金額 NT$100</el-col
+        >
+        <el-col v-show="cardDonation.paymentToolCode == 'R'" style="color: gray"
+          >最低金額 NT$99</el-col
+        >
+      </el-row>
+      <el-row>
+        <el-col style="text-align: center; margin: 16px 0">
+          <el-button
+            @click="submitForm('cardDonation')"
+            v-scroll-to="'#step-two'"
+            >下一步</el-button
+          >
         </el-col>
       </el-row>
     </el-form>
@@ -82,7 +128,9 @@
       <span slot="footer" class="dialog-footer">
         <el-row class="top-line">
           <el-col>
-            <el-button @click="dialog.isShow = false" class="primary-color">我知道了</el-button>
+            <el-button @click="dialog.isShow = false" class="primary-color"
+              >我知道了</el-button
+            >
           </el-col>
         </el-row>
       </span>
@@ -98,6 +146,8 @@ export default {
       cardDonation: {
         paymentToolCode: "E", // 捐款模式: E單次捐款 R定期定額
         amount: null, // 捐款金額
+        amount1: null,
+        amount2: 99,
         step: null,
       },
       dialog: {
@@ -109,9 +159,21 @@ export default {
         paymentToolCode: [
           { required: true, message: "請選擇捐款方式", trigger: "change" },
         ],
-        amount: [{ required: true, message: "請輸入金額", trigger: "blur" }],
+        amount1: [{ required: true, message: "請輸入金額", trigger: "blur" }],
+        amount2: [{ required: true, message: "請輸入金額", trigger: "blur" }],
       },
     };
+  },
+  watch: {
+    "cardDonation.paymentToolCode"() {
+      if (this.cardDonation.paymentToolCode == "E") {
+        this.cardDonation.amount = this.cardDonation.amount1;
+        console.log("單筆捐款:" + this.cardDonation.amount);
+      } else {
+        this.cardDonation.amount = this.cardDonation.amount2;
+        console.log("定期定額:" + this.cardDonation.amount);
+      }
+    },
   },
   methods: {
     submitForm(formName) {
@@ -133,8 +195,15 @@ export default {
     },
     nextStep() {
       this.cardDonation.step = "2";
-      console.log("step:" + this.cardDonation.step);
+      if (this.cardDonation.paymentToolCode == "E") {
+        this.cardDonation.amount = this.cardDonation.amount1;
+        console.log("單筆捐款:" + this.cardDonation.amount);
+      } else {
+        this.cardDonation.amount = this.cardDonation.amount2;
+        console.log("定期定額:" + this.cardDonation.amount);
+      }
       this.$emit("nextStep", this.cardDonation);
+      console.log("捐款金額:" + this.cardDonation.amount);
     },
   },
 };
@@ -150,7 +219,7 @@ export default {
   color: red;
 }
 .el-row {
-  margin: 8px 0;
+  margin: 16px 0;
 }
 .step {
   line-height: 0%;

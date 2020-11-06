@@ -250,7 +250,7 @@
         </el-row>
       </div>
       <!-- 收據 -->
-      <div v-if="memberInfo.isForeign == false">
+      <!-- <div v-if="memberInfo.isForeign == false">
         <el-row
           v-if="memberInfo.receiptTypeCode == 'UNWANTTED'"
           style="margin: 16px 0px"
@@ -267,7 +267,45 @@
             </el-select>
           </el-col>
         </el-row>
-      </div>
+      </div> -->
+      <el-row>
+        <el-col>
+          <el-card class="box-card" shadow="never">
+            <div slot="header" class="clearfix" style="text-align:center;">
+              <span style="color:white;" class="sub-title">捐款注意事項</span>
+            </div>
+            <el-row>
+              <el-col :span="2">
+                <el-form-item prop="isAcceptPdpa">
+                  <input type="checkbox" v-model="isAcceptPdpa" required />
+                </el-form-item>
+              </el-col>
+              <el-col :span="22" style="margin-top:8px;">
+                <label class="notice">
+                  我同意遵守本網站個人
+                  <a
+                    href="https://bwbc.blisswisdom.org/%e3%80%90%e6%8d%90%e6%ac%be%e6%b3%a8%e6%84%8f%e4%ba%8b%e9%a0%85%e3%80%91/"
+                    target="_blank"
+                    style="color:#2B63E0;"
+                  >捐款注意事項</a>及其他有關著作權、版權、商標專用權、網路智慧財產權等之法律規定。
+                </label>
+              </el-col>
+            </el-row>
+            <el-row style="background-color:#F0F0F0; margin-top:20px;">
+              <el-col style="padding: 16px;">
+                <label class="notice">
+                  依財團法人法第25條規定，除捐贈者事先書面表示反對外，各財團法人均需主動公開捐贈者之「姓名」及「捐款金額」，詳見
+                  <a
+                    href="https://www.blisswisdom.org/donate/qanda#q2"
+                    target="_blank"
+                    style="color:#2B63E0;"
+                  >捐款徵信說明</a>
+                </label>
+              </el-col>
+            </el-row>
+          </el-card>
+        </el-col>
+      </el-row>
       <el-row
         style="
           background-color: #d8ba5f33;
@@ -479,6 +517,13 @@ export default {
         return callback();
       }
     };
+    // 捐款注意事項驗證
+    var checkIsAcceptPdpaValidator = (rule, value, callback) => {
+      if (!this.isAcceptPdpa) {
+        console.log(this.isAcceptPdpa);
+        return callback(new Error("請勾選"));
+      } else return callback();
+    };
     // 個資聲明勾選驗證
     var checkAcceptDeclarationValidator = (rule, value, callback) => {
       if (!this.acceptDeclaration) {
@@ -529,6 +574,7 @@ export default {
       },
       declaration: false, // 個資聲明顯示
       acceptDeclaration: false, // 接受個資聲明
+      isAcceptPdpa: false, // 同意遵守捐款注意事項
       region: "",
       regions: [
         {
@@ -665,6 +711,9 @@ export default {
           { required: true, message: "請輸入電子信箱", trigger: "blur" },
           { validator: checkEmailValidator, trigger: "blur" },
         ],
+        isAcceptPdpa: [
+          { validator: checkIsAcceptPdpaValidator, trigger: "change" },
+        ],
         acceptDeclaration: [
           { validator: checkAcceptDeclarationValidator, trigger: "change" },
         ],
@@ -751,7 +800,7 @@ export default {
   color: red;
 }
 .el-row {
-  margin: 8px 0;
+  margin: 16px 0;
 }
 .step {
   line-height: 0%;
@@ -809,5 +858,11 @@ export default {
 }
 /deep/.el-input__inner {
   background-color: #fff;
+}
+/deep/.el-card__header {
+  padding: 3px 20px;
+  background-color: #bda268;
+  color: white;
+  text-align: center;
 }
 </style>

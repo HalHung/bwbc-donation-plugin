@@ -51,7 +51,7 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row>
+      <!-- <el-row>
         <el-col>
           <el-card class="box-card" shadow="never">
             <div slot="header" class="clearfix" style="text-align:center;">
@@ -88,7 +88,7 @@
             </el-row>
           </el-card>
         </el-col>
-      </el-row>
+      </el-row> -->
       <el-row>
         <el-col style="text-align:center; margin:16px 0;">
           <el-button type="warning" plain @click="previous()" v-scroll-to="'#step-one'">上一步</el-button>

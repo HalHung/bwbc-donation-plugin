@@ -79,7 +79,7 @@ export default {
       step: "1",
       loading: false,
       bwbcTransferDonate: {
-        donatorTypeCode: null, // PERSON自然人捐款 CORPORATION法人捐款
+        donatorTypeCode: null, // PERSON個人捐款 CORPORATION公司捐款
         paymentToolCode: 'E', // 捐款模式: E單次捐款 R定期定額
         isForeign: null, // 國籍
         amount: null, // 捐款金額
@@ -87,7 +87,7 @@ export default {
         donatorName: null, // 收據抬頭
         address: null, // 地址
         memo1: null, // 匯款帳號末五碼
-        memo2: null, // 匯款人
+        memo2: null, // 匯款戶名
         date1: null, // 匯款日期
         name: null, // 會員姓名
         genderTypeCode: null, // 性別
@@ -102,7 +102,7 @@ export default {
         sinCompany: null, // 公司統編
         companyAddress: null, // 聯絡地址
         donaUseCode: "Z",
-        donaItemCode: "W11",
+        donaItemCode: "W853",
         imgData: null,
         from: "transfer",
       },
@@ -188,6 +188,11 @@ export default {
         console.log("done");
       });
     },
+    showMessageBox(title, content) {
+      this.dialog.title = title;
+      this.dialog.content = content;
+      this.dialog.isShow = true;
+    },
     setTransferDonation(transferDonation) {
       this.bwbcTransferDonate.donatorTypeCode =
         transferDonation.donatorTypeCode;
@@ -263,7 +268,7 @@ export default {
         `收據抬頭：`+this.bwbcTransferDonate.donatorName+`,`+
         `地址：`+this.bwbcTransferDonate.address+`,`+
         `匯款帳號末五碼：`+this.bwbcTransferDonate.memo1+`,`+
-        `匯款人：`+this.bwbcTransferDonate.memo2+`,`+
+        `匯款戶名：`+this.bwbcTransferDonate.memo2+`,`+
         `匯款日期：`+this.bwbcTransferDonate.date1+`,`+
         `會員姓名：`+this.bwbcTransferDonate.name+`,`+
         `捐款金額：`+this.bwbcTransferDonate.amount+`,`+
@@ -289,7 +294,7 @@ export default {
 @import 'node_modules/bootstrap-vue/src/index.scss';
 #body {
   .el-row {
-    margin: 8px 0px 10px;
+    margin: 16px 0;
   }
 
   /deep/ .el-button {

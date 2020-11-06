@@ -23,8 +23,8 @@
         <el-col>
           <el-form-item prop="donatorTypeCode">
             <el-radio-group v-model="chequeDonation.donatorTypeCode">
-              <el-radio label="PERSON">自然人捐款</el-radio>
-              <el-radio label="CORPORATION">法人捐款</el-radio>
+              <el-radio label="PERSON">個人捐款</el-radio>
+              <el-radio label="CORPORATION">公司捐款</el-radio>
             </el-radio-group>
           </el-form-item>
         </el-col>
@@ -82,7 +82,7 @@ export default {
   data() {
     return {
       chequeDonation: {
-        donatorTypeCode: "PERSON", // PERSON自然人捐款 CORPORATION法人捐款
+        donatorTypeCode: "PERSON", // PERSON個人捐款 CORPORATION公司捐款
         isForeign: false, // 國籍: T台灣人 F外國人
         amount: 10000, // 捐款金額
         donatorName: null, // 收據抬頭
