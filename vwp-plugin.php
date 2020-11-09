@@ -4,7 +4,7 @@
  * Plugin Name:       籌備處捐款外掛
  * Plugin URI:        https://luciditv.com
  * Description:       籌備處捐款外掛
- * Version:           1.0.36
+ * Version:           1.0.40
  * Author:            澈見國際資訊
  */
 

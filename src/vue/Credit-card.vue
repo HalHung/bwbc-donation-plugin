@@ -23,6 +23,47 @@
         @nextStep="setMemberInfo($event)"
       ></MemberInfo>
     </div>
+    <div v-show="step == '4'">
+      <span style="font-weight:500; font-size:20px; color:#9c8044;">感謝您進行了線上捐款</span>
+      <p style="font-size:16px;">
+        謝謝您認同我們的教育理念，更為了教育環境盡一份力！
+        <br />若捐款有問題我們將主動跟您聯繫。
+      </p>
+      <div>
+        <span style="font-size:18px; color:#9c8044;">以下是您的捐款資訊：</span>
+        <p style="font-size:16px; margin:0;">捐款編號：{{donationNo}}</p>
+        <p style="font-size:16px; margin:0;">捐款人：{{bwbcCardDonate.name}}</p>
+        <p style="font-size:16px; margin:0;">手機號碼：{{bwbcCardDonate.cellPhone}}</p>
+        <p style="font-size:16px; margin:0;">捐款項目：福智佛教學院</p>
+        <p style="font-size:16px; margin:0;">捐款日期：{{donaDate}}</p>
+        <p style="font-size:16px; margin:0;" v-if="bwbcCardDonate.paymentToolCode == 'R'">捐款方式：定期定額</p>
+        <p style="font-size:16px; margin:0;" v-else>捐款方式：單筆捐款</p>
+        <p style="font-size:16px; margin:0;">捐款金額：{{bwbcCardDonate.amount}}</p>
+        <p
+          style="font-size:16px; margin:0;"
+          v-show="bwbcCardDonate.receiptTypeCode == 'BY_TIME'"
+        >收據開立方式：單筆開立</p>
+        <p
+          style="font-size:16px; margin:0;"
+          v-show="bwbcCardDonate.receiptTypeCode == 'ANNUAL'"
+        >收據開立方式：年開</p>
+        <p
+          style="font-size:16px; margin:0;"
+          v-show="bwbcCardDonate.receiptTypeCode == 'UNWANTTED'"
+        >收據開立方式：不需寄發</p>
+        <p
+          style="font-size:16px; margin:0;"
+          v-if="bwbcCardDonate.receiptTypeCode != 'UNWANTTED'"
+        >收據抬頭：{{bwbcCardDonate.donatorName}}</p>
+      </div>
+      <p style="font-size:16px;">再次誠摯感謝您！</p>
+      <p style="font-size:16px;">
+        若您有疑惑，歡迎您透過以下方式聯繫我們：
+        <br />籌備處募款組辦公室電話02-7730-0016
+        <br />福智佛教學院籌備處信箱：bwbc.po@blisswisdom.org
+        <br />
+      </p>
+    </div>
     <el-dialog
       custom-class="dialog-message-box"
       :title="dialog.title"
@@ -119,12 +160,12 @@ export default {
           };
         }
       }
-      API.donate.wpDonateCard(this.bwbcCardDonate).then((res) => {
-        if (this.bwbcCardDonate.paymentToolCode === "E") {
+       if (this.bwbcCardDonate.paymentToolCode === "E") {
           this.bwbcCardDonate.donaItemCode = "W851";
         } else if (this.bwbcCardDonate.paymentToolCode === "R") {
           this.bwbcCardDonate.donaItemCode = "W852";
         }
+      API.donate.wpDonateCard(this.bwbcCardDonate).then((res) => {
         let data = res.data;
         if (data.status == 200 && data.message == "成功取得3D HTML") {
           var body2 = data.data.Result;
